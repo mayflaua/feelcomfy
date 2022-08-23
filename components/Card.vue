@@ -49,9 +49,12 @@ export default {
         : this.favoritesStore.addToFavorites(this.card.id);
     },
     _handleAddToCartClick() {
-      this.isInCart
-        ? this.cartStore.changeQuantity(this.card.id, 1)
-        : this.cartStore.addToCart(this.card.id, 1);
+      if (this.isInCart) {
+        this.cartStore.changeQuantity(this.card.id, 1);
+      } else {
+        this.cartStore.addToCart(this.card.id, 1);
+        this.$emit("show-popup", { name: this.card.title, url: this.card.url });
+      }
     },
   },
 

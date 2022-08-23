@@ -1,7 +1,13 @@
 <template>
   <div>
+    <cart-popup ref="popup"/>
     <div class="cards" v-if="cards.length > 0">
-      <Card v-for="card in cards" :key="card.id" :card="card" />
+      <Card
+        v-for="card in cards"
+        :key="card.id"
+        :card="card"
+        @show-popup="_showPopup"
+      />
     </div>
     <!-- TODO: loading component -->
     <div v-else>LOADING...</div>
@@ -39,6 +45,10 @@ export default {
       this._pushCardsData();
       this.cardsLoading = false;
     },
+
+    _showPopup({ name, url }) {
+      this.$refs.popup.show(name, url)
+    }
   },
 
   mounted() {
