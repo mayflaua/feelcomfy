@@ -5,6 +5,7 @@
         <div class="popup__title">Товар добавлен в корзину</div>
         <img :src="item.imageUrl" class="popup__image" />
         <div class="popup__name">{{ item.name }}</div>
+        <!-- TODO: кнопка закрыть и перейти в корзину -->
       </div></transition-group
     >
   </div>
@@ -12,10 +13,15 @@
 
 <script>
 export default {
+  // TODO: показывать если товар уже в корзине
   data: () => ({
     queue: [],
     showTime: 2000,
   }),
+
+  props: {
+    isInCard: { type: Boolean, required: true },
+  },
 
   methods: {
     show(name, url) {

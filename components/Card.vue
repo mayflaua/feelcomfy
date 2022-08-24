@@ -53,7 +53,7 @@ export default {
         this.cartStore.changeQuantity(this.card.id, 1);
       } else {
         this.cartStore.addToCart(this.card.id, 1);
-        this.$emit("show-popup", { name: this.card.title, url: this.card.url });
+        this.$emit("show-popup", { name: this.card.title, url: this.card.thumbnailUrl });
       }
     },
   },
