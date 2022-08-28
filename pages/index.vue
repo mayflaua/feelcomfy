@@ -1,6 +1,7 @@
 <template>
   <div>
-    <cart-popup ref="popup"/>
+    {{ cardsLoading }}
+    <cart-popup ref="popup" />
     <div class="cards" v-if="cards.length > 0">
       <Card
         v-for="card in cards"
@@ -21,22 +22,24 @@ export default {
     cards: [],
     cardsLoaded: 10,
     itemsToLoad: 10,
-    cardsLoading: false,
-    store: null,
+    cardsLoading: true,
   }),
 
   methods: {
     async _getCardsData() {
-      this.cardsLoading = true;
+      // this.cardsLoading = true;
       const start = this.cardsLoaded - this.itemsToLoad;
       const res = await $fetch(
         `/api/cards?start=${start}&limit=${this.itemsToLoad}`
       );
-      this.cardsLoading = false;
+
       return res;
     },
     _pushCardsData() {
-      this._getCardsData().then((res) => this.cards.push(...res));
+      this._getCardsData().then((res) => {
+        this.cards.push(...res);
+        this.cardsLoading = false;
+      });
     },
 
     _add() {
@@ -47,11 +50,11 @@ export default {
     },
 
     _showPopup({ name, url }) {
-      this.$refs.popup.show(name, url)
-    }
+      this.$refs.popup.show(name, url);
+    },
   },
 
-  mounted() {
+  async mounted() {
     this._pushCardsData();
 
     window.onscroll = (ev) => {

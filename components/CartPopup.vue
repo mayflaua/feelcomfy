@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <transition-group name="list" mode="out-in">
-      <div class="popup" v-for="item, i in queue" :key="item.name">
+      <div class="popup" v-for="(item, i) in queue" :key="item.name">
         <img :src="item.imageUrl" class="popup__image" />
         <div class="popup__desc">
           <div class="popup__title">Товар добавлен в корзину</div>
@@ -41,13 +41,9 @@ export default {
   // TODO: показывать если товар уже в корзине
   data: () => ({
     queue: [],
-    showTime: 200000,
+    showTime: 2000,
     timer: null,
   }),
-
-  props: {
-    isInCard: { type: Boolean, required: true },
-  },
 
   methods: {
     show(name, url) {
