@@ -10,8 +10,7 @@
         @show-popup="_showPopup"
       />
     </div>
-    <!-- TODO: loading component -->
-    <div v-else>LOADING...</div>
+    <CardsLoader v-else />
     <button @click="_add">ADd more</button>
   </div>
 </template>
