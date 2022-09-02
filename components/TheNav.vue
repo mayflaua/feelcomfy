@@ -16,7 +16,9 @@
           <button class="nav__burger" @click="sideMenuOpened = true">
             <span class="burger__line"></span>
           </button>
-          <nuxt-link to="/login" class="user-actions__login">Войти</nuxt-link>
+          <a @click="handleAccountClick" class="user-actions__pa">{{
+            auth.isLoggedIn() ? auth.user.user_metadata.name : "Войти"
+          }}</a>
           <nuxt-link to="/favorites" class="user-actions__favorites"
             >Избранное
             <div v-if="favoritesCount != '0'" class="favorites__icon">
@@ -52,10 +54,8 @@
             <span class="close__line"></span>
           </button>
           <div class="header__links">
-            <nuxt-link to="/login" class="header__links-link">Войти</nuxt-link
-            ><span class="header__links-divider">/</span
-            ><nuxt-link to="/signup" class="header__links-link"
-              >Зарегистрироваться</nuxt-link
+            <a @click="openAuthModal" class="header__links-link"
+              >Войти / Зарегистрироваться</a
             >
           </div>
         </header>
@@ -114,6 +114,7 @@ export default {
     sideMenuOpened: false,
     favoritesStore: useFavoritesStore(),
     cartStore: useCartStore(),
+    auth: useAuth(),
 
     categoriesList: [
       {
@@ -149,6 +150,18 @@ export default {
     ],
     asideCategoriesOpened: false,
   }),
+
+  methods: {
+    handleAccountClick() {
+      if (!this.auth.isLoggedIn()) {
+        this.sideMenuOpened = false;
+        this.$emit("open-auth-modal");
+      } else {
+        this.$router.push(`/profile`)
+        // TODO: profile page
+      }
+    },
+  },
 
   computed: {
     favoritesCount() {
@@ -251,6 +264,7 @@ export default {
     }
     .header__links {
       &-link {
+        cursor: pointer;
         color: $font;
         text-decoration: underline;
         font-weight: 500;
@@ -477,7 +491,7 @@ export default {
       }
     }
     .user-actions {
-      &__login,
+      &__pa,
       &__favorites,
       &__cart {
         text-decoration: none;
@@ -488,6 +502,8 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+
+        cursor: pointer;
 
         background-repeat: no-repeat;
         background-size: 24px;
@@ -508,7 +524,7 @@ export default {
         }
       }
 
-      &__login {
+      &__pa {
         background-image: url("~/assets/icons/login.png");
       }
       &__favorites {

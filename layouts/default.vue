@@ -1,10 +1,24 @@
 <template>
   <div class="container">
-    <TheNav></TheNav>
+    <AuthSignIn
+      @close-modal="closeAuthModal"
+      v-if="isAuthModalOpened"
+    />
+    <TheNav @open-auth-modal="openAuthModal"></TheNav>
     <main class="content"><slot /></main>
   </div>
 </template>
+<script setup lang="ts">
+let isAuthModalOpened = ref(false);
 
+const closeAuthModal = () => {
+  isAuthModalOpened.value = false;
+};
+
+const openAuthModal = () => {
+  isAuthModalOpened.value = true;
+};
+</script>
 <style lang="scss" scoped>
 .container {
   width: 80vw;

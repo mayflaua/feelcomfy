@@ -1,7 +1,6 @@
 <template>
   <div>
-    {{ cardsLoading }}
-    <cart-popup ref="popup" />
+    <CartPopup ref="popup" />
     <div class="cards" v-if="cards.length > 0">
       <Card
         v-for="card in cards"
@@ -10,7 +9,7 @@
         @show-popup="_showPopup"
       />
     </div>
-    <CardsLoader v-else />
+    <Loader :text="'Загружаю товары...'" v-else />
     <button @click="_add">ADd more</button>
   </div>
 </template>
@@ -22,6 +21,7 @@ export default {
     cardsLoaded: 10,
     itemsToLoad: 10,
     cardsLoading: true,
+
   }),
 
   methods: {
@@ -51,6 +51,7 @@ export default {
     _showPopup({ name, url }) {
       this.$refs.popup.show(name, url);
     },
+
   },
 
   async mounted() {

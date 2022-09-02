@@ -5,11 +5,18 @@
       <div class="circle circle2"></div>
       <div class="circle circle3"></div>
     </div>
-    <p class="loader-text">Загружаю товары...</p>
+    <p class="loader-text" v-if="text">{{ text }}</p>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+defineProps({
+  text: {
+    type: String,
+    default: "",
+  },
+});
+</script>
 
 <style lang="scss" scoped>
 @import "~/assets/style/main.scss";
@@ -19,7 +26,7 @@ $animation-speed: 1s;
 .loader {
   display: flex;
   justify-content: space-between;
-  width: 230px;
+  max-width: 230px;
   margin: 0 auto;
   &-text {
     font-size: 1.1rem;
