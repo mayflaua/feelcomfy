@@ -25,7 +25,7 @@
               {{ favoritesCount }}
             </div></nuxt-link
           >
-          <nuxt-link to="/card" class="user-actions__cart"
+          <nuxt-link to="/cart" class="user-actions__cart"
             >Корзина
             <div v-if="cartCount != '0'" class="cart__icon">
               {{ cartCount }}

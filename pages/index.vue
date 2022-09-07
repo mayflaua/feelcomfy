@@ -15,13 +15,14 @@
 </template>
 
 <script>
+import { useCartStore } from "~~/stores/cart";
 export default {
   data: () => ({
     cards: [],
     cardsLoaded: 10,
     itemsToLoad: 10,
     cardsLoading: true,
-
+    cartStore: useCartStore(),
   }),
 
   methods: {
@@ -51,10 +52,8 @@ export default {
     _showPopup({ name, url }) {
       this.$refs.popup.show(name, url);
     },
-
   },
-
-  async mounted() {
+  mounted() {
     this._pushCardsData();
 
     window.onscroll = (ev) => {

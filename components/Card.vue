@@ -23,7 +23,7 @@
       {{ card.title }}
     </div>
     <div class="card__info">
-      <div class="card__price">{{ card.price }} Р</div>
+      <div class="card__price">{{ card.price.final }} Р</div>
       <div class="card__cart-btn" @click="_handleAddToCartClick"></div>
     </div>
   </div>
@@ -48,15 +48,15 @@ export default {
         ? this.favoritesStore.removeFromFavorites(this.card.id)
         : this.favoritesStore.addToFavorites(this.card.id);
     },
-    _handleAddToCartClick() {
+    async _handleAddToCartClick() {
+      this.$emit("show-popup", {
+        name: this.card.title,
+        url: this.card.thumbnailUrl,
+      });
       if (this.isInCart) {
         this.cartStore.changeQuantity(this.card.id, 1);
       } else {
         this.cartStore.addToCart(this.card.id, 1);
-        this.$emit("show-popup", {
-          name: this.card.title,
-          url: this.card.thumbnailUrl,
-        });
       }
     },
   },
