@@ -73,7 +73,8 @@
 </template>
 
 <script setup lang="ts">
-const { signUp } = useAuth();
+const { signUp, user } = useAuth();
+const { supabase } = useSupabase();
 
 let signUpEmail = ref("");
 let signUpPassword = ref("");
@@ -109,12 +110,17 @@ const validateForm = () => {
 };
 
 const handleSignUp = () => {
-  signUp({
-    email: signUpEmail.value,
-    password: signUpPassword.value,
-    name: signUpName.value,
-  });
-  showConfirmationMessage.value = true;
+  try {
+    signUp({
+      email: signUpEmail.value,
+      password: signUpPassword.value,
+      name: signUpName.value,
+    });
+
+    showConfirmationMessage.value = true;
+  } catch (err) {
+    throw err;
+  }
 };
 </script>
 

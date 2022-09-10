@@ -9,7 +9,7 @@
         @show-popup="_showPopup"
       />
     </div>
-    <Loader :text="'Загружаю товары...'" v-else />
+    <UILoader :text="'Загружаю товары...'" v-else />
     <button @click="_add">ADd more</button>
   </div>
 </template>

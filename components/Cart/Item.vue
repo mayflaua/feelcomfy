@@ -73,8 +73,9 @@ interface CartItem {
   };
 }
 const props = defineProps<{
-  itemInfo: CartItem;
+  itemInfo: CartItrem;
 }>();
+const emit = defineEmits(["delete"]);
 const checkbox = ref(true);
 
 const formatter = new Intl.NumberFormat("ru-RU", {
@@ -86,12 +87,13 @@ const formatter = new Intl.NumberFormat("ru-RU", {
 const handleDeleteButton = async () => {
   try {
     await cartStore.removeFromCart(props.itemInfo.id);
+    emit("delete", props.itemInfo.id);
   } catch (err) {
     throw err;
   }
 };
 
-const handleChangeQuantity = async (value:number) => {
+const handleChangeQuantity = async (value: number) => {
   try {
     props.itemInfo.qty += value;
     await cartStore.changeQuantity(props.itemInfo.id, value);
@@ -131,7 +133,7 @@ $qtySize: 40px;
 
   &__delete-btn {
     padding: 0 0 0 16px;
-    font-size: 0.7em;
+    font-size: 0.7rem;
     line-height: 13px;
 
     border: none;
@@ -186,12 +188,13 @@ $qtySize: 40px;
         display: block;
         width: $qtySize;
         border: none;
+        border-radius: 0;
         outline: none;
         border-top: 1px solid $default;
         border-bottom: 1px solid $default;
         text-align: center;
         appearance: text-field;
-        font-size: 0.8em;
+        font-size: 0.8rem;
 
         &:focus {
           border-color: black;
@@ -214,7 +217,7 @@ $qtySize: 40px;
 
       color: $default;
       text-align: center;
-      font-size: 0.8em;
+      font-size: 0.8rem;
     }
 
     .qty__minus-btn,
@@ -225,8 +228,9 @@ $qtySize: 40px;
       border-bottom: 1px solid $default;
       background: transparent;
       cursor: pointer;
-      font-size: 1.5em;
+      font-size: 1.5rem;
       font-weight: 300;
+      color: $font;
     }
 
     .qty__minus-btn {
@@ -248,11 +252,11 @@ $qtySize: 40px;
     .price__old {
       color: $dark;
       text-decoration: line-through;
-      font-size: 0.8em;
+      font-size: 0.8rem;
     }
 
     .price__final {
-      font-size: 1em;
+      font-size: 1rem;
       font-weight: 500;
     }
   }
@@ -288,13 +292,14 @@ $qtySize: 40px;
       gap: 14px;
     }
     &__qty {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
       order: 3;
 
       width: 100%;
       margin: 0 0 0 -120px;
+
+      .qty__price-per-item {
+        text-align: left;
+      }
       .qty-input-wrapper {
         height: $qtySize;
         .item__qty-input {

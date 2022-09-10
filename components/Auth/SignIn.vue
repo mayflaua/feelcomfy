@@ -1,7 +1,7 @@
 <template>
   <div class="signin-wrapper">
     <div class="signin-modal" :class="showLoading && 'signin-modal--blocked'">
-      <Loader v-if="showLoading" class="loading"/>
+      <UILoader v-if="showLoading" class="loading" />
       <div class="modal__header">
         <p class="header__title">{{ isSigningIn ? "Вход" : "Регистрация" }}</p>
         <img
@@ -55,6 +55,7 @@ let signInPassword = ref("");
 let isSigningIn = ref(true);
 
 const { signIn } = useAuth();
+const { supabase: sb } = useSupabase();
 
 const handleSignIn = async () => {
   try {
@@ -63,9 +64,14 @@ const handleSignIn = async () => {
     await signIn({
       email: signInEmail.value,
       password: signInPassword.value,
+    }).then(async (user) => {
+      await sb.from("carts").insert({
+        user_id: user.id,
+        cart: null,
+      });
+      showLoading.value = false;
+      emit("close-modal");
     });
-    showLoading.value = false;
-    emit("close-modal");
   } catch (err) {
     showLoading.value = false;
     err.message.startsWith("You")
