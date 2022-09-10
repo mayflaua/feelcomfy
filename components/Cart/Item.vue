@@ -1,6 +1,6 @@
 <template>
   <div class="item">
-    <UICheckbox class="item__checkbox" v-model="checkbox" />
+    <slot></slot>
     <img class="item__image" :src="itemInfo.url" />
     <div class="item__desc">
       <div class="item__head">
@@ -73,10 +73,9 @@ interface CartItem {
   };
 }
 const props = defineProps<{
-  itemInfo: CartItrem;
+  itemInfo: CartItem;
 }>();
 const emit = defineEmits(["delete"]);
-const checkbox = ref(true);
 
 const formatter = new Intl.NumberFormat("ru-RU", {
   style: "currency",
@@ -115,16 +114,11 @@ $qtySize: 40px;
 .item {
   height: $height - $padding * 2;
   width: 100%;
-  padding: $padding;
-  margin: 20px 0;
+  padding: $padding $padding 20px $padding;
   gap: $gap;
 
   display: flex;
   justify-content: flex-start;
-
-  &__checkbox {
-    align-self: center;
-  }
 
   &__image {
     height: $img;
@@ -180,7 +174,6 @@ $qtySize: 40px;
 
   &__qty {
     position: relative;
-
     .qty-input-wrapper {
       display: flex;
       height: $qtySize;
@@ -266,6 +259,7 @@ $qtySize: 40px;
   $qtySize: 35px;
 
   .item {
+    // padding-bottom: 20px;
     &__qty {
       .qty-input-wrapper {
         height: $qtySize;
@@ -284,21 +278,33 @@ $qtySize: 40px;
 
 @media (max-width: 600px) {
   $qtySize: 30px;
+  $img: 70px;
+  $gap: 10px;
 
   .item {
     height: 170px;
+    gap: $gap;
     &__body {
       flex-direction: column;
       gap: 14px;
     }
+    &__image {
+      width: $img;
+      height: $img;
+    }
     &__qty {
+      display: flex;
+      align-items: center;
       order: 3;
 
       width: 100%;
-      margin: 0 0 0 -120px;
+      margin: 0 0 0 -80px;
 
       .qty__price-per-item {
         text-align: left;
+        display: block;
+        position: relative;
+        margin: 0 0 0 8px;
       }
       .qty-input-wrapper {
         height: $qtySize;

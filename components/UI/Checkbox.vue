@@ -3,11 +3,18 @@
     type="checkbox"
     class="checkbox"
     v-model="val"
+    @change="$emit('changed', val)"
   />
 </template>
 
 <script lang="ts" setup>
-const val = ref(true);
+const props = defineProps({
+  defaultValue: {
+    type: Boolean,
+    default: true,
+  },
+});
+const val = ref(props.defaultValue);
 </script>
 
 <style lang="scss" scoped>
