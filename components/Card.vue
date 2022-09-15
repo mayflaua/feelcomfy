@@ -73,7 +73,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/style/main.scss";
 
 .card {
   width: 250px;

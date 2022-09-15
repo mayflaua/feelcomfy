@@ -26,9 +26,11 @@
     <input type="text" placeholder="цвет (если есть)" v-model="color" />
     <input type="text" placeholder="модель (если есть)" v-model="model" />
     <input type="number" placeholder="наличие в штуках" v-model="instock" />
-    
+
     <p class="loading" v-if="loading">LOADING</p>
     <button class="btn" v-else @click="add">добавить</button>
+    <button class="btn" @click="show">смотреть все</button>
+    <pre><code>{{ items.data }}</code></pre>
   </div>
 </template>
 
@@ -37,7 +39,6 @@ const { supabase: s } = useSupabase();
 const rand = () => {
   return Math.floor(Math.random() * 100);
 };
-
 const loading = ref(false);
 
 const title = ref("");
@@ -50,7 +51,7 @@ const model = ref(null);
 const color = ref(null);
 const instock = ref(23);
 
-const items = ref([]);
+let items = ref(s.from("goods").select("*"));
 
 const add = async () => {
   loading.value = true;
@@ -76,6 +77,10 @@ const add = async () => {
   color.value = null;
   instock.value = rand();
   loading.value = false;
+};
+
+const show = async () => {
+  items.value = await s.from("goods").select("*");
 };
 </script>
 

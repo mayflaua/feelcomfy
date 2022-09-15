@@ -19,7 +19,6 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/style/main.scss";
 
 $animation-speed: 1s;
 

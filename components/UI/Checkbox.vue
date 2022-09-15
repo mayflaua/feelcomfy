@@ -18,7 +18,6 @@ const val = ref(props.defaultValue);
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/style/main.scss";
 .checkbox {
   width: 16px;
   height: 16px;

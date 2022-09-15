@@ -15,7 +15,6 @@ const btnProps = defineProps<ButtonProps>();
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/style/main.scss";
   .ui-button {
     display: inline-block;
     padding: 10px 17px;

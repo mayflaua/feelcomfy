@@ -179,7 +179,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/style/main.scss";
 
 .menu-enter-from,
 .menu-leave-to {

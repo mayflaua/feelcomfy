@@ -87,7 +87,6 @@ const switchAuthMethod = () => {
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/style/main.scss";
 .signin-wrapper {
   display: flex;
   justify-content: center;

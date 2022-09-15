@@ -125,7 +125,6 @@ const handleSignUp = () => {
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/style/main.scss";
 
 .confirm-email {
   padding: 20px 10px;

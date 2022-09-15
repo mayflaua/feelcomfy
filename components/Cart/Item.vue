@@ -103,7 +103,6 @@ const handleChangeQuantity = async (value: number) => {
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/style/main.scss";
 
 $img: 100px;
 $gap: 20px;

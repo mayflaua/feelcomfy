@@ -1,45 +1,53 @@
 <template>
-  <div class="cart">
-    <p class="cart__title" v-if="totalItemsFormatted">
-      Ваша корзина
-      <span class="cart__cart-counter">{{ totalItemsFormatted }}</span>
-    </p>
-
-    <div class="cart--empty" v-else>
-      <p class="cart__title">В корзине пока нет товаров</p>
-      <p class="cart__subtitle">Начните с подборок на главной странице или найдите нужный товар через поиск</p>
-      <UIButton value="На главную" path="/"/>
+  <div class="cart-wrapper">
+    <div class="title-wrapper" v-if="!isCartLoading">
+      <p class="cart__title" v-if="totalItemsFormatted">
+        Ваша корзина
+        <span class="cart__cart-counter">{{ totalItemsFormatted }}</span>
+      </p>
+      <div class="cart--empty" v-else>
+        <p class="cart__title">В корзине пока нет товаров</p>
+        <p class="cart__subtitle">
+          Начните с подборок на главной странице или найдите нужный товар через
+          поиск
+        </p>
+        <UIButton value="На главную" path="/" />
+      </div>
     </div>
+    <div class="cart">
+      <UILoader
+        text="Загружаю корзину"
+        v-if="isCartLoading"
+      />
 
-    <UILoader text="Загружаю корзину" v-if="isCartLoading" />
-
-    <div class="cart__body" v-else-if="totalItemsFormatted">
-      <div class="cart__info">
-        <UICheckbox
-          class="info__checkbox"
-          :checked="allChecked"
-          @click="handleCheckAllClick"
-        />
-        <span class="info__checkbox-text" v-if="allChecked">Снять все</span>
-        <span class="info__checkbox-text" v-else>Выбрать все</span>        
-      </div>
-      <div class="items">
-        <CartItem
-          class="items__item"
-          v-for="(item, i) in cartItems"
-          :key="item.id"
-          :itemInfo="item"
-          @delete="handleDeleteEvent"
-        >
+      <div class="cart__body" v-if="totalItemsFormatted">
+        <div class="cart__info">
           <UICheckbox
-            class="item__checkbox"
-            :checked="checkboxes[i]"
-            :defaultValue="defaultCheckboxValue"
-            @changed="(val) => (checkboxes[i] = val)"
+            class="info__checkbox"
+            :checked="allChecked"
+            @click="handleCheckAllClick"
           />
-        </CartItem>
+          <span class="info__checkbox-text" v-if="allChecked">Снять все</span>
+          <span class="info__checkbox-text" v-else>Выбрать все</span>
+        </div>
+        <div class="items">
+          <CartItem
+            class="items__item"
+            v-for="(item, i) in cartItems"
+            :key="item.id"
+            :itemInfo="item"
+            @delete="handleDeleteEvent"
+          >
+            <UICheckbox
+              class="item__checkbox"
+              :checked="checkboxes[i]"
+              :defaultValue="defaultCheckboxValue"
+              @changed="(val) => (checkboxes[i] = val)"
+            />
+          </CartItem>
+        </div>
       </div>
-      <div class="order"></div>
+      <div class="order" v-if="totalItemsFormatted"></div>
     </div>
   </div>
 </template>
@@ -60,7 +68,7 @@ const cartItems = ref([]);
 /* static array with stored cart ids and qtys */
 const cartStored = await cartStore.getCartFromDatabase();
 const handleCheckAllClick = () => {
-  const allCheckedBeforeClick = allChecked.value 
+  const allCheckedBeforeClick = allChecked.value;
   for (let key of Object.keys(checkboxes.value)) {
     checkboxes.value[key] = allCheckedBeforeClick ? false : true;
   }
@@ -69,9 +77,10 @@ const isCartLoading = ref(true);
 
 const totalItemsFormatted = computed(() => {
   /* format "товар" in the right form depending on the totalItems value */
+  /* indicates empty cart when returns false */
   const items = cartStore.totalItems;
   if (items == 0) {
-    return;
+    return false;
   } else if (items.toString().endsWith("1")) {
     return `, ${items} товар`;
   } else if (["2", "3", "4"].includes(items.toString().slice(-1))) {
@@ -113,10 +122,15 @@ onMounted(() => getCardsInfo());
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/style/main.scss";
 .cart {
-  width: 90%;
-  margin: 0 auto;
+  // width: 90%;
+  display: flex;
+  justify-content: space-between;
+
+  &-wrapper {
+    padding: 0 10px;
+
+  }
   &__title {
     font-size: 1.2rem;
     font-weight: 600;
@@ -169,6 +183,12 @@ onMounted(() => getCardsInfo());
       }
     }
   }
+}
+
+.order {
+  width: 30%;
+  height: 10px;
+  background: #000;
 }
 
 @media (max-width: 768px) {
