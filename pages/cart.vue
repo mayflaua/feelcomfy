@@ -1,10 +1,15 @@
 <template>
   <div class="cart">
-    <p class="cart__title">
+    <p class="cart__title" v-if="totalItemsFormatted">
       Ваша корзина
-      <span v-if="!totalItemsFormatted"> пуста</span>
       <span class="cart__cart-counter">{{ totalItemsFormatted }}</span>
     </p>
+
+    <div class="cart--empty" v-else>
+      <p class="cart__title">В корзине пока нет товаров</p>
+      <p class="cart__subtitle">Начните с подборок на главной странице или найдите нужный товар через поиск</p>
+      <UIButton value="На главную" path="/"/>
+    </div>
 
     <UILoader text="Загружаю корзину" v-if="isCartLoading" />
 
@@ -115,7 +120,7 @@ onMounted(() => getCardsInfo());
   &__title {
     font-size: 1.2rem;
     font-weight: 600;
-    margin: 0;
+    margin: 0 0 15px 0;
   }
 
   &__info {
@@ -131,6 +136,20 @@ onMounted(() => getCardsInfo());
   &__body {
     border: 1px solid $default;
     border-radius: 5px;
+  }
+
+  &--empty {
+    text-align: center;
+    background: url("~/assets/images/empty-cart-bg.png") no-repeat top/8rem;
+    padding: 100px 6px 0 6px;
+
+    .cart__subtitle {
+      font-size: 0.9rem;
+    }
+
+    .cart__title {
+      border: none;
+    }
   }
 
   .items {
