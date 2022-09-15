@@ -15,6 +15,7 @@
     "@pinia/nuxt": "^0.3.1",
     "@supabase/supabase-js": "^1.35.6",
     "@vueuse/core": "^8.9.4",
-    "pinia": "^2.0.17"
+    "pinia": "^2.0.17",
+    "vue3-circle-progress": "^1.0.7"
   }
 }

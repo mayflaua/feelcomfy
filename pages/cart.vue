@@ -15,10 +15,7 @@
       </div>
     </div>
     <div class="cart">
-      <UILoader
-        text="Загружаю корзину"
-        v-if="isCartLoading"
-      />
+      <UILoader text="Загружаю корзину" v-if="isCartLoading" />
 
       <div class="cart__body" v-if="totalItemsFormatted">
         <div class="cart__info">
@@ -47,13 +44,87 @@
           </CartItem>
         </div>
       </div>
-      <div class="order" v-if="totalItemsFormatted"></div>
+      <div class="order" v-if="totalItemsFormatted">
+        <div class="order__free-delivery">
+          <div class="free-delivery__indicator">
+            <CircleProgress
+              :size="35"
+              :border-width="3"
+              :border-bg-width="3"
+              fill-color="rgb(22,202,78)"
+              :percent="freeDeliveryPercent"
+              class="circle"
+            />
+          </div>
+          <div class="free-delivery__text">
+            <p class="free-delivery__title">
+              <span v-if="!isFreeDelivery"
+                >Бесплатно доставим ваш заказ в пункт выдачи
+              </span>
+              <span v-else>Вам доступна бесплатная доставка до двери</span>
+            </p>
+            <p class="free-delivery__subtitle" v-if="!isFreeDelivery">
+              Ещё
+              {{ formatter.format(freeDeliveryCondition - totalCartWorth) }} для
+              бесплатной доставки до двери
+            </p>
+          </div>
+        </div>
+        <div class="order__info">
+          <p class="info__title">Ваш заказ</p>
+          <p class="info__goods">
+            Товары ({{ cartStore.totalItems }}):
+            <span>{{ formatter.format(totalCartWorth) }}</span>
+          </p>
+          <p class="info__delivery" v-if="!isFreeDelivery">
+            Доставка: <span>{{ formatter.format(1000) }}</span>
+          </p>
+          <p class="info__total">
+            Итого: <span>{{ formatter.format(totalCartWorth) }}</span>
+          </p>
+          <p class="info__saving" v-if="summarySavings">
+            Вы экономите {{ formatter.format(summarySavings) }}
+          </p>
+          <UIButton value="Перейти к оформлению" path="/" class="info__button"/>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import "vue3-circle-progress/dist/circle-progress.css";
+import CircleProgress from "vue3-circle-progress";
 import { useCartStore } from "~~/stores/cart";
+
+defineComponent({
+  CircleProgress,
+});
+
+/* min order worth for free delivery */
+const freeDeliveryCondition = 8000;
+const totalCartWorth = computed(() => {
+  return cartItems.value.reduce(
+    (acc, curr) => acc + curr.qty * curr.price.final,
+    0
+  );
+});
+const summarySavings = computed(() => {
+  return cartItems.value.reduce(
+    (acc, curr) =>
+      curr.price.old
+        ? acc + curr.qty * (curr.price.old - curr.price.final)
+        : acc,
+    0
+  );
+});
+/* currency formatter */
+const formatter = new Intl.NumberFormat("ru-RU", {
+  style: "currency",
+  currency: "RUB",
+  maximumFractionDigits: 0,
+});
+
 /* items appear with this checkbox value at render */
 const defaultCheckboxValue = true;
 const checkboxes = ref({});
@@ -90,6 +161,17 @@ const totalItemsFormatted = computed(() => {
   }
 });
 
+const freeDeliveryPercent = computed(() => {
+  /* returns the percentage of total cart worth from free delivery condition */
+
+  return Math.min((totalCartWorth.value / freeDeliveryCondition) * 100, 100);
+});
+
+const isFreeDelivery = computed(() => {
+  /* return boolean value indicates if free delivery available */
+  return freeDeliveryPercent.value == 100;
+});
+
 const getCardsInfo = async () => {
   /* fetch all items from api with stored ids */
   const ids = cartStored.map((item) => item.id);
@@ -123,13 +205,13 @@ onMounted(() => getCardsInfo());
 
 <style lang="scss" scoped>
 .cart {
-  // width: 90%;
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
 
   &-wrapper {
     padding: 0 10px;
-
   }
   &__title {
     font-size: 1.2rem;
@@ -150,6 +232,7 @@ onMounted(() => getCardsInfo());
   &__body {
     border: 1px solid $default;
     border-radius: 5px;
+    flex-grow: 2;
   }
 
   &--empty {
@@ -186,14 +269,73 @@ onMounted(() => getCardsInfo());
 }
 
 .order {
-  width: 30%;
-  height: 10px;
-  background: #000;
+  width: 25%;
+  padding: 8px 12px;
+  border: 1px solid $default;
+  border-radius: 5px;
+
+  &__free-delivery {
+    display: flex;
+    gap: 5px;
+    border-bottom: 1px solid $default;
+    padding: 10px 0;
+    .free-delivery {
+      &__title {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
+      &__subtitle {
+        margin: 10px 0 0 0;
+        font-size: 0.7rem;
+        color: $dark;
+      }
+      &__indicator {
+        position: relative;
+        .circle {
+          background: url("data:image/svg+xml,%3csvg width='24' height='20' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e %3cpath fill-rule='evenodd' clip-rule='evenodd' d='M19.2425 7.22388C19.6618 7.49073 19.7854 8.04701 19.5186 8.46636L11.7593 18.4832C11.605 18.7256 11.3443 18.8798 11.0576 18.8982C10.7708 18.9165 10.4925 18.7969 10.3086 18.5762L5.3086 12.5762C4.99039 12.1943 5.04198 11.6268 5.42383 11.3086C5.80568 10.9904 6.37319 11.042 6.6914 11.4238L10.9024 16.477L18 7.49998C18.2669 7.08064 18.8231 6.95702 19.2425 7.22388Z' fill='%2316CA4E'/%3e %3c/svg%3e")
+            no-repeat center/contain;
+        }
+      }
+    }
+  }
+
+  &__info {
+    .info {
+      &__title {
+        font-weight: 500;
+        margin: 10px 0;
+      }
+
+      &__goods,
+      &__delivery,
+      &__total {
+        display: flex;
+        justify-content: space-between;
+      }
+      &__total span {
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+      &__saving {
+        text-align: right;
+        color: rgb(22,202,78);
+        font-size: 0.7rem;
+        margin: -10px 0 15px 0;
+      }
+      &__button {
+        border-radius: 6px;
+        display: block;
+      }
+    }
+  }
 }
 
 @media (max-width: 768px) {
   .cart {
     width: 100%;
+    flex-direction: column;
+    align-items: stretch;
 
     .items {
       padding: 0;
@@ -211,6 +353,15 @@ onMounted(() => getCardsInfo());
 
     &__body {
       border: none;
+    }
+  }
+
+  .order {
+    width: 100%;
+    border: none;
+
+    &__free-delivery {
+      gap: 15px;
     }
   }
 }

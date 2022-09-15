@@ -22,6 +22,7 @@ const btnProps = defineProps<ButtonProps>();
     text-decoration: none;
     font-size: 0.9rem;
     color: $bg;
+    text-align: center;
 
     &:hover {
       background-color: darken($blue, 8)

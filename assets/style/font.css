@@ -1,15 +1,9 @@
-$bg: white;
-$font: black;
-$light: #eee;
-$default: #aaa;
-$dark: #888;
-// TODO: синий нормальным сделать
-$blue: #6e6edf;
-* {
-  box-sizing: border-box;
-}
 body {
   font-family: Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
 }
 @font-face {
   font-family: "Roboto";
