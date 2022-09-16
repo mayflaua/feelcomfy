@@ -12,6 +12,14 @@ const useAuth = () => {
       { email, password },
       { data: metadata }
     );
+    await supabase.from("carts").insert({
+      user_id: u.id,
+      cart: {}
+    });
+    await supabase.from("favorites").insert({
+      user_id: u.id,
+      favorites: []
+    });
     if (error) throw error;
     return u;
   };

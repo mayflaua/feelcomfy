@@ -1,10 +1,10 @@
 <template>
   <div>
     <CartPopup ref="popup" />
-    <div class="cards" v-if="cards.length > 0">
+    <div class="cards" v-if="!cardsLoading">
       <Card
         v-for="card in cards"
-        :key="card.id"
+        :key="card.pk_id"
         :card="card"
         @show-popup="_showPopup"
       />
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { useCartStore } from "~~/stores/cart";
+import { useCartStore } from "~/stores/cart";
 export default {
   data: () => ({
     cards: [],
@@ -23,17 +23,17 @@ export default {
     itemsToLoad: 10,
     cardsLoading: true,
     cartStore: useCartStore(),
+    sb: useSupabase(),
   }),
-
   methods: {
     async _getCardsData() {
       // this.cardsLoading = true;
       const start = this.cardsLoaded - this.itemsToLoad;
-      const res = await $fetch(
-        `/api/cards?start=${start}&limit=${this.itemsToLoad}`
-      );
-
-      return res;
+      const res = await this.sb.supabase
+        .from("goods")
+        .select()
+        .range(this.cardsLoaded, this.cardsLoaded + this.itemsToLoad - 1);
+      return res.data;
     },
     _pushCardsData() {
       this._getCardsData().then((res) => {
@@ -41,21 +41,17 @@ export default {
         this.cardsLoading = false;
       });
     },
-
     _add() {
       this.cardsLoading = true;
       this.cardsLoaded += this.itemsToLoad;
       this._pushCardsData();
       this.cardsLoading = false;
     },
-
     _showPopup({ name, url }) {
       this.$refs.popup.show(name, url);
     },
   },
   mounted() {
-    this._pushCardsData();
-
     window.onscroll = (ev) => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
         if (!this.cardsLoading) {
@@ -63,6 +59,9 @@ export default {
         }
       }
     };
+  },
+  beforeMount() {
+    this._pushCardsData();
   },
 };
 </script>

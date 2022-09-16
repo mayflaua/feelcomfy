@@ -1,7 +1,7 @@
 <template>
   <div class="item">
     <slot></slot>
-    <img class="item__image" :src="itemInfo.url" />
+    <img class="item__image" :src="itemInfo.image_url" />
     <div class="item__desc">
       <div class="item__head">
         <div class="item__name">{{ itemInfo.title }}</div>
@@ -10,12 +10,12 @@
         </button>
       </div>
       <div class="item__body">
-        <div class="item__info" v-if="itemInfo.info">
-          <p class="item__color" v-if="itemInfo.info.color">
-            Цвет: <span>{{ itemInfo.info.color }}</span>
+        <div class="item__info">
+          <p class="item__color" v-if="itemInfo.color">
+            Цвет: <span>{{ itemInfo.color }}</span>
           </p>
-          <p class="item__model" v-if="itemInfo.info.model">
-            Модель: <span>{{ itemInfo.info.model }}</span>
+          <p class="item__model" v-if="itemInfo.model">
+            Модель: <span>{{ itemInfo.model }}</span>
           </p>
         </div>
         <div class="item__qty">
@@ -38,15 +38,15 @@
             </button>
           </div>
           <p class="qty__price-per-item" v-show="itemInfo.qty > 1">
-            {{ formatter.format(itemInfo.price.final) }}/ед.
+            {{ formatter.format(itemInfo.final_price) }}/ед.
           </p>
         </div>
         <div class="item__price">
-          <div class="price__old" v-if="itemInfo.price.old">
-            {{ formatter.format(itemInfo.price.old * itemInfo.qty) }}
+          <div class="price__old" v-if="itemInfo.old_price">
+            {{ formatter.format(itemInfo.old_price * itemInfo.qty) }}
           </div>
           <div class="price__final">
-            {{ formatter.format(itemInfo.price.final * itemInfo.qty) }}
+            {{ formatter.format(itemInfo.final_price * itemInfo.qty) }}
           </div>
         </div>
       </div>
@@ -59,18 +59,14 @@ import { useCartStore } from "~/stores/cart";
 const cartStore = useCartStore();
 
 interface CartItem {
-  readonly id: Number;
+  readonly pk_id: Number;
   title: String;
-  url: string;
+  image_url: string;
   qty: number;
-  price: {
-    old?: number;
-    final: number;
-  };
-  info?: {
-    model?: String;
-    color?: String;
-  };
+  old_price?: number;
+  final_price: number;
+  model?: String;
+  color?: String;
 }
 const props = defineProps<{
   itemInfo: CartItem;
@@ -85,8 +81,8 @@ const formatter = new Intl.NumberFormat("ru-RU", {
 
 const handleDeleteButton = async () => {
   try {
-    await cartStore.removeFromCart(props.itemInfo.id);
-    emit("delete", props.itemInfo.id);
+    await cartStore.removeFromCart(props.itemInfo.pk_id);
+    emit("delete", props.itemInfo.pk_id);
   } catch (err) {
     throw err;
   }
@@ -95,7 +91,7 @@ const handleDeleteButton = async () => {
 const handleChangeQuantity = async (value: number) => {
   try {
     props.itemInfo.qty += value;
-    await cartStore.changeQuantity(props.itemInfo.id, value);
+    await cartStore.changeQuantity(props.itemInfo.pk_id, value);
   } catch (err) {
     throw err;
   }
@@ -103,7 +99,6 @@ const handleChangeQuantity = async (value: number) => {
 </script>
 
 <style lang="scss" scoped>
-
 $img: 100px;
 $gap: 20px;
 $padding: 10px;

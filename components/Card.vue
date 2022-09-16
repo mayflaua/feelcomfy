@@ -1,6 +1,8 @@
 <template>
   <div class="card">
-    <img class="card__image" :alt="card.title" :src="card.url" />
+    <div class="card__image">
+      <img :alt="card.title" :src="card.image_url" />
+    </div>
     <div class="card__favorites-btn" @click="_handleFavoritesClick">
       <svg
         width="20"
@@ -23,7 +25,14 @@
       {{ card.title }}
     </div>
     <div class="card__info">
-      <div class="card__price">{{ card.price.final }} Р</div>
+      <div class="card__price">
+        <div class="card__final-price">
+          {{ formatter.format(card.final_price) }}
+        </div>
+        <div class="card__old-price" v-if="card.old_price">
+          {{ formatter.format(card.old_price) }}
+        </div>
+      </div>
       <div class="card__cart-btn" @click="_handleAddToCartClick"></div>
     </div>
   </div>
@@ -37,6 +46,12 @@ export default {
   data: () => ({
     favoritesStore: useFavoritesStore(),
     cartStore: useCartStore(),
+    /* currency formatter */
+    formatter: new Intl.NumberFormat("ru-RU", {
+      style: "currency",
+      currency: "RUB",
+      maximumFractionDigits: 0,
+    }),
   }),
   props: {
     card: { type: Object, required: true },
@@ -44,40 +59,43 @@ export default {
 
   methods: {
     _handleFavoritesClick() {
-      this.isInFavorites
-        ? this.favoritesStore.removeFromFavorites(this.card.id)
-        : this.favoritesStore.addToFavorites(this.card.id);
+      if (this.isInFavorites) {
+        this.favoritesStore.removeFromFavorites(this.card.pk_id);
+        this.$emit("unlike", this.card.pk_id);
+      } else {
+        this.favoritesStore.addToFavorites(this.card.pk_id);
+      }
     },
     async _handleAddToCartClick() {
       this.$emit("show-popup", {
         name: this.card.title,
-        url: this.card.thumbnailUrl,
+        url: this.card.thumbnail_url,
       });
       if (this.isInCart) {
-        this.cartStore.changeQuantity(this.card.id, 1);
+        this.cartStore.changeQuantity(this.card.pk_id, 1);
       } else {
-        this.cartStore.addToCart(this.card.id, 1);
+        this.cartStore.addToCart(this.card.pk_id, 1);
       }
     },
   },
 
   computed: {
     isInFavorites() {
-      return this.favoritesStore.isInFavorites(this.card.id);
+      return this.favoritesStore.isInFavorites(this.card.pk_id);
     },
     isInCart() {
-      return this.cartStore.isInCart(this.card.id);
+      return this.cartStore.isInCart(this.card.pk_id);
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-
 .card {
   width: 250px;
   min-height: 350px;
   background: #eee;
+  border: 1px solid $light;
   border-radius: 7px;
   overflow: hidden;
 
@@ -100,8 +118,14 @@ export default {
 
   &__image {
     transition: transform 0.2s ease;
-
-    width: 100%;
+    height: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    img {
+      width: 100%;
+    }
   }
 
   &__favorites-btn {
@@ -162,6 +186,15 @@ export default {
     padding: 0 10px;
     font-size: 1.2rem;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    .card__old-price {
+      font-size: 0.8rem;
+      color: $dark;
+      text-decoration: line-through;
+    }
   }
 
   &__cart-btn {

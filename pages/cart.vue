@@ -17,7 +17,7 @@
     <div class="cart">
       <UILoader text="Загружаю корзину" v-if="isCartLoading" />
 
-      <div class="cart__body" v-if="totalItemsFormatted">
+      <div class="cart__body" v-if="totalItemsFormatted && !isCartLoading">
         <div class="cart__info">
           <UICheckbox
             class="info__checkbox"
@@ -44,7 +44,7 @@
           </CartItem>
         </div>
       </div>
-      <div class="order" v-if="totalItemsFormatted">
+      <div class="order" v-if="totalItemsFormatted && !isCartLoading">
         <div class="order__free-delivery">
           <div class="free-delivery__indicator">
             <CircleProgress
@@ -58,9 +58,7 @@
           </div>
           <div class="free-delivery__text">
             <p class="free-delivery__title">
-              <span v-if="!isFreeDelivery"
-                >Бесплатно доставим ваш заказ в пункт выдачи
-              </span>
+              <span v-if="!isFreeDelivery">Бесплатно доставим ваш заказ </span>
               <span v-else>Вам доступна бесплатная доставка до двери</span>
             </p>
             <p class="free-delivery__subtitle" v-if="!isFreeDelivery">
@@ -80,12 +78,17 @@
             Доставка: <span>{{ formatter.format(1000) }}</span>
           </p>
           <p class="info__total">
-            Итого: <span>{{ formatter.format(totalCartWorth) }}</span>
+            Итого:
+            <span>{{ formatter.format(totalCartWorthWithDelivery) }}</span>
           </p>
           <p class="info__saving" v-if="summarySavings">
             Вы экономите {{ formatter.format(summarySavings) }}
           </p>
-          <UIButton value="Перейти к оформлению" path="/" class="info__button"/>
+          <UIButton
+            value="Перейти к оформлению"
+            path="/"
+            class="info__button"
+          />
         </div>
       </div>
     </div>
@@ -96,7 +99,10 @@
 import "vue3-circle-progress/dist/circle-progress.css";
 import CircleProgress from "vue3-circle-progress";
 import { useCartStore } from "~~/stores/cart";
+const { user } = useAuth();
+const { supabase } = useSupabase();
 
+// FIXME: unauthorized access
 defineComponent({
   CircleProgress,
 });
@@ -105,15 +111,18 @@ defineComponent({
 const freeDeliveryCondition = 8000;
 const totalCartWorth = computed(() => {
   return cartItems.value.reduce(
-    (acc, curr) => acc + curr.qty * curr.price.final,
+    (acc, curr) => acc + curr.qty * curr.final_price,
     0
   );
+});
+const totalCartWorthWithDelivery = computed(() => {
+  return totalCartWorth.value + (isFreeDelivery.value ? 0 : 1000);
 });
 const summarySavings = computed(() => {
   return cartItems.value.reduce(
     (acc, curr) =>
-      curr.price.old
-        ? acc + curr.qty * (curr.price.old - curr.price.final)
+      curr.old_price
+        ? acc + curr.qty * (curr.old_price - curr.final_price)
         : acc,
     0
   );
@@ -173,23 +182,31 @@ const isFreeDelivery = computed(() => {
 });
 
 const getCardsInfo = async () => {
-  /* fetch all items from api with stored ids */
-  const ids = cartStored.map((item) => item.id);
-  const res: any = await $fetch(`/api/cards?ids=${ids.join("+")}`);
+  /* fetch all items from db with stored ids if they exist*/
+  if (cartStored) {
+    const ids = cartStored.map((item) => item.pk_id);
 
-  isCartLoading.value = false;
-  /* create an object with all fetched cards infos */
-  res.forEach((item, i) => {
-    if (cartStored.length !== 0) {
-      /* and initial checkbox values object */
-      checkboxes.value[i] = defaultCheckboxValue;
-      const qty = cartStored.find((i) => i.id == item.id).qty;
-      cartItems.value.push({
-        ...item,
-        qty,
-      });
-    }
-  });
+    const { data: res } = await supabase
+      .from("goods")
+      .select()
+      .in("pk_id", ids);
+    /* create an object with all fetched cards infos */
+    res.forEach((item, i) => {
+      if (cartStored.length !== 0) {
+        /* and initial checkbox values object */
+        checkboxes.value[i] = defaultCheckboxValue;
+        const qty = cartStored.find((i) => i.id == item.id).qty;
+        cartItems.value.push({
+          ...item,
+          qty,
+        });
+      }
+    });
+    isCartLoading.value = false;
+  } else {
+    /* else stop loading and show empty cart element */
+    isCartLoading.value = false;
+  }
 };
 
 const handleDeleteEvent = (id: number) => {
@@ -200,7 +217,7 @@ const handleDeleteEvent = (id: number) => {
   );
 };
 
-onMounted(() => getCardsInfo());
+onBeforeMount(() => getCardsInfo());
 </script>
 
 <style lang="scss" scoped>
@@ -319,7 +336,7 @@ onMounted(() => getCardsInfo());
       }
       &__saving {
         text-align: right;
-        color: rgb(22,202,78);
+        color: rgb(22, 202, 78);
         font-size: 0.7rem;
         margin: -10px 0 15px 0;
       }

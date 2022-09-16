@@ -8,8 +8,8 @@ export const useCartStore = defineStore("cart", {
 
   getters: {
     getCart: (state) => state.cart,
-    isInCart: (state) => (id) => state.cart.some((el) => el.id == id),
-    totalItems: (state) => state.cart.length,
+    isInCart: (state) => (id) => state.cart.some((el) => el.pk_id == id),
+    totalItems: (state) => state.cart?.length || 0,
     totalQuantity: (state) =>
       state.cart.reduce((acc, curr) => acc + curr.qty, 0),
   },
@@ -18,10 +18,8 @@ export const useCartStore = defineStore("cart", {
     async addToCart(id, qty) {
       if (!this.isInCart(id)) {
         try {
-          this.cart.push({ id, qty });
+          this.cart.push({ pk_id: id, qty });
           await this._updateDatabase();
-
-          console.log(`added ${qty} item(s) with id ${id} to cart`);
         } catch (err) {
           throw err;
         }
@@ -31,7 +29,8 @@ export const useCartStore = defineStore("cart", {
     async changeQuantity(id, qty) {
       try {
         if (this.isInCart(id)) {
-          this.cart[this.cart.findIndex((item) => item.id == id)].qty += qty;
+          this.cart[this.cart.findIndex((item) => item.pk_id == id)].qty += qty;
+
           await this._updateDatabase();
         }
       } catch (err) {
@@ -46,10 +45,7 @@ export const useCartStore = defineStore("cart", {
           if (index > -1) {
             this.cart.splice(index, 1);
             await this._updateDatabase();
-            console.log(`removed item with id ${id} from cart`);
           }
-        } else {
-          throw new Error("Item isn't in cart");
         }
       } catch (err) {
         throw err;
