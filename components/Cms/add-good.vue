@@ -72,6 +72,17 @@ const handleAddButtonClick = async () => {
   sending.value = true;
   await db.from("goods").insert(itemToAdd.value);
   sending.value = false;
+
+  itemToAdd.value.category_id = 0;
+  itemToAdd.value.title = "";
+  itemToAdd.value.old_price = null;
+  itemToAdd.value.final_price = 0;
+  itemToAdd.value.units_in_stock = 0;
+  itemToAdd.value.image_url = "";
+  itemToAdd.value.thumbnail_url = "";
+  itemToAdd.value.model = null;
+  itemToAdd.value.color = "";
+  itemToAdd.value.orders = 0;
 };
 
 const itemToAdd = ref({

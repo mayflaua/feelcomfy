@@ -193,9 +193,14 @@ const handleDeleteButtonClick = async () => {
   font-size: 1.2rem;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   gap: 5px;
 
-  &__img,
+  &__image {
+    width: 90%;
+    align-self: center;
+  }
+
   &__pk_id,
   &__title,
   &__category_id,
