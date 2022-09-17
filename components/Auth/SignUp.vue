@@ -72,7 +72,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const { signUp, user } = useAuth();
 const { supabase } = useSupabase();
 

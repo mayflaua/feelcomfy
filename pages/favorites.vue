@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import "vue-select/dist/vue-select.css";
 import vSelect from "vue-select";
 import { useFavoritesStore } from "~~/stores/favorites";
@@ -92,7 +92,7 @@ const getFavorites = async () => {
   }
 };
 
-const handleUnlikeEvent = (id: number) => {
+const handleUnlikeEvent = (id) => {
   favoritesCards.value.splice(
     favoritesCards.value.findIndex((item) => item.id == id),
     1

@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const { supabase: db } = useSupabase();
 let loadedGoods = ref({ data: [] });
 const loadAllGoods = async () => {

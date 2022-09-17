@@ -95,8 +95,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import "vue3-circle-progress/dist/circle-progress.css";
+<script setup>
 import CircleProgress from "vue3-circle-progress";
 import { useCartStore } from "~~/stores/cart";
 const { user } = useAuth();
@@ -209,7 +208,7 @@ const getCardsInfo = async () => {
   }
 };
 
-const handleDeleteEvent = (id: number) => {
+const handleDeleteEvent = (id) => {
   /* remove deleted item from the static render array */
   cartItems.value.splice(
     cartItems.value.findIndex((item) => item.id == id),

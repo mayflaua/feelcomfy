@@ -4,14 +4,17 @@
   </nuxt-link>
 </template>
 
-<script setup lang="ts">
+<script setup>
 
-interface ButtonProps {
-  value: string,
-  path: string
-}
+// interface ButtonProps {
+//   value: string,
+//   path: string
+// }
 
-const btnProps = defineProps<ButtonProps>();
+const btnProps = defineProps({
+  value: String,
+  path: String,
+});
 </script>
 
 <style lang="scss" scoped>

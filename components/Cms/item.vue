@@ -127,21 +127,21 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const { supabase: db } = useSupabase();
-interface ItemProps {
-  readonly pk_id: number;
-  category_id: number;
-  title: string;
-  old_price: number;
-  final_price: number;
-  units_in_stock: number;
-  image_url: string;
-  thumbnail_url: string;
-  model?: string;
-  color: string;
-  orders: number;
-}
+// interface ItemProps {
+//   readonly pk_id: number;
+//   category_id: number;
+//   title: string;
+//   old_price: number;
+//   final_price: number;
+//   units_in_stock: number;
+//   image_url: string;
+//   thumbnail_url: string;
+//   model?: string;
+//   color: string;
+//   orders: number;
+// }
 const itemProps = defineProps({
   info: {
     type: Object,
@@ -151,7 +151,7 @@ const itemProps = defineProps({
 const item = ref(structuredClone(toRaw(itemProps.info)));
 const isEditting = ref(false);
 
-let prevValues: Object;
+let prevValues;
 
 const handleEditButtonClick = async () => {
   if (isEditting.value) {

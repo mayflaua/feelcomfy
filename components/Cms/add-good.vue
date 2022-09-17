@@ -63,7 +63,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const { supabase: db } = useSupabase();
 import { Image } from "image-js";
 

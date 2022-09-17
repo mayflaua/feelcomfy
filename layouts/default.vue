@@ -8,7 +8,7 @@
     <main class="content"><slot /></main>
   </div>
 </template>
-<script setup lang="ts">
+<script setup>
 let isAuthModalOpened = ref(false);
 
 const closeAuthModal = () => {

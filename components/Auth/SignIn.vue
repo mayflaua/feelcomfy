@@ -42,7 +42,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const emit = defineEmits(["close-modal"]);
 
 let authError = ref("");

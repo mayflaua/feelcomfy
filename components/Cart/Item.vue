@@ -54,23 +54,26 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { useCartStore } from "~/stores/cart";
 const cartStore = useCartStore();
 
-interface CartItem {
-  readonly pk_id: Number;
-  title: String;
-  image_url: string;
-  qty: number;
-  old_price?: number;
-  final_price: number;
-  model?: String;
-  color?: String;
-}
-const props = defineProps<{
-  itemInfo: CartItem;
-}>();
+// interface CartItem {
+//   readonly pk_id: Number;
+//   title: String;
+//   image_url: string;
+//   qty: number;
+//   old_price?: number;
+//   final_price: number;
+//   model?: String;
+//   color?: String;
+// }
+const props = defineProps({
+  itemInfo: {
+    type: Object,
+    required: true
+  }
+});
 const emit = defineEmits(["delete"]);
 
 const formatter = new Intl.NumberFormat("ru-RU", {
@@ -88,7 +91,7 @@ const handleDeleteButton = async () => {
   }
 };
 
-const handleChangeQuantity = async (value: number) => {
+const handleChangeQuantity = async (value) => {
   try {
     props.itemInfo.qty += value;
     await cartStore.changeQuantity(props.itemInfo.pk_id, value);
