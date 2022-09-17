@@ -66,8 +66,9 @@ const sortItems = () => {
 
   const sorter = {
     popular: (arr) => arr.sort((a, b) => b.orders - a.orders),
-    cheap: (arr) => arr.sort((a, b) => a.price.final - b.price.final),
-    expensive: (arr) => arr.sort((a, b) => b.price.final - a.price.final),
+    cheap: (arr) => arr.sort((a, b) => a.final_price - b.final_price),
+    expensive: (arr) => arr.sort((a, b) => b.final_price - a.final_price),
+    // TODO: sort by rating when implement rating system
     rating: (arr) => arr,
     orders: (arr) => arr.sort((a, b) => b.orders - a.orders),
   };

@@ -9,8 +9,10 @@
         @show-popup="_showPopup"
       />
     </div>
-    <UILoader :text="'Загружаю товары...'" v-else />
-    <button @click="_add">ADd more</button>
+    <UILoader
+      :text="'Загружаю товары...'"
+      v-if="cardsLoading || moreContentLoading"
+    />
   </div>
 </template>
 
@@ -22,6 +24,7 @@ export default {
     cardsLoaded: 10,
     itemsToLoad: 10,
     cardsLoading: true,
+    moreContentLoading: false,
     cartStore: useCartStore(),
     sb: useSupabase(),
   }),
@@ -35,17 +38,16 @@ export default {
         .range(this.cardsLoaded, this.cardsLoaded + this.itemsToLoad - 1);
       return res.data;
     },
-    _pushCardsData() {
-      this._getCardsData().then((res) => {
-        this.cards.push(...res);
-        this.cardsLoading = false;
-      });
-    },
-    _add() {
-      this.cardsLoading = true;
-      this.cardsLoaded += this.itemsToLoad;
-      this._pushCardsData();
+    async _pushCardsData() {
+      const res = await this._getCardsData();
+      this.cards.push(...res);
       this.cardsLoading = false;
+    },
+    async _loadMore() {
+      this.moreContentLoading = true;
+      this.cardsLoaded += this.itemsToLoad;
+      await this._pushCardsData();
+      this.moreContentLoading = false;
     },
     _showPopup({ name, url }) {
       this.$refs.popup.show(name, url);
@@ -55,7 +57,7 @@ export default {
     window.onscroll = (ev) => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
         if (!this.cardsLoading) {
-          this._add();
+          this._loadMore();
         }
       }
     };
