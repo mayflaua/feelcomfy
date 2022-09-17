@@ -1,5 +1,6 @@
 <template>
   <div class="favorites">
+    <CartPopup ref="popup" />
     <div class="favorites__header">
       <div class="favorites__title">Мои желания</div>
       <div class="sorting-wrapper">
@@ -21,6 +22,7 @@
           :key="card.id"
           :card="card"
           @unlike="handleUnlikeEvent"
+          @show-popup="_showPopup"
         />
       </div>
     </main>
@@ -71,6 +73,12 @@ const sortItems = () => {
   };
   favoritesCards.value = sorter[method](favoritesCards.value);
 };
+
+const popup = ref();
+
+const _showPopup = ({ name, url }) =>{
+      popup.value.show(name, url);
+    }
 
 const favoritesCards = ref([]);
 const favoritesStored = await favoritesStore.getFavoritesFromDatabase();

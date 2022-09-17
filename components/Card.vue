@@ -39,6 +39,7 @@
           {{ formatter.format(card.old_price) }}
         </div>
       </div>
+      <!-- FIXME: не забыть убрать эту хрень -->
       <div class="card__cart-btn" @click="_handleAddToCartClick"></div>
     </div>
   </div>

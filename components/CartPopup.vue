@@ -96,6 +96,7 @@ export default {
   box-shadow: 0 6px 6px rgba(black, 0.2);
 
   display: flex;
+  gap: 8px;
   justify-content: space-between;
 
   &__title {
@@ -131,11 +132,14 @@ export default {
   }
 
   &__go-to-cart {
+    font-size: 0.9rem;
+    width: 6rem;
     font-weight: 600;
     color: white;
     background-color: $blue;
     padding: 5px 8px;
     text-decoration: none;
+    text-align: center;
   }
 }
 </style>
