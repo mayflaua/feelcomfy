@@ -24,6 +24,12 @@
     <div class="card__title">
       {{ card.title }}
     </div>
+    <div class="card__orders">
+      <!-- TODO: система оценок -->
+      <div class="rating">5.0</div>
+      <!-- заменить кол-во заказов на кол-во оценок -->
+      <div class="evaluations">({{ formattedOrders }})</div>
+    </div>
     <div class="card__info">
       <div class="card__price">
         <div class="card__final-price">
@@ -85,6 +91,19 @@ export default {
     },
     isInCart() {
       return this.cartStore.isInCart(this.card.pk_id);
+    },
+    formattedOrders() {
+      if (this.card.orders == 0) {
+        return "0 оценок";
+      } else if (this.card.orders.toString().endsWith("1")) {
+        return `${this.card.orders} оценка`;
+      } else if (
+        ["2", "3", "4"].includes(this.card.orders.toString().slice(-1))
+      ) {
+        return `${this.card.orders} оценки`;
+      } else {
+        return `${this.card.orders} оценок`;
+      }
     },
   },
 };
@@ -172,6 +191,21 @@ export default {
     width: 100%;
     padding: 5px 10px;
     font-size: 1.1rem;
+  }
+
+  &__orders {
+    display: flex;
+    gap: 5px;
+    padding: 0 10px;
+    margin: -7px 0 0 0;
+    font-size: 0.7rem;
+    color: $dark;
+
+    .rating {
+      background: url("~/assets/icons/star.svg") no-repeat left/14px;
+      background-position: 0 -1px;
+      padding-left: 14px;
+    }
   }
 
   &__info {
