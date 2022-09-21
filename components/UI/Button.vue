@@ -1,5 +1,5 @@
 <template>
-  <nuxt-link :to="path" class="ui-button">
+  <nuxt-link :to="path" class="ui-button" :class="disabled && 'ui-button--disabled'">
     {{ value }}
   </nuxt-link>
 </template>
@@ -14,6 +14,10 @@
 const btnProps = defineProps({
   value: String,
   path: String,
+  disabled: {
+    type: Boolean,
+    default: false
+  }
 });
 </script>
 
@@ -30,6 +34,11 @@ const btnProps = defineProps({
 
     &:hover {
       background-color: darken($blue, 8)
+    }
+
+    &--disabled {
+      pointer-events: none;
+      opacity: 0.7;
     }
   }
 </style>

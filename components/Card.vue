@@ -39,8 +39,12 @@
           {{ formatter.format(card.old_price) }}
         </div>
       </div>
-      <!-- FIXME: не забыть убрать эту хрень -->
-      <div class="card__cart-btn" @click="_handleAddToCartClick"></div>
+      <div
+        :class="
+          isInCart ? 'card__cart-btn card__cart-btn--incart' : 'card__cart-btn'
+        "
+        @click="_handleCartAction"
+      ></div>
     </div>
   </div>
 </template>
@@ -73,16 +77,13 @@ export default {
         this.favoritesStore.addToFavorites(this.card.pk_id);
       }
     },
-    async _handleAddToCartClick() {
+    async _handleCartAction() {
+      this.cartStore.handleCartAction(this.card.pk_id);
       this.$emit("show-popup", {
         name: this.card.title,
         url: this.card.thumbnail_url,
+        event: this.isInCart ?  "add" : "remove",
       });
-      if (this.isInCart) {
-        this.cartStore.changeQuantity(this.card.pk_id, 1);
-      } else {
-        this.cartStore.addToCart(this.card.pk_id, 1);
-      }
     },
   },
 
@@ -242,11 +243,16 @@ export default {
     border-radius: 50%;
 
     background-image: url("~/assets/icons/cart-add.png");
-    background-size: 90%;
+    background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: 0 0;
 
-    transition: background-color 0.2s ease;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &--incart {
+      background-position: 0 100%;
+    }
 
     &:hover {
       background-color: $default;

@@ -6,14 +6,21 @@
   </div>
 </template>
 <script setup>
-import { useCartStore } from "~/stores/cart";
 import { useFavoritesStore } from "~/stores/favorites";
-const cartStore = useCartStore();
+import { useCartStore } from "~/stores/cart";
+
+const { supabase } = useSupabase();
+const { user } = useAuth();
+
 const favoritesStore = useFavoritesStore();
+const cart = useCartStore();
 
-onMounted(async () => {
-  await cartStore.getCartFromDatabase();
-  await favoritesStore.getFavoritesFromDatabase();
-})
-
+onBeforeMount(async () => {
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event == "SIGNED_IN") {
+      await favoritesStore.getFavoritesFromDatabase();
+      await cart.getCartFromDatabase(user.value.id);
+    }
+  });
+});
 </script>

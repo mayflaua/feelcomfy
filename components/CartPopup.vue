@@ -4,7 +4,13 @@
       <div class="popup" v-for="(item, i) in queue" :key="item.name">
         <img :src="item.imageUrl" class="popup__image" />
         <div class="popup__desc">
-          <div class="popup__title">Товар добавлен в корзину</div>
+          <div class="popup__title">
+            {{
+              (item.event == "add"
+                ? "Товар добавлен в корзину"
+                : "Товар удален из корзины")
+            }}
+          </div>
           <div class="popup__name">{{ item.name }}</div>
         </div>
         <div class="popup__controls">
@@ -46,8 +52,8 @@ export default {
   }),
 
   methods: {
-    show(name, url) {
-      this.queue.push({ name, imageUrl: url });
+    show(name, url, event) {
+      this.queue.push({ name, imageUrl: url, event });
       this.timer = setTimeout(() => this.queue.shift(), this.showTime);
     },
     close(index) {

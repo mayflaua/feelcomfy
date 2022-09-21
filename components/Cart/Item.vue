@@ -1,11 +1,15 @@
 <template>
   <div class="item">
-    <slot></slot>
-    <img class="item__image" :src="itemInfo.image_url" />
+    <UICheckbox class="item__checkbox" v-model="itemInfo.checked" />
+    <img class="item__image" :src="itemInfo.thumbnail_url" />
     <div class="item__desc">
       <div class="item__head">
-        <div class="item__name">{{ itemInfo.title }}</div>
-        <button class="item__delete-btn" @click.prevent="handleDeleteButton">
+        <div class="item__name">{{ itemInfo.title }} {{ itemInfo.pk_id }}</div>
+        <button
+          class="item__delete-btn"
+          @click.prevent="handleDeleteButton"
+          v-if="!noInput"
+        >
           Удалить
         </button>
       </div>
@@ -19,12 +23,14 @@
           </p>
         </div>
         <div class="item__qty">
-          <div class="qty-input-wrapper">
+          <div class="qty-input-wrapper" v-if="!noInput">
             <input
               type="number"
               class="item__qty-input"
               min="1"
+              :max="itemInfo.units_in_stock"
               v-model="itemInfo.qty"
+              readonly
             />
             <button
               :disabled="itemInfo.qty == 1"
@@ -37,9 +43,16 @@
               +
             </button>
           </div>
-          <p class="qty__price-per-item" v-show="itemInfo.qty > 1">
+          <p
+            class="qty__price-per-item"
+            v-show="itemInfo.qty > 1"
+            v-if="!noInput"
+          >
             {{ formatter.format(itemInfo.final_price) }}/ед.
           </p>
+          <div class="qty__qty-label" v-if="noInput">
+            Количество: <span>{{ itemInfo.qty }} шт.</span>
+          </div>
         </div>
         <div class="item__price">
           <div class="price__old" v-if="itemInfo.old_price">
@@ -58,22 +71,21 @@
 import { useCartStore } from "~/stores/cart";
 const cartStore = useCartStore();
 
-// interface CartItem {
-//   readonly pk_id: Number;
-//   title: String;
-//   image_url: string;
-//   qty: number;
-//   old_price?: number;
-//   final_price: number;
-//   model?: String;
-//   color?: String;
-// }
 const props = defineProps({
   itemInfo: {
     type: Object,
-    required: true
-  }
+    required: true,
+  },
+
+  noInput: {
+    type: Boolean,
+    default: false,
+  },
 });
+
+// const itemInfo = computed(() => props.itemInfo);
+
+
 const emit = defineEmits(["delete"]);
 
 const formatter = new Intl.NumberFormat("ru-RU", {
@@ -84,8 +96,7 @@ const formatter = new Intl.NumberFormat("ru-RU", {
 
 const handleDeleteButton = async () => {
   try {
-    await cartStore.removeFromCart(props.itemInfo.pk_id);
-    emit("delete", props.itemInfo.pk_id);
+    await cartStore.handleCartAction(props.itemInfo.pk_id);
   } catch (err) {
     throw err;
   }
@@ -93,7 +104,6 @@ const handleDeleteButton = async () => {
 
 const handleChangeQuantity = async (value) => {
   try {
-    props.itemInfo.qty += value;
     await cartStore.changeQuantity(props.itemInfo.pk_id, value);
   } catch (err) {
     throw err;
@@ -116,6 +126,7 @@ $qtySize: 40px;
 
   display: flex;
   justify-content: flex-start;
+  align-items: center;
 
   &__image {
     height: $img;
@@ -157,6 +168,7 @@ $qtySize: 40px;
   &__info {
     display: flex;
     flex-direction: column;
+    width: 25%;
 
     .item__model,
     .item__color {
@@ -231,6 +243,15 @@ $qtySize: 40px;
     .qty__plus-btn {
       border-radius: 0 3px 3px 0;
       border-right: 1px solid $default;
+    }
+
+    .qty__qty-label {
+      color: $dark;
+      font-size: 0.9rem;
+
+      span {
+        color: black;
+      }
     }
   }
 

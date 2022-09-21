@@ -49,8 +49,8 @@ export default {
       await this._pushCardsData();
       this.moreContentLoading = false;
     },
-    _showPopup({ name, url }) {
-      this.$refs.popup.show(name, url);
+    _showPopup({ name, url, event }) {
+      this.$refs.popup.show(name, url, event);
     },
   },
   mounted() {

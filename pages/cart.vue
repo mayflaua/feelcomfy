@@ -33,14 +33,7 @@
             v-for="(item, i) in cartItems"
             :key="item.id"
             :itemInfo="item"
-            @delete="handleDeleteEvent"
           >
-            <UICheckbox
-              class="item__checkbox"
-              :checked="checkboxes[i]"
-              :defaultValue="defaultCheckboxValue"
-              @changed="(val) => (checkboxes[i] = val)"
-            />
           </CartItem>
         </div>
       </div>
@@ -52,41 +45,54 @@
               :border-width="3"
               :border-bg-width="3"
               fill-color="rgb(22,202,78)"
-              :percent="freeDeliveryPercent"
+              :percent="cartStore.freeDeliveryPercent"
               class="circle"
             />
           </div>
           <div class="free-delivery__text">
             <p class="free-delivery__title">
-              <span v-if="!isFreeDelivery">Бесплатно доставим ваш заказ </span>
+              <span v-if="!cartStore.isFreeDelivery">{{
+                cartStore.totalSelectedItemsWorth != 0
+                  ? "Бесплатно доставим ваш заказ"
+                  : "Выберите товары"
+              }}</span>
               <span v-else>Вам доступна бесплатная доставка до двери</span>
             </p>
-            <p class="free-delivery__subtitle" v-if="!isFreeDelivery">
+            <p class="free-delivery__subtitle" v-if="!cartStore.isFreeDelivery">
               Ещё
-              {{ formatter.format(freeDeliveryCondition - totalCartWorth) }} для
-              бесплатной доставки до двери
+              {{
+                formatter.format(
+                  cartStore.freeDeliveryCondition - cartStore.totalSelectedItemsWorth
+                )
+              }}
+              для бесплатной доставки до двери
             </p>
           </div>
         </div>
-        <div class="order__info">
+        <div class="order__info" v-if="cartStore.totalCartWorth != 0">
           <p class="info__title">Ваш заказ</p>
           <p class="info__goods">
             Товары ({{ cartStore.totalItems }}):
-            <span>{{ formatter.format(totalCartWorth) }}</span>
+            <span>{{
+              formatter.format(cartStore.totalSelectedItemsWorth)
+            }}</span>
           </p>
-          <p class="info__delivery" v-if="!isFreeDelivery">
+          <p class="info__delivery" v-if="!cartStore.isFreeDelivery">
             Доставка: <span>{{ formatter.format(1000) }}</span>
           </p>
           <p class="info__total">
             Итого:
-            <span>{{ formatter.format(totalCartWorthWithDelivery) }}</span>
+            <span>{{
+              formatter.format(cartStore.totalCartWorthWithDelivery)
+            }}</span>
           </p>
-          <p class="info__saving" v-if="summarySavings">
-            Вы экономите {{ formatter.format(summarySavings) }}
+          <p class="info__saving" v-if="cartStore.summarySavings">
+            Вы экономите {{ formatter.format(cartStore.summarySavings) }}
           </p>
           <UIButton
             value="Перейти к оформлению"
-            path="/"
+            path=""
+            @click="handleMakeOrderClick"
             class="info__button"
           />
         </div>
@@ -106,26 +112,6 @@ defineComponent({
   CircleProgress,
 });
 
-/* min order worth for free delivery */
-const freeDeliveryCondition = 8000;
-const totalCartWorth = computed(() => {
-  return cartItems.value.reduce(
-    (acc, curr) => acc + curr.qty * curr.final_price,
-    0
-  );
-});
-const totalCartWorthWithDelivery = computed(() => {
-  return totalCartWorth.value + (isFreeDelivery.value ? 0 : 1000);
-});
-const summarySavings = computed(() => {
-  return cartItems.value.reduce(
-    (acc, curr) =>
-      curr.old_price
-        ? acc + curr.qty * (curr.old_price - curr.final_price)
-        : acc,
-    0
-  );
-});
 /* currency formatter */
 const formatter = new Intl.NumberFormat("ru-RU", {
   style: "currency",
@@ -133,26 +119,21 @@ const formatter = new Intl.NumberFormat("ru-RU", {
   maximumFractionDigits: 0,
 });
 
-/* items appear with this checkbox value at render */
-const defaultCheckboxValue = true;
-const checkboxes = ref({});
-/* boolean value indicates if all checkboxes are checked */
-const allChecked = computed(() =>
-  Object.values(checkboxes.value).every(Boolean)
-);
+// const allChecked = computed(() =>
+//   Object.values(checkboxes.value).every(Boolean)
+// );
 
 const cartStore = useCartStore();
 /* dynamic array with cards */
-const cartItems = ref([]);
-/* static array with stored cart ids and qtys */
-const cartStored = await cartStore.getCartFromDatabase();
+const cartItems = computed(() => cartStore.cart);
+
 const handleCheckAllClick = () => {
   const allCheckedBeforeClick = allChecked.value;
   for (let key of Object.keys(checkboxes.value)) {
-    checkboxes.value[key] = allCheckedBeforeClick ? false : true;
+    checkboxes.value[key] = !allCheckedBeforeClick;
   }
 };
-const isCartLoading = ref(true);
+const isCartLoading = ref(false);
 
 const totalItemsFormatted = computed(() => {
   /* format "товар" in the right form depending on the totalItems value */
@@ -169,54 +150,50 @@ const totalItemsFormatted = computed(() => {
   }
 });
 
-const freeDeliveryPercent = computed(() => {
-  /* returns the percentage of total cart worth from free delivery condition */
-
-  return Math.min((totalCartWorth.value / freeDeliveryCondition) * 100, 100);
-});
-
-const isFreeDelivery = computed(() => {
-  /* return boolean value indicates if free delivery available */
-  return freeDeliveryPercent.value == 100;
-});
-
-const getCardsInfo = async () => {
-  /* fetch all items from db with stored ids if they exist*/
-  if (cartStored) {
-    const ids = cartStored.map((item) => item.pk_id);
-
-    const { data: res } = await supabase
-      .from("goods")
-      .select()
-      .in("pk_id", ids);
-    /* create an object with all fetched cards infos */
-    res.forEach((item, i) => {
-      if (cartStored.length !== 0) {
-        /* and initial checkbox values object */
-        checkboxes.value[i] = defaultCheckboxValue;
-        const qty = cartStored.find((i) => i.id == item.id).qty;
-        cartItems.value.push({
-          ...item,
-          qty,
-        });
-      }
-    });
-    isCartLoading.value = false;
-  } else {
-    /* else stop loading and show empty cart element */
-    isCartLoading.value = false;
-  }
-};
-
 const handleDeleteEvent = (id) => {
-  /* remove deleted item from the static render array */
+  /* remove deleted item from the static render array and stored items array*/
+  cartStored.splice(
+    cartStored.findIndex((item) => item.pk_id == id),
+    1
+  );
   cartItems.value.splice(
-    cartItems.value.findIndex((item) => item.id == id),
+    cartItems.value.findIndex((item) => item.pk_id == id),
     1
   );
 };
 
-onBeforeMount(() => getCardsInfo());
+const handleMakeOrderClick = async () => {
+  if (totalCartWorth != 0) {
+    /* make orders list from selected items */
+    let order = [];
+    cartStored.forEach((item, i) => {
+      checkboxes.value[i]
+        ? order.push({
+            id: item.pk_id,
+            qty: item.qty,
+            price: cartItems.value[i].final_price,
+          })
+        : null;
+    });
+    /* insert order to database and get its order_id*/
+    await supabase.from("orders").insert({
+      user_id: user.value.id,
+      order,
+    });
+    const orderID = await supabase
+      .from("orders")
+      .select("order_id")
+      .order("created_at", { ascending: false })
+      .limit(1);
+    /* redirect to order confirmation page */
+    await navigateTo({
+      path: "/order",
+      query: { order: orderID.data[0].order_id },
+    });
+  }
+};
+
+// onBeforeMount(() => getCardsInfo());
 </script>
 
 <style lang="scss" scoped>
@@ -272,10 +249,6 @@ onBeforeMount(() => getCardsInfo());
     gap: 20px;
     &__item {
       border-bottom: 1px solid $default;
-
-      .item__checkbox {
-        align-self: center;
-      }
 
       &:last-child {
         border-bottom: none;

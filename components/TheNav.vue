@@ -158,7 +158,6 @@ export default {
         this.$emit("open-auth-modal");
       } else {
         this.$router.push(`/profile`)
-        // TODO: profile page
       }
     },
   },
