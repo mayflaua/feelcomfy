@@ -153,15 +153,15 @@ const handleDeleteEvent = (id) => {
 };
 
 const handleMakeOrderClick = async () => {
-  if (totalCartWorth != 0) {
+  if (cartStore.totalSelectedItemsWorth != 0) {
     /* make orders list from selected items */
     let order = [];
-    cartStored.forEach((item, i) => {
-      checkboxes.value[i]
+    cartItems.value.forEach((item) => {
+      item.checked
         ? order.push({
             id: item.pk_id,
             qty: item.qty,
-            price: cartItems.value[i].final_price,
+            price: item.final_price,
           })
         : null;
     });
