@@ -1,27 +1,24 @@
 <template>
   <div class="order-success">
-    <img src="~/assets/images/order-success.png" alt="success" class="order-success__image">
+    <img
+      src="~/assets/images/order-success.png"
+      alt="success"
+      class="order-success__image"
+    />
     <p class="order-success__title">Спасибо за заказ!</p>
     <p class="order-success__subtitle">Ваши личные данные не были сохранены</p>
-    <p class="order-success__subtitle">Заказ не будет выполнен, ведь это ненастоящий интернет-магазин :)</p>
+    <p class="order-success__subtitle">
+      Заказ не будет выполнен, ведь это ненастоящий интернет-магазин :)
+    </p>
     <UIButton value="На главную" path="/" class="order-success__btn" />
-
   </div>
 </template>
 
 <script setup>
 definePageMeta({
-  // middleware: ["auth"],
+  middleware: "order",
 });
 
-const getQueryData = () => {
-  const router = useRouter();
-  if (router.currentRoute.value.query.referrer == "order") {
-    router.replace({ query: null });
-  } else {
-    navigateTo("/");
-  }
-};
 </script>
 
 <style lang="scss" scoped>

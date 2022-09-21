@@ -288,7 +288,8 @@ const checkValid = () =>
 
 const handleSubmitButton = async () => {
   if (formValid.value) {
-    await navigateTo("/order/success", { query: { referrer: "order" } });
+    const router = useRouter();
+    router.push({ name: "order-success", query: { referrer: "order" } });
   }
 };
 
@@ -302,8 +303,6 @@ const formatter = new Intl.NumberFormat("ru-RU", {
 onBeforeMount(async () => {
   order.value = await getOrderInfo(getQueryData());
 });
-
-onMounted(() => {});
 </script>
 
 <style lang="scss" scoped>

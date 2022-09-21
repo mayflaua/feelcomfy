@@ -107,7 +107,7 @@ const handleUnlikeEvent = (id) => {
     1
   );
 };
-onMounted(() => getFavorites());
+onBeforeMount(() => getFavorites());
 </script>
 
 <style scoped lang="scss">
