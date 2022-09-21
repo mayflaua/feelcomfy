@@ -65,7 +65,7 @@ export const useCartStore: StoreDefinition = defineStore("cart", {
 
     freeDeliveryPercent: <Number>(state) =>
       Math.min(
-        (state.totalCartWorthWithDelivery / state.freeDeliveryCondition) * 100,
+        (state.totalSelectedItemsWorth / state.freeDeliveryCondition) * 100,
         100
       ),
 
