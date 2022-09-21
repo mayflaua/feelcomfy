@@ -301,7 +301,8 @@ $qtySize: 40px;
   $gap: 10px;
 
   .item {
-    height: 170px;
+    min-height: 170px;
+    height: unset;
     gap: $gap;
     &__body {
       flex-direction: column;
