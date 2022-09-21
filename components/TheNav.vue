@@ -275,7 +275,7 @@ export default {
     width: 100%;
     background: $bg;
     margin: 10px 0;
-    font-size: 1.1em;
+    font-size: 1.1rem;
     font-weight: 500;
     .arrow {
       fill: $blue;
@@ -495,7 +495,7 @@ export default {
         text-decoration: none;
         color: $font;
         font-weight: 500;
-        font-size: 1.1em;
+        font-size: 1.1rem;
         padding: 0 10px 0 35px;
         display: flex;
         justify-content: center;

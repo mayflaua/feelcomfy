@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-    <AuthSignIn
-      @close-modal="closeAuthModal"
-      v-if="isAuthModalOpened"
-    />
+    <AuthSignIn @close-modal="closeAuthModal" v-if="isAuthModalOpened" />
     <TheNav @open-auth-modal="openAuthModal"></TheNav>
     <main class="content"><slot /></main>
   </div>
@@ -19,20 +16,22 @@ const openAuthModal = () => {
   isAuthModalOpened.value = true;
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+html {
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+}
 .container {
   width: 80vw;
   margin: 0 auto;
-  overflow: hidden;
+  padding: 0 7px;
 
   @media (max-width: 1600px) {
     width: 90vw;
   }
   @media (max-width: 1400px) {
-    width: 100vw;
-  }
-  @media (max-width: 768px) {
-    font-size: 15px;
+    width: 100%;
   }
 }
 
