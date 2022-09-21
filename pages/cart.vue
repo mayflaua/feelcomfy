@@ -21,10 +21,10 @@
         <div class="cart__info">
           <UICheckbox
             class="info__checkbox"
-            :checked="allChecked"
-            @click="handleCheckAllClick"
+            :checked="cartStore.allChecked"
+            @click="cartStore.handleCheckAllClick"
           />
-          <span class="info__checkbox-text" v-if="allChecked">Снять все</span>
+          <span class="info__checkbox-text" v-if="cartStore.allChecked">Снять все</span>
           <span class="info__checkbox-text" v-else>Выбрать все</span>
         </div>
         <div class="items">
@@ -69,7 +69,7 @@
             </p>
           </div>
         </div>
-        <div class="order__info" v-if="cartStore.totalCartWorth != 0">
+        <div class="order__info" v-if="cartStore.totalSelectedItemsWorth != 0">
           <p class="info__title">Ваш заказ</p>
           <p class="info__goods">
             Товары ({{ cartStore.totalItems }}):
@@ -119,20 +119,10 @@ const formatter = new Intl.NumberFormat("ru-RU", {
   maximumFractionDigits: 0,
 });
 
-// const allChecked = computed(() =>
-//   Object.values(checkboxes.value).every(Boolean)
-// );
-
 const cartStore = useCartStore();
 /* dynamic array with cards */
 const cartItems = computed(() => cartStore.cart);
 
-const handleCheckAllClick = () => {
-  const allCheckedBeforeClick = allChecked.value;
-  for (let key of Object.keys(checkboxes.value)) {
-    checkboxes.value[key] = !allCheckedBeforeClick;
-  }
-};
 const isCartLoading = ref(false);
 
 const totalItemsFormatted = computed(() => {

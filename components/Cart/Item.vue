@@ -1,6 +1,10 @@
 <template>
   <div class="item">
-    <UICheckbox class="item__checkbox" v-model="itemInfo.checked" />
+    <UICheckbox
+      class="item__checkbox"
+      :checked="cartStore.getCheckValue(itemInfo.pk_id)"
+      @change="cartStore.handleCheck(itemInfo.pk_id)"
+    />
     <img class="item__image" :src="itemInfo.thumbnail_url" />
     <div class="item__desc">
       <div class="item__head">
@@ -82,9 +86,6 @@ const props = defineProps({
     default: false,
   },
 });
-
-// const itemInfo = computed(() => props.itemInfo);
-
 
 const emit = defineEmits(["delete"]);
 

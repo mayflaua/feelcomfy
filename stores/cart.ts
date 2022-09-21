@@ -40,6 +40,13 @@ export const useCartStore: StoreDefinition = defineStore("cart", {
           (item: CompressedCartItem) => item.pk_id == item_id
         ),
 
+    allChecked: <Boolean>(state) => state.cart.every((item) => item.checked),
+
+    getCheckValue:
+      <Boolean>(state) =>
+      (item_id: number) =>
+        state.cart.find((item) => item.pk_id == item_id).checked,
+
     totalItems: <Number>(state) => state._cartCompressed?.length || 0,
 
     totalCartWorth: <Number>(state) =>
@@ -83,7 +90,12 @@ export const useCartStore: StoreDefinition = defineStore("cart", {
         .from("goods")
         .select()
         .eq("pk_id", item_id);
-      this.cart.push({ ...addedItem[0], qty: 1 });
+
+      this.cart.push({
+        ...addedItem[0],
+        qty: 1,
+        checked: this.defaultCheckboxValue,
+      });
       this._updateDatabase();
     },
 
@@ -127,6 +139,18 @@ export const useCartStore: StoreDefinition = defineStore("cart", {
           }
         }, 3000);
       }
+    },
+
+    handleCheckAllClick() {
+      const allCheckedBeforeClick = this.allChecked;
+      for (const obj of this.cart) {
+        obj.checked = !allCheckedBeforeClick;
+      }
+    },
+
+    handleCheck(pk_id: number) {
+      const itemToChange = this.cart.find((item) => item.pk_id == pk_id);
+      itemToChange.checked = !itemToChange.checked;
     },
 
     async handleCartAction(item_id: number): Promise<void> {
