@@ -1,28 +1,28 @@
 <template>
   <div class="favorites">
-    <CartPopup ref="popup" />
+    <CartPopup ref="popup"/>
     <div class="favorites__header">
       <div class="favorites__title">Мои желания</div>
       <div class="sorting-wrapper">
         <p class="sorting__title">Сортировка</p>
         <v-select
-          :options="sortingSelectOptions"
-          :clearable="false"
-          :searchable="false"
-          v-model="sortOption"
-          class="sorting__select"
-          @option:selected="sortItems"
+            v-model="sortOption"
+            :clearable="false"
+            :options="sortingSelectOptions"
+            :searchable="false"
+            class="sorting__select"
+            @option:selected="sortItems"
         />
       </div>
     </div>
     <main class="favorites__body">
       <div class="favorites-list">
         <Card
-          v-for="card in favoritesCards"
-          :key="card.id"
-          :card="card"
-          @unlike="handleUnlikeEvent"
-          @show-popup="_showPopup"
+            v-for="card in favoritesCards"
+            :key="card.id"
+            :card="card"
+            @unlike="handleUnlikeEvent"
+            @show-popup="_showPopup"
         />
       </div>
     </main>
@@ -31,11 +31,11 @@
 
 <script setup>
 import "vue-select/dist/vue-select.css";
-import vSelect from "vue-select";
-import { useFavoritesStore } from "~~/stores/favorites";
+import {useFavoritesStore} from "~~/stores/favorites";
+
 const favoritesStore = useFavoritesStore();
 
-const { supabase } = useSupabase();
+const {supabase} = useSupabase();
 
 const sortingSelectOptions = [
   {
@@ -77,9 +77,9 @@ const sortItems = () => {
 
 const popup = ref();
 
-const _showPopup = ({ name, url }) =>{
-      popup.value.show(name, url);
-    }
+const _showPopup = ({name, url}) => {
+  popup.value.show(name, url);
+}
 
 const favoritesCards = ref([]);
 const favoritesStored = await favoritesStore.getFavoritesFromDatabase();
@@ -87,13 +87,13 @@ const favoritesStored = await favoritesStore.getFavoritesFromDatabase();
 const getFavorites = async () => {
   /* fetch all items from api with stored ids if they exist*/
   if (favoritesStored.length !== 0) {
-    const { data: res } = await supabase
-      .from("goods")
-      .select()
-      .in("pk_id", favoritesStored);
+    const {data: res} = await supabase
+        .from("goods")
+        .select()
+        .in("pk_id", favoritesStored);
 
     /* create an object with all fetched cards infos */
-    res.forEach((item, i) => {
+    res.forEach(item => {
       favoritesCards.value.push({
         ...item,
       });
@@ -103,25 +103,28 @@ const getFavorites = async () => {
 
 const handleUnlikeEvent = (id) => {
   favoritesCards.value.splice(
-    favoritesCards.value.findIndex((item) => item.id == id),
-    1
+      favoritesCards.value.findIndex((item) => item.id == id),
+      1
   );
 };
 onBeforeMount(() => getFavorites());
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .favorites {
   padding: 0 10px;
+
   &__header {
     display: flex;
     flex-direction: column;
     border-bottom: 1px solid $default;
     padding: 0 0 10px 0;
+
     .favorites__title {
       font-size: 1.2rem;
       font-weight: 500;
     }
+
     .sorting-wrapper {
       display: flex;
       align-items: center;

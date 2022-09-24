@@ -1,62 +1,72 @@
 <template>
   <header class="header">
     <nav class="nav">
-      <nuxt-link to="/" class="nav__logo">
-        <img class="logo" src="~/assets/icons/logo.png" alt="logo" />
+      <nuxt-link class="nav__logo" to="/">
+        <img alt="logo" class="logo" src="~/assets/icons/logo.png">
       </nuxt-link>
       <div class="nav__actions">
         <div class="nav__search-form">
           <input
-            type="text"
             class="search-form__input"
             placeholder="Найти товары"
-          /><button class="search-form__search-btn"></button>
+            type="text"
+          >
+          <button class="search-form__search-btn" />
         </div>
         <div class="nav__user-actions">
           <button class="nav__burger" @click="sideMenuOpened = true">
-            <span class="burger__line"></span>
+            <span class="burger__line" />
           </button>
-          <a @click="handleAccountClick" class="user-actions__pa">{{
+          <a class="user-actions__pa" @click="handleAccountClick">{{
             auth.isLoggedIn() ? auth.user.user_metadata.name : "Войти"
           }}</a>
-          <nuxt-link to="/favorites" class="user-actions__favorites"
-            >Избранное
+          <nuxt-link
+            class="user-actions__favorites"
+            to="/favorites"
+          >
+            Избранное
             <div v-if="favoritesCount != '0'" class="favorites__icon">
               {{ favoritesCount }}
-            </div></nuxt-link
+            </div>
+          </nuxt-link>
+          <nuxt-link
+            class="user-actions__cart"
+            to="/cart"
           >
-          <nuxt-link to="/cart" class="user-actions__cart"
-            >Корзина
+            Корзина
             <div v-if="cartCount != '0'" class="cart__icon">
               {{ cartCount }}
-            </div></nuxt-link
-          >
+            </div>
+          </nuxt-link>
         </div>
       </div>
     </nav>
     <div class="categories">
       <ul class="list">
         <li v-for="item in categoriesList" :key="item.name">
-          <nuxt-link :to="item.link" class="list__item">{{
-            item.title
-          }}</nuxt-link>
+          <nuxt-link :to="item.link" class="list__item">
+            {{
+              item.title
+            }}
+          </nuxt-link>
         </li>
       </ul>
     </div>
     <transition name="menu">
       <aside
-        class="aside-menu"
         v-show="sideMenuOpened"
+        class="aside-menu"
         @click.self="sideMenuOpened = false"
       >
         <header class="aside__header">
           <button class="aside__close" @click="sideMenuOpened = false">
-            <span class="close__line"></span>
+            <span class="close__line" />
           </button>
           <div class="header__links">
-            <a @click="openAuthModal" class="header__links-link"
-              >Войти / Зарегистрироваться</a
-            >
+            <a
+              class="header__links-link"
+              @click="openAuthModal"
+            >Войти / Зарегистрироваться</a>
           </div>
         </header>
         <div class="aside__categories">
@@ -65,39 +75,42 @@
               class="title"
               @click="asideCategoriesOpened = !asideCategoriesOpened"
             >
-              Категории<svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
+              Категории
+              <svg
+                :class="asideCategoriesOpened ? 'arrow--up' : ''"
+                class="arrow"
                 height="24"
                 viewBox="0 0 24 24"
-                class="arrow"
-                :class="asideCategoriesOpened ? 'arrow--up' : ''"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
               >
                 <path
                   d="M5.21967 9.21967C5.51256 8.92678 5.98744 8.92678 6.28033 9.21967L12 14.9393L17.7197 9.21967C18.0126 8.92678 18.4874 8.92678 18.7803 9.21967C19.0732 9.51256 19.0732 9.98744 18.7803 10.2803L12.5303 16.5303C12.2374 16.8232 11.7626 16.8232 11.4697 16.5303L5.21967 10.2803C4.92678 9.98744 4.92678 9.51256 5.21967 9.21967Z"
-                ></path>
+                />
               </svg>
             </div>
             <transition-group name="aside-categories">
               <nuxt-link
-                :to="item.name"
-                v-show="asideCategoriesOpened"
-                class="aside__categories-item"
                 v-for="item in categoriesList"
+                v-show="asideCategoriesOpened"
                 :key="item.name"
+                :to="item.name"
+                class="aside__categories-item"
               >
                 {{ item.title }}
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
+                  class="arrow arrow--right"
                   height="24"
                   viewBox="0 0 24 24"
-                  class="arrow arrow--right"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
                     d="M5.21967 9.21967C5.51256 8.92678 5.98744 8.92678 6.28033 9.21967L12 14.9393L17.7197 9.21967C18.0126 8.92678 18.4874 8.92678 18.7803 9.21967C19.0732 9.51256 19.0732 9.98744 18.7803 10.2803L12.5303 16.5303C12.2374 16.8232 11.7626 16.8232 11.4697 16.5303L5.21967 10.2803C4.92678 9.98744 4.92678 9.51256 5.21967 9.21967Z"
-                  ></path></svg></nuxt-link
-            ></transition-group>
+                  />
+                </svg>
+              </nuxt-link>
+            </transition-group>
           </div>
         </div>
       </aside>
@@ -106,8 +119,9 @@
 </template>
 
 <script>
-import { useFavoritesStore } from "~/stores/favorites";
-import { useCartStore } from "~/stores/cart";
+import { useFavoritesStore } from '~/stores/favorites'
+import { useCartStore } from '~/stores/cart'
+import useAuth from '@/composables/useAuth'
 
 export default {
   data: () => ({
@@ -118,63 +132,63 @@ export default {
 
     categoriesList: [
       {
-        name: "mouse",
-        title: "Мыши",
-        link: "",
+        name: 'mouse',
+        title: 'Мыши',
+        link: ''
       },
       {
-        name: "keyboards",
-        title: "Клавиатуры",
-        link: "",
+        name: 'keyboards',
+        title: 'Клавиатуры',
+        link: ''
       },
       {
-        name: "chairs",
-        title: "Кресла",
-        link: "",
+        name: 'chairs',
+        title: 'Кресла',
+        link: ''
       },
       {
-        name: "tables",
-        title: "Столы",
-        link: "",
+        name: 'tables',
+        title: 'Столы',
+        link: ''
       },
       {
-        name: "monitors",
-        title: "Мониторы",
-        link: "",
+        name: 'monitors',
+        title: 'Мониторы',
+        link: ''
       },
       {
-        name: "merch",
-        title: "Мерч",
-        link: "",
-      },
+        name: 'merch',
+        title: 'Мерч',
+        link: ''
+      }
     ],
-    asideCategoriesOpened: false,
+    asideCategoriesOpened: false
   }),
 
-  methods: {
-    handleAccountClick() {
-      if (!this.auth.isLoggedIn()) {
-        this.sideMenuOpened = false;
-        this.$emit("open-auth-modal");
-      } else {
-        this.$router.push(`/profile`)
-      }
-    },
-  },
-
   computed: {
-    favoritesCount() {
+    favoritesCount () {
       return this.favoritesStore.totalFavorites < 10
         ? this.favoritesStore.totalFavorites.toString()
-        : "9+";
+        : '9+'
     },
-    cartCount() {
+    cartCount () {
       return this.cartStore.totalItems < 10
         ? this.cartStore.totalItems.toString()
-        : "9+";
-    },
+        : '9+'
+    }
   },
-};
+
+  methods: {
+    handleAccountClick () {
+      if (!this.auth.isLoggedIn()) {
+        this.sideMenuOpened = false
+        this.$emit('open-auth-modal')
+      } else {
+        this.$router.push('/profile')
+      }
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -224,6 +238,7 @@ export default {
     color: $font;
     background: $bg;
     padding: 0 15px;
+
     .aside__close {
       background: none;
       position: relative;
@@ -260,6 +275,7 @@ export default {
         }
       }
     }
+
     .header__links {
       &-link {
         cursor: pointer;
@@ -277,6 +293,7 @@ export default {
     margin: 10px 0;
     font-size: 1.1rem;
     font-weight: 500;
+
     .arrow {
       fill: $blue;
       transition: transform 0.5s ease;
@@ -289,6 +306,7 @@ export default {
         transform: rotate(-90deg);
       }
     }
+
     .title {
       width: 100%;
       color: $blue;
@@ -334,6 +352,7 @@ export default {
     @media (max-width: 768px) {
       width: 100%;
     }
+
     .logo {
       height: 40px;
       margin: 0 15px 0 0;
@@ -360,6 +379,7 @@ export default {
     width: 50%;
     height: 100%;
     display: flex;
+
     &:hover {
       & > .search-form__input,
       & > .search-form__search-btn {
@@ -408,8 +428,7 @@ export default {
         outline: none;
         border-left: none;
 
-        background: $light url("~/assets/icons/search.png") no-repeat
-          center/18px;
+        background: $light url("~/assets/icons/search.png") no-repeat center/18px;
 
         @media (max-width: 768px) {
           border-top-right-radius: 0;
@@ -488,6 +507,7 @@ export default {
         display: block;
       }
     }
+
     .user-actions {
       &__pa,
       &__favorites,
@@ -525,6 +545,7 @@ export default {
       &__pa {
         background-image: url("~/assets/icons/login.png");
       }
+
       &__favorites {
         background-image: url("~/assets/icons/favorites.png");
         position: relative;
@@ -548,6 +569,7 @@ export default {
           }
         }
       }
+
       &__cart {
         background-image: url("~/assets/icons/cart.png");
         position: relative;

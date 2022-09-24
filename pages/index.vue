@@ -1,7 +1,7 @@
 <template>
   <div>
     <CartPopup ref="popup" />
-    <div class="cards" v-if="!cardsLoading">
+    <div v-if="!cardsLoading" class="cards">
       <Card
         v-for="card in cards"
         :key="card.pk_id"
@@ -10,14 +10,16 @@
       />
     </div>
     <UILoader
-      :text="'Загружаю товары...'"
       v-if="cardsLoading || moreContentLoading"
+      :text="'Загружаю товары...'"
     />
   </div>
 </template>
 
 <script>
-import { useCartStore } from "~/stores/cart";
+import { useCartStore } from '~/stores/cart'
+import useSupabase from '@/composables/useSupabase'
+
 export default {
   data: () => ({
     cards: [],
@@ -26,46 +28,45 @@ export default {
     cardsLoading: true,
     moreContentLoading: false,
     cartStore: useCartStore(),
-    sb: useSupabase(),
+    sb: useSupabase()
   }),
-  methods: {
-    async _getCardsData() {
-      // this.cardsLoading = true;
-      const start = this.cardsLoaded - this.itemsToLoad;
-      const res = await this.sb.supabase
-        .from("goods")
-        .select()
-        .range(this.cardsLoaded, this.cardsLoaded + this.itemsToLoad - 1);
-      return res.data;
-    },
-    async _pushCardsData() {
-      const res = await this._getCardsData();
-      this.cards.push(...res);
-      this.cardsLoading = false;
-    },
-    async _loadMore() {
-      this.moreContentLoading = true;
-      this.cardsLoaded += this.itemsToLoad;
-      await this._pushCardsData();
-      this.moreContentLoading = false;
-    },
-    _showPopup({ name, url, event }) {
-      this.$refs.popup.show(name, url, event);
-    },
-  },
-  mounted() {
-    window.onscroll = (ev) => {
+  mounted () {
+    window.onscroll = () => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
         if (!this.cardsLoading) {
-          this._loadMore();
+          this._loadMore()
         }
       }
-    };
+    }
   },
-  beforeMount() {
-    this._pushCardsData();
+  beforeMount () {
+    this._pushCardsData()
   },
-};
+  methods: {
+    async _getCardsData () {
+      // this.cardsLoading = true;
+      const res = await this.sb.supabase
+        .from('goods')
+        .select()
+        .range(this.cardsLoaded, this.cardsLoaded + this.itemsToLoad - 1)
+      return res.data
+    },
+    async _pushCardsData () {
+      const res = await this._getCardsData()
+      this.cards.push(...res)
+      this.cardsLoading = false
+    },
+    async _loadMore () {
+      this.moreContentLoading = true
+      this.cardsLoaded += this.itemsToLoad
+      await this._pushCardsData()
+      this.moreContentLoading = false
+    },
+    _showPopup ({ name, url, event }) {
+      this.$refs.popup.show(name, url, event)
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

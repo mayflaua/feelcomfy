@@ -1,20 +1,24 @@
 <template>
   <div class="container">
-    <AuthSignIn @close-modal="closeAuthModal" v-if="isAuthModalOpened" />
-    <TheNav @open-auth-modal="openAuthModal"></TheNav>
-    <main class="content"><slot /></main>
+    <AuthSignIn v-if="isAuthModalOpened" @close-modal="closeAuthModal" />
+    <TheNav @open-auth-modal="openAuthModal" />
+    <main class="content">
+      <slot />
+    </main>
   </div>
 </template>
 <script setup>
-let isAuthModalOpened = ref(false);
+import { ref } from 'vue'
+
+const isAuthModalOpened = ref(false)
 
 const closeAuthModal = () => {
-  isAuthModalOpened.value = false;
-};
+  isAuthModalOpened.value = false
+}
 
 const openAuthModal = () => {
-  isAuthModalOpened.value = true;
-};
+  isAuthModalOpened.value = true
+}
 </script>
 <style lang="scss">
 html {
@@ -22,6 +26,7 @@ html {
     font-size: 14px;
   }
 }
+
 .container {
   width: 80vw;
   margin: 0 auto;

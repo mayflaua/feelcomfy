@@ -1,17 +1,19 @@
 <template>
   <div class="wrapper">
     <transition-group name="list" mode="out-in">
-      <div class="popup" v-for="(item, i) in queue" :key="item.name">
-        <img :src="item.imageUrl" class="popup__image" />
+      <div v-for="(item, i) in queue" :key="item.name" class="popup">
+        <img :src="item.imageUrl" class="popup__image">
         <div class="popup__desc">
           <div class="popup__title">
             {{
-              (item.event == "add"
+              (item.event === "add"
                 ? "Товар добавлен в корзину"
                 : "Товар удален из корзины")
             }}
           </div>
-          <div class="popup__name">{{ item.name }}</div>
+          <div class="popup__name">
+            {{ item.name }}
+          </div>
         </div>
         <div class="popup__controls">
           <button class="popup__close" @click="close(i)">
@@ -34,11 +36,13 @@
                   />
                 </g>
               </g>
-            </svg></button
-          ><nuxt-link to="/cart" class="popup__go-to-cart">К корзине</nuxt-link>
+            </svg>
+          </button><nuxt-link to="/cart" class="popup__go-to-cart">
+            К корзине
+          </nuxt-link>
         </div>
-      </div></transition-group
-    >
+      </div>
+    </transition-group>
   </div>
 </template>
 
@@ -48,20 +52,20 @@ export default {
   data: () => ({
     queue: [],
     showTime: 2000,
-    timer: null,
+    timer: null
   }),
 
   methods: {
-    show(name, url, event) {
-      this.queue.push({ name, imageUrl: url, event });
-      this.timer = setTimeout(() => this.queue.shift(), this.showTime);
+    show (name, url, event) {
+      this.queue.push({ name, imageUrl: url, event })
+      this.timer = setTimeout(() => this.queue.shift(), this.showTime)
     },
-    close(index) {
-      this.queue.splice(index, 1);
-      clearTimeout(this.timer);
-    },
-  },
-};
+    close (index) {
+      this.queue.splice(index, 1)
+      clearTimeout(this.timer)
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

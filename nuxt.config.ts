@@ -1,21 +1,21 @@
-import { defineNuxtConfig } from "nuxt/config";
+import { defineNuxtConfig } from 'nuxt/config'
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
-  css: ["~/assets/style/normalize.css", "~/assets/style/font.css"],
+  css: ['~/assets/style/normalize.css', '~/assets/style/font.css'],
 
-  modules: ["@pinia/nuxt"],
+  modules: ['@pinia/nuxt'],
   vite: {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@use "~/assets/style/colors.scss" as *;',
-        },
-      },
-    },
+          additionalData: '@use "~/assets/style/colors.scss" as *;'
+        }
+      }
+    }
   },
 
   build: {
-    transpile: ["pinia"],
-  },
-});
+    transpile: ['pinia']
+  }
+})

@@ -2,36 +2,41 @@
   <div class="cms">
     <div class="cms__buttons">
       <UIButton
-        value="Добавить товар"
-        path=""
         class="cms__btn"
+        path=""
+        value="Добавить товар"
         @click.prevent="addGoodBtnClicked = !addGoodBtnClicked"
       />
       <UIButton
-        value="Загрузить все товары"
-        path=""
         class="cms__btn"
+        path=""
+        value="Загрузить все товары"
         @click.prevent="loadAllGoods"
       />
     </div>
     <CmsAddGood v-if="addGoodBtnClicked" />
-    <p class="loading-state">{{ loadingState }}</p>
+    <p class="loading-state">
+      {{ loadingState }}
+    </p>
     <div class="items">
-      <CmsItem :info="item" v-for="item in loadedGoods.data" :key="item.id" />
+      <CmsItem v-for="item in loadedGoods.data" :key="item.id" :info="item" />
     </div>
   </div>
 </template>
 
 <script setup>
-const { supabase: db } = useSupabase();
-let loadedGoods = ref({ data: [] });
+import { ref } from 'vue'
+import useSupabase from '@/composables/useSupabase'
+
+const { supabase: db } = useSupabase()
+const loadedGoods = ref({ data: [] })
 const loadAllGoods = async () => {
-  loadingState.value = "Загрузка";
-  loadedGoods.value = await db.from("goods").select("*");
-  loadingState.value = null;
-};
-const loadingState = ref(null);
-const addGoodBtnClicked = ref(false);
+  loadingState.value = 'Загрузка'
+  loadedGoods.value = await db.from('goods').select('*')
+  loadingState.value = null
+}
+const loadingState = ref(null)
+const addGoodBtnClicked = ref(false)
 </script>
 
 <style lang="scss" scoped>

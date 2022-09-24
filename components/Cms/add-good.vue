@@ -1,130 +1,145 @@
 <template>
-  <div class="item" :class="!sending || 'item--disabled'">
-    <img class="item__image" :src="itemToAdd.image_url" alt="Изображение" />
+  <div :class="!sending || 'item--disabled'" class="item">
+    <img :src="itemToAdd.image_url" alt="Изображение" class="item__image">
 
     <div class="item__title">
       title:
-      <input v-model="itemToAdd.title" class="input" />
+      <input v-model="itemToAdd.title" class="input">
     </div>
     <div class="item__category_id">
       category_id:
       <select v-model="itemToAdd.category_id" class="input">
-        <option value="1" selected>мышь</option>
-        <option value="2">клава</option>
-        <option value="3">кресло</option>
-        <option value="4">стол</option>
-        <option value="5">монитор</option>
-        <option value="6">мерч</option>
+        <option selected value="1">
+          мышь
+        </option>
+        <option value="2">
+          клава
+        </option>
+        <option value="3">
+          кресло
+        </option>
+        <option value="4">
+          стол
+        </option>
+        <option value="5">
+          монитор
+        </option>
+        <option value="6">
+          мерч
+        </option>
       </select>
     </div>
     <div class="item__old_price">
       old_price:
-      <input v-model="itemToAdd.old_price" class="input" />
+      <input v-model="itemToAdd.old_price" class="input">
     </div>
     <div class="item__final_price">
       final_price:
-      <input v-model="itemToAdd.final_price" class="input" />
+      <input v-model="itemToAdd.final_price" class="input">
     </div>
     <div class="item__units_in_stock">
       units_in_stock:
-      <input v-model="itemToAdd.units_in_stock" class="input" />
+      <input v-model="itemToAdd.units_in_stock" class="input">
     </div>
     <div class="item__image_url">
       image_url:
       <input
-        class="input"
         ref="fullImage"
+        class="input"
         type="file"
         @change="handleImageUpload"
-      />
+      >
     </div>
     <div class="item__thumbnail_url">
       thumbnail_url:
-      <input v-model="itemToAdd.thumbnail_url" class="input" />
+      <input v-model="itemToAdd.thumbnail_url" class="input">
     </div>
     <div class="item__model">
       model:
-      <input v-model="itemToAdd.model" class="input" />
+      <input v-model="itemToAdd.model" class="input">
     </div>
     <div class="item__color">
       color:
-      <input v-model="itemToAdd.color" class="input" />
+      <input v-model="itemToAdd.color" class="input">
     </div>
     <div class="item__orders">
       orders:
-      <input v-model="itemToAdd.orders" class="input" />
+      <input v-model="itemToAdd.orders" class="input">
     </div>
     <UIButton
       :value="sending ? 'Отправка' : 'Добавить'"
-      path=""
       class="submit-btn"
+      path=""
       @click.prevent="handleAddButtonClick"
     />
   </div>
 </template>
 
 <script setup>
-const { supabase: db } = useSupabase();
-import { Image } from "image-js";
+import { Image } from 'image-js'
+import { ref } from 'vue'
+import useSupabase from '@/composables/useSupabase'
 
-const sending = ref(false);
+const { supabase: db } = useSupabase()
+
+const sending = ref(false)
 const handleAddButtonClick = async () => {
-  sending.value = true;
-  await db.from("goods").insert(itemToAdd.value);
-  sending.value = false;
+  sending.value = true
+  await db.from('goods').insert(itemToAdd.value)
+  sending.value = false
 
-  itemToAdd.value.category_id = 0;
-  itemToAdd.value.title = "";
-  itemToAdd.value.old_price = null;
-  itemToAdd.value.final_price = 0;
-  itemToAdd.value.units_in_stock = 0;
-  itemToAdd.value.image_url = "";
-  itemToAdd.value.thumbnail_url = "";
-  itemToAdd.value.model = null;
-  itemToAdd.value.color = "";
-  itemToAdd.value.orders = 0;
-};
+  itemToAdd.value.category_id = 0
+  itemToAdd.value.title = ''
+  itemToAdd.value.old_price = null
+  itemToAdd.value.final_price = 0
+  itemToAdd.value.units_in_stock = 0
+  itemToAdd.value.image_url = ''
+  itemToAdd.value.thumbnail_url = ''
+  itemToAdd.value.model = null
+  itemToAdd.value.color = ''
+  itemToAdd.value.orders = 0
+}
 
 const itemToAdd = ref({
   category_id: 0,
-  title: "",
+  title: '',
   old_price: null,
   final_price: 0,
   units_in_stock: 0,
-  image_url: "",
-  thumbnail_url: "",
+  image_url: '',
+  thumbnail_url: '',
   model: null,
-  color: "",
-  orders: 0,
-});
+  color: '',
+  orders: 0
+})
 
-const fullImage = ref(null);
+const fullImage = ref(null)
 const handleImageUpload = async () => {
   /* get file, upload it to storage and get its url */
-  const file = fullImage.value.files[0];
-  await db.storage.from("images").upload(`full/${file.name}`, file);
+  const file = fullImage.value.files[0]
+  await db.storage.from('images').upload(`full/${file.name}`, file)
   const { publicURL: url } = db.storage
-    .from("images")
-    .getPublicUrl(`full/${file.name}`);
+    .from('images')
+    .getPublicUrl(`full/${file.name}`)
 
   /* make thumbnail */
-  let image = await Image.load(url);
-  let thumb = image
+  const image = await Image.load(url)
+  image
     .resize({ width: 150 })
-    .toBlob("image/jpeg")
+    .toBlob('image/jpeg')
     .then(
-      async (blob) =>
-        /* then upload it to storage */
-        await db.storage.from("images").upload(`thumb/${file.name}`, blob)
-    );
+      async blob =>
+      /* then upload it to storage */
+        await db.storage.from('images').upload(`thumb/${file.name}`, blob)
+    )
   /* and get thumbnail url */
   const { publicURL: thumbnailUrl } = db.storage
-    .from("images")
-    .getPublicUrl(`thumb/${file.name}`);
+    .from('images')
+    .getPublicUrl(`thumb/${file.name}`)
   /* push urls to form */
-  itemToAdd.value.image_url = url;
-  itemToAdd.value.thumbnail_url = thumbnailUrl;
-};
+  itemToAdd.value.image_url = url
+  itemToAdd.value.thumbnail_url = thumbnailUrl
+}
 </script>
 
 <style lang="scss" scoped>
@@ -134,6 +149,7 @@ const handleImageUpload = async () => {
     pointer-events: none;
     position: relative;
   }
+
   border: 2px solid $blue;
   border-radius: 9px;
   padding: 10px;
@@ -162,6 +178,7 @@ const handleImageUpload = async () => {
     display: flex;
     justify-content: space-between;
     font-weight: 500;
+
     .input {
       display: inline-block;
       text-align: right;
@@ -169,10 +186,12 @@ const handleImageUpload = async () => {
       width: 100px;
     }
   }
+
   .submit-btn {
     grid-area: btn;
     display: block;
   }
+
   &__image {
     grid-area: img;
     display: block;

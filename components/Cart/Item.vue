@@ -1,43 +1,45 @@
 <template>
   <div class="item">
     <UICheckbox
-      class="item__checkbox"
       :checked="cartStore.getCheckValue(itemInfo.pk_id)"
+      class="item__checkbox"
       @change="cartStore.handleCheck(itemInfo.pk_id)"
     />
-    <img class="item__image" :src="itemInfo.thumbnail_url" />
+    <img :alt="itemInfo.title" :src="itemInfo.thumbnail_url" class="item__image">
     <div class="item__desc">
       <div class="item__head">
-        <div class="item__name">{{ itemInfo.title }} {{ itemInfo.pk_id }}</div>
+        <div class="item__name">
+          {{ itemInfo.title }} {{ itemInfo.pk_id }}
+        </div>
         <button
+          v-if="!noInput"
           class="item__delete-btn"
           @click.prevent="handleDeleteButton"
-          v-if="!noInput"
         >
           Удалить
         </button>
       </div>
       <div class="item__body">
         <div class="item__info">
-          <p class="item__color" v-if="itemInfo.color">
+          <p v-if="itemInfo.color" class="item__color">
             Цвет: <span>{{ itemInfo.color }}</span>
           </p>
-          <p class="item__model" v-if="itemInfo.model">
+          <p v-if="itemInfo.model" class="item__model">
             Модель: <span>{{ itemInfo.model }}</span>
           </p>
         </div>
         <div class="item__qty">
-          <div class="qty-input-wrapper" v-if="!noInput">
+          <div v-if="!noInput" class="qty-input-wrapper">
             <input
-              type="number"
+              :max="itemInfo.units_in_stock"
+              :value="itemInfo.qty"
               class="item__qty-input"
               min="1"
-              :max="itemInfo.units_in_stock"
-              v-model="itemInfo.qty"
               readonly
-            />
+              type="number"
+            >
             <button
-              :disabled="itemInfo.qty == 1"
+              :disabled="itemInfo.qty <= 1"
               class="qty__minus-btn"
               @click="itemInfo.qty > 1 ? handleChangeQuantity(-1) : null"
             >
@@ -48,18 +50,18 @@
             </button>
           </div>
           <p
-            class="qty__price-per-item"
-            v-show="itemInfo.qty > 1"
             v-if="!noInput"
+            v-show="itemInfo.qty > 1"
+            class="qty__price-per-item"
           >
             {{ formatter.format(itemInfo.final_price) }}/ед.
           </p>
-          <div class="qty__qty-label" v-if="noInput">
+          <div v-if="noInput" class="qty__qty-label">
             Количество: <span>{{ itemInfo.qty }} шт.</span>
           </div>
         </div>
         <div class="item__price">
-          <div class="price__old" v-if="itemInfo.old_price">
+          <div v-if="itemInfo.old_price" class="price__old">
             {{ formatter.format(itemInfo.old_price * itemInfo.qty) }}
           </div>
           <div class="price__final">
@@ -72,44 +74,37 @@
 </template>
 
 <script setup>
-import { useCartStore } from "~/stores/cart";
-const cartStore = useCartStore();
+import { useCartStore } from '~/stores/cart'
+
+const cartStore = useCartStore()
 
 const props = defineProps({
   itemInfo: {
     type: Object,
-    required: true,
+    required: true
   },
 
   noInput: {
     type: Boolean,
-    default: false,
-  },
-});
+    default: false
+  }
+})
 
-const emit = defineEmits(["delete"]);
+defineEmits(['delete'])
 
-const formatter = new Intl.NumberFormat("ru-RU", {
-  style: "currency",
-  currency: "RUB",
-  maximumFractionDigits: 0,
-});
+const formatter = new Intl.NumberFormat('ru-RU', {
+  style: 'currency',
+  currency: 'RUB',
+  maximumFractionDigits: 0
+})
 
 const handleDeleteButton = async () => {
-  try {
-    await cartStore.handleCartAction(props.itemInfo.pk_id);
-  } catch (err) {
-    throw err;
-  }
-};
+  await cartStore.handleCartAction(props.itemInfo.pk_id)
+}
 
 const handleChangeQuantity = async (value) => {
-  try {
-    await cartStore.changeQuantity(props.itemInfo.pk_id, value);
-  } catch (err) {
-    throw err;
-  }
-};
+  await cartStore.changeQuantity(props.itemInfo.pk_id, value)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -184,9 +179,11 @@ $qtySize: 40px;
 
   &__qty {
     position: relative;
+
     .qty-input-wrapper {
       display: flex;
       height: $qtySize;
+
       .item__qty-input {
         display: block;
         width: $qtySize;
@@ -196,7 +193,7 @@ $qtySize: 40px;
         border-top: 1px solid $default;
         border-bottom: 1px solid $default;
         text-align: center;
-        appearance: text-field;
+        appearance: textfield;
         font-size: 0.8rem;
 
         &:focus {
@@ -213,6 +210,7 @@ $qtySize: 40px;
         }
       }
     }
+
     .qty__price-per-item {
       position: absolute;
       margin: 3px 0 0 0;
@@ -241,6 +239,7 @@ $qtySize: 40px;
       border-radius: 3px 0 0 3px;
       border-left: 1px solid $default;
     }
+
     .qty__plus-btn {
       border-radius: 0 3px 3px 0;
       border-right: 1px solid $default;
@@ -282,6 +281,7 @@ $qtySize: 40px;
     &__qty {
       .qty-input-wrapper {
         height: $qtySize;
+
         .item__qty-input {
           width: $qtySize;
         }
@@ -304,14 +304,17 @@ $qtySize: 40px;
     min-height: 170px;
     height: unset;
     gap: $gap;
+
     &__body {
       flex-direction: column;
       gap: 14px;
     }
+
     &__image {
       width: $img;
       height: $img;
     }
+
     &__qty {
       display: flex;
       align-items: center;
@@ -326,8 +329,10 @@ $qtySize: 40px;
         position: relative;
         margin: 0 0 0 8px;
       }
+
       .qty-input-wrapper {
         height: $qtySize;
+
         .item__qty-input {
           width: $qtySize;
         }

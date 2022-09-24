@@ -3,87 +3,101 @@
     <div class="signin-modal" :class="showLoading && 'signin-modal--blocked'">
       <UILoader v-if="showLoading" class="loading" />
       <div class="modal__header">
-        <p class="header__title">{{ isSigningIn ? "Вход" : "Регистрация" }}</p>
+        <p class="header__title">
+          {{ isSigningIn ? "Вход" : "Регистрация" }}
+        </p>
         <img
           src="~/assets/icons/close.png"
           class="header__close-btn"
+          alt="close icon"
           @click="$emit('close-modal')"
-        />
+        >
       </div>
-      <div class="body-wrapper" v-if="isSigningIn">
+      <div v-if="isSigningIn" class="body-wrapper">
         <div class="modal__body">
           <input
+            v-model.lazy="signInEmail"
             type="email"
             class="body__email-input"
             placeholder="Email"
-            v-model.lazy="signInEmail"
-          />
+          >
           <input
+            v-model.lazy="signInPassword"
             type="password"
             class="body__password-input"
             placeholder="Пароль"
-            v-model.lazy="signInPassword"
-          />
-          <button class="body__login-btn" @click="handleSignIn">Войти</button>
-          <button class="body__forgot-password-btn">Забыли пароль?</button>
-          <p class="auth-error" v-if="authError">{{ authError }}</p>
+          >
+          <button class="body__login-btn" @click="handleSignIn">
+            Войти
+          </button>
+          <button class="body__forgot-password-btn">
+            Забыли пароль?
+          </button>
+          <p v-if="authError" class="auth-error">
+            {{ authError }}
+          </p>
         </div>
         <div class="modal__footer">
           <div class="footer__signup">
             <span class="signup__text">Нет аккаунта? </span>
-            <a class="signup__link" @click.prevent="switchAuthMethod"
-              >Зарегестрироваться</a
-            >
+            <a
+              class="signup__link"
+              @click.prevent="switchAuthMethod"
+            >Зарегистрироваться</a>
           </div>
         </div>
       </div>
-      <AuthSignUp class="body-wrapper" v-else @has-account="switchAuthMethod" />
+      <AuthSignUp v-else class="body-wrapper" @has-account="switchAuthMethod" />
     </div>
   </div>
 </template>
 
 <script setup>
-const emit = defineEmits(["close-modal"]);
+import { ref } from 'vue'
+import useAuth from '../../composables/useAuth'
+import useSupabase from '../../composables/useSupabase'
 
-let authError = ref("");
+const emit = defineEmits(['close-modal'])
 
-let showLoading = ref(false);
+const authError = ref('')
 
-let signInEmail = ref("");
-let signInPassword = ref("");
+const showLoading = ref(false)
 
-let isSigningIn = ref(true);
+const signInEmail = ref('')
+const signInPassword = ref('')
 
-const { signIn } = useAuth();
-const { supabase: sb } = useSupabase();
+const isSigningIn = ref(true)
+
+const { signIn } = useAuth()
+const { supabase: sb } = useSupabase()
 
 const handleSignIn = async () => {
   try {
-    showLoading.value = true;
-    authError.value = "";
+    showLoading.value = true
+    authError.value = ''
     await signIn({
       email: signInEmail.value,
-      password: signInPassword.value,
+      password: signInPassword.value
     }).then(async (user) => {
-      await sb.from("carts").insert({
+      await sb.from('carts').insert({
         user_id: user.id,
-        cart: null,
-      });
-      showLoading.value = false;
-      emit("close-modal");
-    });
+        cart: null
+      })
+      showLoading.value = false
+      emit('close-modal')
+    })
   } catch (err) {
-    showLoading.value = false;
-    err.message.startsWith("You")
-      ? (authError.value = "Введите данные")
-      : (authError.value = "Неверные данные");
+    showLoading.value = false
+    err.message.startsWith('You')
+      ? (authError.value = 'Введите данные')
+      : (authError.value = 'Неверные данные')
   }
-};
+}
 
 const switchAuthMethod = () => {
-  isSigningIn.value = !isSigningIn.value;
-  authError.value = null;
-};
+  isSigningIn.value = !isSigningIn.value
+  authError.value = null
+}
 </script>
 
 <style lang="scss" scoped>

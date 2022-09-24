@@ -10,25 +10,25 @@
           Зарегистрируйтесь и начните совершать покупки на FeelComfy.
         </p>
         <input
+          ref="emailElement"
+          v-model.lazy="signUpEmail"
           type="email"
           class="body__email-input"
           placeholder="Email"
-          v-model.lazy="signUpEmail"
-          ref="emailElement"
           required
-        />
+        >
         <input
+          v-model.lazy="signUpName"
           type="text"
           class="body__name-input"
           placeholder="Имя"
-          v-model.lazy="signUpName"
-        />
+        >
         <input
+          v-model="signUpPassword"
           type="password"
           class="body__password-input"
           placeholder="Придумайте пароль"
-          v-model="signUpPassword"
-        />
+        >
         <div class="body__validation">
           <div
             class="validate"
@@ -60,28 +60,31 @@
       <div class="modal__footer">
         <div class="footer__signup">
           <span class="signup__text">Уже есть аккаунт? </span>
-          <a class="signup__link" @click.prevent="$emit('has-account')"
-            >Войти</a
-          >
+          <a
+            class="signup__link"
+            @click.prevent="$emit('has-account')"
+          >Войти</a>
         </div>
       </div>
     </div>
   </div>
-  <div class="confirm-email" v-else>
+  <div v-else class="confirm-email">
     Подтвердите регистрацию по ссылке, отправленной на email
   </div>
 </template>
 
 <script setup>
-const { signUp, user } = useAuth();
-const { supabase } = useSupabase();
+import { computed, reactive, ref } from 'vue'
+import useAuth from '../../composables/useAuth'
 
-let signUpEmail = ref("");
-let signUpPassword = ref("");
-let signUpName = ref("");
-let emailElement = ref(null);
+const { signUp } = useAuth()
 
-let showConfirmationMessage = ref(false);
+const signUpEmail = ref('')
+const signUpPassword = ref('')
+const signUpName = ref('')
+const emailElement = ref(null)
+
+const showConfirmationMessage = ref(false)
 
 const validations = reactive({
   length: false,
@@ -89,39 +92,35 @@ const validations = reactive({
   letters: false,
 
   name: false,
-  email: false,
-});
+  email: false
+})
 
-let isFormValid = computed(() => Object.values(validations).every(Boolean));
+const isFormValid = computed(() => Object.values(validations).every(Boolean))
 
 const validateForm = () => {
-  validations.length = signUpPassword.value.length >= 8;
+  validations.length = signUpPassword.value.length >= 8
 
   validations.numbers =
     !!signUpPassword.value.match(/[0-9]/) &&
-    !!signUpPassword.value.match(/[a-z]/);
+    !!signUpPassword.value.match(/[a-z]/)
 
   validations.letters =
-    signUpPassword.value.toLowerCase() !== signUpPassword.value;
+    signUpPassword.value.toLowerCase() !== signUpPassword.value
 
-  validations.name = signUpName.value.length >= 1;
+  validations.name = signUpName.value.length >= 1
 
-  validations.email = emailElement.value.validity.valid;
-};
+  validations.email = emailElement.value.validity.valid
+}
 
 const handleSignUp = () => {
-  try {
-    signUp({
-      email: signUpEmail.value,
-      password: signUpPassword.value,
-      name: signUpName.value,
-    });
+  signUp({
+    email: signUpEmail.value,
+    password: signUpPassword.value,
+    name: signUpName.value
+  })
 
-    showConfirmationMessage.value = true;
-  } catch (err) {
-    throw err;
-  }
-};
+  showConfirmationMessage.value = true
+}
 </script>
 
 <style lang="scss" scoped>

@@ -1,11 +1,13 @@
 <template>
   <div class="loader">
     <div class="loader-circles">
-      <div class="circle circle1"></div>
-      <div class="circle circle2"></div>
-      <div class="circle circle3"></div>
+      <div class="circle circle1" />
+      <div class="circle circle2" />
+      <div class="circle circle3" />
     </div>
-    <p class="loader-text" v-if="text">{{ text }}</p>
+    <p v-if="text" class="loader-text">
+      {{ text }}
+    </p>
   </div>
 </template>
 
@@ -13,9 +15,9 @@
 defineProps({
   text: {
     type: String,
-    default: "",
-  },
-});
+    default: ''
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -27,6 +29,7 @@ $animation-speed: 1s;
   justify-content: space-between;
   max-width: 230px;
   margin: 0 auto;
+
   &-text {
     font-size: 1.1rem;
     font-weight: 600;
@@ -49,6 +52,7 @@ $animation-speed: 1s;
       &1 {
         animation-delay: calc($animation-speed / 3);
       }
+
       &3 {
         animation-delay: calc($animation-speed / -3);
       }

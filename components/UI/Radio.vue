@@ -1,27 +1,27 @@
 <template>
-  <div class="radio" :class="getClass"></div>
+  <div :class="getClass" class="radio" />
 </template>
 <script setup>
 const props = defineProps({
   selected: {
     type: Boolean,
-    default: false,
+    default: false
   },
   disabled: {
     type: Boolean,
-    default: false,
-  },
-});
+    default: false
+  }
+})
 
 const getClass = computed(() => {
   if ((props.selected && props.disabled) || props.disabled) {
-    return "radio--disabled";
+    return 'radio--disabled'
   } else if (props.selected) {
-    return "radio--selected";
+    return 'radio--selected'
   } else {
-    return "";
+    return ''
   }
-});
+})
 </script>
 
 <style lang="scss" scoped>
@@ -44,6 +44,7 @@ const getClass = computed(() => {
     background-color: $blue;
     border-radius: 50%;
   }
+
   &--selected {
     border-color: $blue;
 
@@ -51,6 +52,7 @@ const getClass = computed(() => {
       visibility: visible;
     }
   }
+
   &--disabled {
     border-color: $dark;
     pointer-events: none;

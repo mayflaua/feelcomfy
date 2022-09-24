@@ -1,0 +1,7 @@
+{
+  "extends": [
+    "@nuxtjs",
+    "plugin:vue/strongly-recommended",
+    "eslint:recommended"
+  ]
+}

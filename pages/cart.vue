@@ -1,12 +1,14 @@
 <template>
   <div class="cart-wrapper">
-    <div class="title-wrapper" v-if="!isCartLoading">
-      <p class="cart__title" v-if="totalItemsFormatted">
+    <div v-if="!isCartLoading" class="title-wrapper">
+      <p v-if="totalItemsFormatted" class="cart__title">
         Ваша корзина
         <span class="cart__cart-counter">{{ totalItemsFormatted }}</span>
       </p>
-      <div class="cart--empty" v-else>
-        <p class="cart__title">В корзине пока нет товаров</p>
+      <div v-else class="cart--empty">
+        <p class="cart__title">
+          В корзине пока нет товаров
+        </p>
         <p class="cart__subtitle">
           Начните с подборок на главной странице или найдите нужный товар через
           поиск
@@ -15,29 +17,28 @@
       </div>
     </div>
     <div class="cart">
-      <UILoader text="Загружаю корзину" v-if="isCartLoading" />
+      <UILoader v-if="isCartLoading" text="Загружаю корзину" />
 
-      <div class="cart__body" v-if="totalItemsFormatted && !isCartLoading">
+      <div v-if="totalItemsFormatted && !isCartLoading" class="cart__body">
         <div class="cart__info">
           <UICheckbox
             class="info__checkbox"
             :checked="cartStore.allChecked"
             @click="cartStore.handleCheckAllClick"
           />
-          <span class="info__checkbox-text" v-if="cartStore.allChecked">Снять все</span>
-          <span class="info__checkbox-text" v-else>Выбрать все</span>
+          <span v-if="cartStore.allChecked" class="info__checkbox-text">Снять все</span>
+          <span v-else class="info__checkbox-text">Выбрать все</span>
         </div>
         <div class="items">
           <CartItem
-            class="items__item"
-            v-for="(item, i) in cartItems"
+            v-for="(item) in cartItems"
             :key="item.id"
-            :itemInfo="item"
-          >
-          </CartItem>
+            class="items__item"
+            :item-info="item"
+          />
         </div>
       </div>
-      <div class="order" v-if="totalItemsFormatted && !isCartLoading">
+      <div v-if="totalItemsFormatted && !isCartLoading" class="order">
         <div class="order__free-delivery">
           <div class="free-delivery__indicator">
             <CircleProgress
@@ -52,13 +53,13 @@
           <div class="free-delivery__text">
             <p class="free-delivery__title">
               <span v-if="!cartStore.isFreeDelivery">{{
-                cartStore.totalSelectedItemsWorth != 0
+                cartStore.totalSelectedItemsWorth !== 0
                   ? "Бесплатно доставим ваш заказ"
                   : "Выберите товары"
               }}</span>
               <span v-else>Вам доступна бесплатная доставка до двери</span>
             </p>
-            <p class="free-delivery__subtitle" v-if="!cartStore.isFreeDelivery">
+            <p v-if="!cartStore.isFreeDelivery" class="free-delivery__subtitle">
               Ещё
               {{
                 formatter.format(
@@ -69,15 +70,17 @@
             </p>
           </div>
         </div>
-        <div class="order__info" v-if="cartStore.totalSelectedItemsWorth != 0">
-          <p class="info__title">Ваш заказ</p>
+        <div v-if="cartStore.totalSelectedItemsWorth !== 0" class="order__info">
+          <p class="info__title">
+            Ваш заказ
+          </p>
           <p class="info__goods">
             Товары ({{ cartStore.totalItems }}):
             <span>{{
               formatter.format(cartStore.totalSelectedItemsWorth)
             }}</span>
           </p>
-          <p class="info__delivery" v-if="!cartStore.isFreeDelivery">
+          <p v-if="!cartStore.isFreeDelivery" class="info__delivery">
             Доставка: <span>{{ formatter.format(1000) }}</span>
           </p>
           <p class="info__total">
@@ -86,14 +89,14 @@
               formatter.format(cartStore.totalCartWorthWithDelivery)
             }}</span>
           </p>
-          <p class="info__saving" v-if="cartStore.summarySavings">
+          <p v-if="cartStore.summarySavings" class="info__saving">
             Вы экономите {{ formatter.format(cartStore.summarySavings) }}
           </p>
           <UIButton
             value="Перейти к оформлению"
             path=""
-            @click="handleMakeOrderClick"
             class="info__button"
+            @click="handleMakeOrderClick"
           />
         </div>
       </div>
@@ -102,86 +105,76 @@
 </template>
 
 <script setup>
-import CircleProgress from "vue3-circle-progress";
-import { useCartStore } from "~~/stores/cart";
-const { user } = useAuth();
-const { supabase } = useSupabase();
+import CircleProgress from 'vue3-circle-progress'
+import { computed, defineComponent, ref } from 'vue'
+import { navigateTo } from 'nuxt3/app'
+import useAuth from '../composables/useAuth'
+import useSupabase from '../composables/useSupabase'
+import { useCartStore } from '~~/stores/cart'
+const { user } = useAuth()
+const { supabase } = useSupabase()
 
 // FIXME: unauthorized access
-defineComponent({
-  CircleProgress,
-});
-
+defineComponent({ CircleProgress })
 /* currency formatter */
-const formatter = new Intl.NumberFormat("ru-RU", {
-  style: "currency",
-  currency: "RUB",
-  maximumFractionDigits: 0,
-});
+const formatter = new Intl.NumberFormat('ru-RU', {
+  style: 'currency',
+  currency: 'RUB',
+  maximumFractionDigits: 0
+})
 
-const cartStore = useCartStore();
+const cartStore = useCartStore()
 /* dynamic array with cards */
-const cartItems = computed(() => cartStore.cart);
+const cartItems = computed(() => cartStore.cart)
 
-const isCartLoading = ref(false);
+const isCartLoading = ref(false)
 
 const totalItemsFormatted = computed(() => {
   /* format "товар" in the right form depending on the totalItems value */
   /* indicates empty cart when returns false */
-  const items = cartStore.totalItems;
-  if (items == 0) {
-    return false;
-  } else if (items.toString().endsWith("1")) {
-    return `, ${items} товар`;
-  } else if (["2", "3", "4"].includes(items.toString().slice(-1))) {
-    return `, ${items} товара`;
+  const items = cartStore.totalItems
+  if (items === 0) {
+    return false
+  } else if (items.toString().endsWith('1')) {
+    return `, ${items} товар`
+  } else if (['2', '3', '4'].includes(items.toString().slice(-1))) {
+    return `, ${items} товара`
   } else {
-    return `, ${items} товаров`;
+    return `, ${items} товаров`
   }
-});
-
-const handleDeleteEvent = (id) => {
-  /* remove deleted item from the static render array and stored items array*/
-  cartStored.splice(
-    cartStored.findIndex((item) => item.pk_id == id),
-    1
-  );
-  cartItems.value.splice(
-    cartItems.value.findIndex((item) => item.pk_id == id),
-    1
-  );
-};
+})
 
 const handleMakeOrderClick = async () => {
-  if (cartStore.totalSelectedItemsWorth != 0) {
+  if (cartStore.totalSelectedItemsWorth !== 0) {
     /* make orders list from selected items */
-    let order = [];
+    const order = []
     cartItems.value.forEach((item) => {
+      // eslint-disable-next-line no-unused-expressions
       item.checked
         ? order.push({
-            id: item.pk_id,
-            qty: item.qty,
-            price: item.final_price,
-          })
-        : null;
-    });
-    /* insert order to database and get its order_id*/
-    await supabase.from("orders").insert({
+          id: item.pk_id,
+          qty: item.qty,
+          price: item.final_price
+        })
+        : null
+    })
+    /* insert order to database and get its order_id */
+    await supabase.from('orders').insert({
       user_id: user.value.id,
-      order,
-    });
+      order
+    })
     const orderID = await supabase
-      .from("orders")
-      .select("order_id")
-      .order("created_at", { ascending: false })
-      .limit(1);
+      .from('orders')
+      .select('order_id')
+      .order('created_at', { ascending: false })
+      .limit(1)
     /* redirect to order confirmation page */
     await navigateTo({
-      path: "/order",
-      query: { order: orderID.data[0].order_id },
-    });
+      path: '/order',
+      query: { order: orderID.data[0].order_id }
+    })
   }
-};
+}
 
 // onBeforeMount(() => getCardsInfo());
 </script>

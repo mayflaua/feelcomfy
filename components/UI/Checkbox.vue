@@ -1,20 +1,22 @@
 <template>
   <input
-    type="checkbox"
-    class="checkbox"
     v-model="val"
+    class="checkbox"
+    type="checkbox"
     @change="$emit('changed', val)"
-  />
+  >
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
 const props = defineProps({
   defaultValue: {
     type: Boolean,
-    default: true,
-  },
-});
-const val = ref(props.defaultValue);
+    default: true
+  }
+})
+const val = ref(props.defaultValue)
 </script>
 
 <style lang="scss" scoped>
