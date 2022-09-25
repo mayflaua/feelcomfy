@@ -1,23 +1,27 @@
 <template>
   <div class="order-success">
     <img
-      src="~/assets/images/order-success.png"
       alt="success"
       class="order-success__image"
-    />
-    <p class="order-success__title">Спасибо за заказ!</p>
-    <p class="order-success__subtitle">Ваши личные данные не были сохранены</p>
+      src="~/assets/images/order-success.png"
+    >
+    <p class="order-success__title">
+      Спасибо за заказ!
+    </p>
+    <p class="order-success__subtitle">
+      Ваши личные данные не были сохранены
+    </p>
     <p class="order-success__subtitle">
       Заказ не будет выполнен, ведь это ненастоящий интернет-магазин :)
     </p>
-    <UIButton value="На главную" path="/" class="order-success__btn" />
+    <UIButton class="order-success__btn" path="/" value="На главную" />
   </div>
 </template>
 
 <script setup>
 definePageMeta({
-  middleware: "order",
-});
+  middleware: 'order'
+})
 
 </script>
 
@@ -27,6 +31,8 @@ definePageMeta({
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding: 0 0 50px 0;
+
   &__image {
     width: 250px;
   }
