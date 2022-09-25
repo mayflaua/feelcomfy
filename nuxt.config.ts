@@ -4,7 +4,7 @@ import { defineNuxtConfig } from 'nuxt/config'
 export default defineNuxtConfig({
   css: ['~/assets/style/normalize.css', '~/assets/style/font.css'],
 
-  modules: ['@pinia/nuxt'],
+  modules: ['@pinia/nuxt', '@nuxt/image-edge'],
   vite: {
     css: {
       preprocessorOptions: {
@@ -17,5 +17,9 @@ export default defineNuxtConfig({
 
   build: {
     transpile: ['pinia']
+  },
+
+  image: {
+    domains: ['ltxvxjjipthpwfyluwmj.supabase.co']
   }
 })

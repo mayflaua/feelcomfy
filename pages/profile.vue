@@ -27,7 +27,10 @@
           <p class="orders__title">
             Мои заказы
           </p>
-          <div class="orders__list">
+
+          <div
+            class="orders__list"
+          >
             <ProfileOrder v-for="order in ordersList" :key="order.order_id" :order-info="order" />
           </div>
         </div>

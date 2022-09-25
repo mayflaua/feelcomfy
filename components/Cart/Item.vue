@@ -5,7 +5,17 @@
       class="item__checkbox"
       @change="cartStore.handleCheck(itemInfo.pk_id)"
     />
-    <img :alt="itemInfo.title" :src="itemInfo.thumbnail_url" class="item__image">
+    <div class="item__image">
+      <nuxt-img
+        :alt="itemInfo.title"
+        :src="itemInfo.thumbnail_url"
+        format="webp"
+        height="100%"
+        prelaod
+        quality="60"
+        width="100px"
+      />
+    </div>
     <div class="item__desc">
       <div class="item__head">
         <div class="item__name">
@@ -115,7 +125,7 @@ $height: 150px;
 $qtySize: 40px;
 
 .item {
-  height: $height - $padding * 2;
+  //height: $height - $padding * 2;
   width: 100%;
   padding: $padding $padding 20px $padding;
   gap: $gap;
@@ -127,6 +137,8 @@ $qtySize: 40px;
   &__image {
     height: $img;
     width: $img;
+    display: flex;
+    align-items: center;
   }
 
   &__delete-btn {

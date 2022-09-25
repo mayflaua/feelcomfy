@@ -40,7 +40,18 @@
       </div>
       <div v-if="showGoods" class="goods__list">
         <div v-for="item in orderInfo.order" :key="item.id" class="list__item">
-          <img :alt="item.title" :src="item.thumbnail_url" class="item__image">
+          <div class="item__image-wrapper">
+            <nuxt-img
+              :alt="item.title"
+              :src="item.thumbnail_url"
+              class="item__image"
+              format="webp"
+              height="100%"
+              preload
+              quality="60"
+              width="90px"
+            />
+          </div>
           <div class="item__info">
             <div class="title">
               {{ item.title }}
@@ -194,11 +205,6 @@ const handleSubmitButton = async () => {
 
           &:last-child {
             border: none;
-          }
-
-          .item__image {
-            width: 90px;
-            height: 100%;
           }
 
           .item__info {

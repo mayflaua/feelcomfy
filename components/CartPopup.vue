@@ -1,8 +1,18 @@
 <template>
   <div class="wrapper">
-    <transition-group name="list" mode="out-in">
+    <transition-group mode="out-in" name="list">
       <div v-for="(item, i) in queue" :key="item.name" class="popup">
-        <img :src="item.imageUrl" class="popup__image">
+        <div class="image-wrapper">
+          <nuxt-img
+            :src="item.imageUrl"
+            class="popup__image"
+            format="webp"
+            height="100%"
+            preload
+            quality="40"
+            width="60px"
+          />
+        </div>
         <div class="popup__desc">
           <div class="popup__title">
             {{
@@ -18,18 +28,18 @@
         <div class="popup__controls">
           <button class="popup__close" @click="close(i)">
             <svg
-              width="24px"
               height="24px"
               viewBox="0 0 24 24"
+              width="24px"
               xmlns="http://www.w3.org/2000/svg"
             >
               <g data-name="Layer 2">
                 <g data-name="close">
                   <rect
-                    width="24"
                     height="24"
-                    transform="rotate(180 12 12)"
                     opacity="0"
+                    transform="rotate(180 12 12)"
+                    width="24"
                   />
                   <path
                     d="M13.41 12l4.3-4.29a1 1 0 1 0-1.42-1.42L12 10.59l-4.29-4.3a1 1 0 0 0-1.42 1.42l4.3 4.29-4.3 4.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4.29-4.3 4.29 4.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"
@@ -37,7 +47,8 @@
                 </g>
               </g>
             </svg>
-          </button><nuxt-link to="/cart" class="popup__go-to-cart">
+          </button>
+          <nuxt-link class="popup__go-to-cart" to="/cart">
             К корзине
           </nuxt-link>
         </div>
@@ -74,10 +85,12 @@ export default {
 .list-move {
   transition: all 0.5s ease;
 }
+
 .list-enter-from {
   opacity: 0;
   transform: translateY(-30px);
 }
+
 .list-leave-to {
   opacity: 0;
   transform: translateY(30px);
@@ -96,6 +109,7 @@ export default {
   right: 0;
   z-index: 20;
 }
+
 .popup {
   width: 100%;
   height: 100px;
@@ -108,6 +122,7 @@ export default {
   display: flex;
   gap: 8px;
   justify-content: space-between;
+  align-items: center;
 
   &__title {
     font-size: 1.2em;
@@ -116,15 +131,10 @@ export default {
     text-align: center;
   }
 
-  &__image {
-    display: block;
-    width: 60px;
-    height: 100%;
-  }
-
   &__desc {
     display: flex;
     flex-direction: column;
+    gap: 10px;
     justify-content: space-around;
   }
 

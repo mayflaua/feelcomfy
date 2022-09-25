@@ -1,7 +1,16 @@
 <template>
   <div class="card">
     <div class="card__image">
-      <img :alt="card.title" :src="card.image_url">
+      <nuxt-img
+        :alt="card.title"
+        :src="card.image_url"
+        class="img"
+        format="webp"
+        height="100%"
+        preload
+        quality="80"
+        width="250px"
+      />
     </div>
     <div class="card__favorites-btn" @click="_handleFavoritesClick">
       <svg
@@ -147,10 +156,6 @@ export default {
     align-items: center;
     justify-content: center;
     background-color: white;
-
-    img {
-      width: 100%;
-    }
   }
 
   &__favorites-btn {
