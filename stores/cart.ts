@@ -1,6 +1,6 @@
-import { defineStore, StoreDefinition } from "pinia";
+import {defineStore, StoreDefinition} from "pinia";
 
-const { supabase } = useSupabase();
+const {supabase} = useSupabase();
 
 interface CompressedCartItem {
   readonly pk_id: number;
@@ -30,66 +30,68 @@ export const useCartStore: StoreDefinition = defineStore("cart", {
 
     defaultCheckboxValue: true,
     freeDeliveryCondition: 8000,
+
+    cartReady: false,
   }),
 
   getters: {
     isInCart:
-      <Boolean>(state) =>
-      (item_id: number) =>
-        state._cartCompressed.some(
-          (item: CompressedCartItem) => item.pk_id == item_id
-        ),
+        <Boolean>(state) =>
+            (item_id: number) =>
+                state._cartCompressed.some(
+                    (item: CompressedCartItem) => item.pk_id == item_id
+                ),
 
     allChecked: <Boolean>(state) => state.cart.every((item) => item.checked),
 
     getCheckValue:
-      <Boolean>(state) =>
-      (item_id: number) =>
-        state.cart.find((item) => item.pk_id == item_id).checked,
+        <Boolean>(state) =>
+            (item_id: number) =>
+                state.cart.find((item) => item.pk_id == item_id).checked,
 
     totalItems: <Number>(state) => state._cartCompressed?.length || 0,
 
     totalCartWorth: <Number>(state) =>
-      state.cart.reduce((acc, curr) => acc + curr.qty * curr.final_price, 0),
+        state.cart.reduce((acc, curr) => acc + curr.qty * curr.final_price, 0),
 
     totalSelectedItemsWorth: <Number>(state) =>
-      state.cart.reduce(
-        (acc, curr) =>
-          /* consider only checked items */
-          curr.checked ? acc + curr.qty * curr.final_price : acc,
-        0
-      ),
+        state.cart.reduce(
+            (acc, curr) =>
+                /* consider only checked items */
+                curr.checked ? acc + curr.qty * curr.final_price : acc,
+            0
+        ),
 
     totalCartWorthWithDelivery: <Number>(state) =>
-      state.totalSelectedItemsWorth + (state.isFreeDelivery ? 0 : 1000),
+        state.totalSelectedItemsWorth + (state.isFreeDelivery ? 0 : 1000),
 
     freeDeliveryPercent: <Number>(state) =>
-      Math.min(
-        (state.totalSelectedItemsWorth / state.freeDeliveryCondition) * 100,
-        100
-      ),
+        Math.min(
+            (state.totalSelectedItemsWorth / state.freeDeliveryCondition) * 100,
+            100
+        ),
 
     isFreeDelivery: <Boolean>(state) =>
-      state.totalSelectedItemsWorth >= state.freeDeliveryCondition,
+        state.totalSelectedItemsWorth >= state.freeDeliveryCondition,
 
     summarySaving: <Number>(state) =>
-      state.cart.reduce(
-        (acc, curr) =>
-          /* consider checked items that have old price */
-          curr.old_price && curr.checked
-            ? acc + curr.qty * (curr.old_price - curr.final_price)
-            : acc,
-        0
-      ),
+        state.cart.reduce(
+            (acc, curr) =>
+                /* consider checked items that have old price */
+                curr.old_price && curr.checked
+                    ? acc + curr.qty * (curr.old_price - curr.final_price)
+                    : acc,
+            0
+        ),
   },
   actions: {
     async _addToCart(item_id: number) {
-      this._cartCompressed.push({ pk_id: item_id, qty: 1 });
+      this._cartCompressed.push({pk_id: item_id, qty: 1});
 
-      const { data: addedItem } = await supabase
-        .from("goods")
-        .select()
-        .eq("pk_id", item_id);
+      const {data: addedItem} = await supabase
+          .from("goods")
+          .select()
+          .eq("pk_id", item_id);
 
       this.cart.push({
         ...addedItem[0],
@@ -103,14 +105,14 @@ export const useCartStore: StoreDefinition = defineStore("cart", {
       /* remove items from both compressed and normal carts */
 
       this._cartCompressed.splice(
-        this._cartCompressed.findIndex(
-          (item: CompressedCartItem) => item.pk_id == item_id
-        ),
-        1
+          this._cartCompressed.findIndex(
+              (item: CompressedCartItem) => item.pk_id == item_id
+          ),
+          1
       );
       this.cart.splice(
-        this.cart.findIndex((item: CartItem) => item.pk_id == item_id),
-        1
+          this.cart.findIndex((item: CartItem) => item.pk_id == item_id),
+          1
       );
       this._updateDatabase();
     },
@@ -119,8 +121,8 @@ export const useCartStore: StoreDefinition = defineStore("cart", {
       /* change quantity in stored compressed cart and on ui*/
       const currentItem = this.cart.find((item) => item.pk_id == item_id);
       if (
-        (currentItem.qty > 0 && currentItem.qty < currentItem.units_in_stock) ||
-        (currentItem.qty >= currentItem.units_in_stock && value < 0)
+          (currentItem.qty > 0 && currentItem.qty < currentItem.units_in_stock) ||
+          (currentItem.qty >= currentItem.units_in_stock && value < 0)
       ) {
         this._cartCompressed.find((item) => item.pk_id == item_id).qty += value;
         this.cart.find((item) => item.pk_id == item_id).qty += value;
@@ -128,11 +130,11 @@ export const useCartStore: StoreDefinition = defineStore("cart", {
         /* update database only after 3 seconds of the last change to reduce database requests */
         /* may not work and be unefficient but idk i did my best :P */
         const initialValue = this._cartCompressed.find(
-          (item) => item.pk_id == item_id
+            (item) => item.pk_id == item_id
         ).qty;
         const timer = setTimeout(() => {
           const currentValue = this._cartCompressed.find(
-            (item) => item.pk_id == item_id
+              (item) => item.pk_id == item_id
           ).qty;
           if (currentValue == initialValue) {
             this._updateDatabase();
@@ -156,36 +158,37 @@ export const useCartStore: StoreDefinition = defineStore("cart", {
     async handleCartAction(item_id: number): Promise<void> {
       /* add or remove item from cart */
       this.isInCart(item_id)
-        ? this._removeFromCart(item_id)
-        : this._addToCart(item_id);
+          ? this._removeFromCart(item_id)
+          : this._addToCart(item_id);
     },
 
     async getCartFromDatabase(user_id): Promise<void> {
       try {
         /* get compressed cart and store it */
-        const { data: compressedCart } = await supabase
-          .from("carts")
-          .select("cart")
-          .eq("user_id", user_id);
+        const {data: compressedCart} = await supabase
+            .from("carts")
+            .select("cart")
+            .eq("user_id", user_id);
         this._cartCompressed = compressedCart[0].cart;
 
         /* get full cart items info and store it */
-        let { data: fullCart } = await supabase
-          .from("goods")
-          .select()
-          .in(
-            "pk_id",
-            this._cartCompressed.map((item: CompressedCartItem) => item.pk_id)
-          );
+        let {data: fullCart} = await supabase
+            .from("goods")
+            .select()
+            .in(
+                "pk_id",
+                this._cartCompressed.map((item: CompressedCartItem) => item.pk_id)
+            );
 
         // add qty and checked property to every item in cart
         for (const el of fullCart) {
           el.checked = this.defaultCheckboxValue;
           el.qty = this._cartCompressed.find(
-            (item) => item.pk_id == el.pk_id
+              (item) => item.pk_id == el.pk_id
           ).qty;
         }
         this.cart = fullCart;
+        this.cartReady = true;
       } catch (err) {
         throw err;
       }
@@ -194,9 +197,9 @@ export const useCartStore: StoreDefinition = defineStore("cart", {
     async _updateDatabase(): Promise<void> {
       /* update user cart in database */
       await supabase
-        .from("carts")
-        .update({ cart: this._cartCompressed })
-        .eq("user_id", supabase.auth.user().id);
+          .from("carts")
+          .update({cart: this._cartCompressed})
+          .eq("user_id", supabase.auth.user().id);
       return;
     },
   },

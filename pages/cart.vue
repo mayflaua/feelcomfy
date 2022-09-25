@@ -1,6 +1,6 @@
 <template>
   <div class="cart-wrapper">
-    <div v-if="!isCartLoading" class="title-wrapper">
+    <div v-if="cartStore.cartReady" class="title-wrapper">
       <p v-if="totalItemsFormatted" class="cart__title">
         Ваша корзина
         <span class="cart__cart-counter">{{ totalItemsFormatted }}</span>
@@ -13,17 +13,17 @@
           Начните с подборок на главной странице или найдите нужный товар через
           поиск
         </p>
-        <UIButton value="На главную" path="/" />
+        <UIButton path="/" value="На главную" />
       </div>
     </div>
     <div class="cart">
-      <UILoader v-if="isCartLoading" text="Загружаю корзину" />
+      <UILoader v-if="!cartStore.cartReady" text="Загружаю корзину" />
 
-      <div v-if="totalItemsFormatted && !isCartLoading" class="cart__body">
+      <div v-if="totalItemsFormatted && cartStore.cartReady" class="cart__body">
         <div class="cart__info">
           <UICheckbox
-            class="info__checkbox"
             :checked="cartStore.allChecked"
+            class="info__checkbox"
             @click="cartStore.handleCheckAllClick"
           />
           <span v-if="cartStore.allChecked" class="info__checkbox-text">Снять все</span>
@@ -33,21 +33,21 @@
           <CartItem
             v-for="(item) in cartItems"
             :key="item.id"
-            class="items__item"
             :item-info="item"
+            class="items__item"
           />
         </div>
       </div>
-      <div v-if="totalItemsFormatted && !isCartLoading" class="order">
+      <div v-if="totalItemsFormatted && cartStore.cartReady" class="order">
         <div class="order__free-delivery">
           <div class="free-delivery__indicator">
             <CircleProgress
-              :size="35"
-              :border-width="3"
               :border-bg-width="3"
-              fill-color="rgb(22,202,78)"
+              :border-width="3"
               :percent="cartStore.freeDeliveryPercent"
+              :size="35"
               class="circle"
+              fill-color="rgb(22,202,78)"
             />
           </div>
           <div class="free-delivery__text">
@@ -93,9 +93,9 @@
             Вы экономите {{ formatter.format(cartStore.summarySavings) }}
           </p>
           <UIButton
-            value="Перейти к оформлению"
-            path=""
             class="info__button"
+            path=""
+            value="Перейти к оформлению"
             @click="handleMakeOrderClick"
           />
         </div>
@@ -106,11 +106,11 @@
 
 <script setup>
 import CircleProgress from 'vue3-circle-progress'
-import { computed, defineComponent, ref } from 'vue'
-import { navigateTo } from 'nuxt3/app'
+import { computed, defineComponent } from 'vue'
 import useAuth from '../composables/useAuth'
 import useSupabase from '../composables/useSupabase'
 import { useCartStore } from '~~/stores/cart'
+
 const { user } = useAuth()
 const { supabase } = useSupabase()
 
@@ -126,8 +126,6 @@ const formatter = new Intl.NumberFormat('ru-RU', {
 const cartStore = useCartStore()
 /* dynamic array with cards */
 const cartItems = computed(() => cartStore.cart)
-
-const isCartLoading = ref(false)
 
 const totalItemsFormatted = computed(() => {
   /* format "товар" in the right form depending on the totalItems value */
@@ -176,7 +174,6 @@ const handleMakeOrderClick = async () => {
   }
 }
 
-// onBeforeMount(() => getCardsInfo());
 </script>
 
 <style lang="scss" scoped>
@@ -189,6 +186,7 @@ const handleMakeOrderClick = async () => {
   &-wrapper {
     padding: 0 10px;
   }
+
   &__title {
     font-size: 1.2rem;
     font-weight: 600;
@@ -230,6 +228,7 @@ const handleMakeOrderClick = async () => {
     display: flex;
     flex-direction: column;
     gap: 20px;
+
     &__item {
       border-bottom: 1px solid $default;
 
@@ -251,22 +250,25 @@ const handleMakeOrderClick = async () => {
     gap: 5px;
     border-bottom: 1px solid $default;
     padding: 10px 0;
+
     .free-delivery {
       &__title {
         margin: 0;
         font-size: 0.95rem;
         font-weight: 500;
       }
+
       &__subtitle {
         margin: 10px 0 0 0;
         font-size: 0.7rem;
         color: $dark;
       }
+
       &__indicator {
         position: relative;
+
         .circle {
-          background: url("data:image/svg+xml,%3csvg width='24' height='20' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e %3cpath fill-rule='evenodd' clip-rule='evenodd' d='M19.2425 7.22388C19.6618 7.49073 19.7854 8.04701 19.5186 8.46636L11.7593 18.4832C11.605 18.7256 11.3443 18.8798 11.0576 18.8982C10.7708 18.9165 10.4925 18.7969 10.3086 18.5762L5.3086 12.5762C4.99039 12.1943 5.04198 11.6268 5.42383 11.3086C5.80568 10.9904 6.37319 11.042 6.6914 11.4238L10.9024 16.477L18 7.49998C18.2669 7.08064 18.8231 6.95702 19.2425 7.22388Z' fill='%2316CA4E'/%3e %3c/svg%3e")
-            no-repeat center/contain;
+          background: url("data:image/svg+xml,%3csvg width='24' height='20' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3e %3cpath fill-rule='evenodd' clip-rule='evenodd' d='M19.2425 7.22388C19.6618 7.49073 19.7854 8.04701 19.5186 8.46636L11.7593 18.4832C11.605 18.7256 11.3443 18.8798 11.0576 18.8982C10.7708 18.9165 10.4925 18.7969 10.3086 18.5762L5.3086 12.5762C4.99039 12.1943 5.04198 11.6268 5.42383 11.3086C5.80568 10.9904 6.37319 11.042 6.6914 11.4238L10.9024 16.477L18 7.49998C18.2669 7.08064 18.8231 6.95702 19.2425 7.22388Z' fill='%2316CA4E'/%3e %3c/svg%3e") no-repeat center/contain;
         }
       }
     }
@@ -285,16 +287,19 @@ const handleMakeOrderClick = async () => {
         display: flex;
         justify-content: space-between;
       }
+
       &__total span {
         font-size: 1.1rem;
         font-weight: 500;
       }
+
       &__saving {
         text-align: right;
         color: rgb(22, 202, 78);
         font-size: 0.7rem;
         margin: -10px 0 15px 0;
       }
+
       &__button {
         border-radius: 6px;
         display: block;
