@@ -12,9 +12,9 @@
           <div class="delivery-block__city">
             <p class="city__title">Город доставки</p>
             <v-select
-              class="city__input"
-              :options="cities"
-              :clearable="false"
+                :clearable="false"
+                :options="cities"
+                class="city__input"
             />
           </div>
 
@@ -22,14 +22,14 @@
             <p class="pick-method__title">Способ получения</p>
             <div class="pick-method">
               <div class="pick-method__pvz">
-                <UIRadio disabled />
+                <UIRadio disabled/>
                 <div class="pvz__title">
                   Пункт выдачи FeelComfy
                   <p>Пока у нас нет собственных пунктов выдачи :(</p>
                 </div>
               </div>
               <div class="pick-method__courier">
-                <UIRadio selected />
+                <UIRadio selected/>
                 <p class="courier__title">Курьером до двери</p>
               </div>
             </div>
@@ -38,27 +38,27 @@
           <form class="delivery-block__form">
             <div class="form__street">
               <p class="street__label">Улица, дом</p>
-              <input type="text" class="street__input" />
+              <input class="street__input" type="text"/>
             </div>
             <div class="form__apartment">
               <p class="apartment__label">Квартира/офис</p>
-              <input type="text" class="apartment__input" />
+              <input class="apartment__input" type="text"/>
             </div>
             <div class="form__entrance">
               <p class="entrance__label">Подъезд</p>
-              <input type="text" class="entrance__input" />
+              <input class="entrance__input" type="text"/>
             </div>
             <div class="form__floor">
               <p class="floor__label">Этаж</p>
-              <input type="text" class="floor__input" />
+              <input class="floor__input" type="text"/>
             </div>
             <div class="form__code">
               <p class="code__label">Код домофона</p>
-              <input type="text" class="code__input" />
+              <input class="code__input" type="text"/>
             </div>
             <div class="form__comment">
               <p class="comment__label">Комментарий для курьера</p>
-              <input type="text" class="comment__input" />
+              <input class="comment__input" type="text"/>
               <span class="comment__subtitle">
                 Например, куда именно привезти заказ, ближайший адрес или
                 ориентир
@@ -70,23 +70,23 @@
       <div class="receiver-block-wrapper">
         <div class="order__receiver-block">
           <p class="receiver-block__title">Получатель заказа:</p>
-          <form @input="checkValid" ref="form" class="receiver-block__form">
+          <form ref="form" class="receiver-block__form" @input="checkValid">
             <div class="form__last-name">
               <p class="last-name__label">Фамилия</p>
               <input
-                type="text"
-                class="last-name__input"
-                required
-                placeholder="Введите фамилию"
+                  class="last-name__input"
+                  placeholder="Введите фамилию"
+                  required
+                  type="text"
               />
             </div>
             <div class="form__first-name">
               <p class="first-name__label">Имя</p>
               <input
-                type="text"
-                class="first-name__input"
-                required
-                placeholder="Введите имя"
+                  class="first-name__input"
+                  placeholder="Введите имя"
+                  required
+                  type="text"
               />
             </div>
             <div class="form__courier-tip">
@@ -102,27 +102,28 @@
             <div class="form__phone">
               <p class="phone__label">Номер телефона</p>
               <input
-                type="tel"
-                class="phone__input"
-                required
-                placeholder="Введите номер телефона"
+                  class="phone__input"
+                  placeholder="Введите номер телефона"
+                  required
+                  type="tel"
               />
             </div>
             <div class="form__email">
               <p class="email__label">Электронная почта</p>
               <input
-                type="email"
-                class="email__input"
-                required
-                placeholder="Введите email"
+                  class="email__input"
+                  placeholder="Введите email"
+                  required
+                  type="email"
               />
             </div>
           </form>
         </div>
         <div class="subscription">
-          <UICheckbox class="subscription__checkbox" /><span
-            class="subscription__label"
-            >Подписаться на наши новости и акции. Вы будете одними из первых
+          <UICheckbox class="subscription__checkbox"/>
+          <span
+              class="subscription__label"
+          >Подписаться на наши новости и акции. Вы будете одними из первых
             узнавать о новых скидках, акциях и распродажах.</span
           >
         </div>
@@ -132,25 +133,25 @@
           <p class="payment-block__title">Способ оплаты</p>
           <div class="payment__method">
             <div class="method__card">
-              <UIRadio selected class="radio" />
+              <UIRadio class="radio" selected/>
               <p class="title">
                 Картой онлайн
                 <span>Принимаем Visa, Mastercard и Мир</span>
               </p>
             </div>
             <div class="method__installment">
-              <UIRadio disabled class="radio" />
+              <UIRadio class="radio" disabled/>
               <p class="title">
                 Рассрочка без переплат
                 <span>Доступно в настоящих интернет-магазинах</span>
               </p>
             </div>
             <div class="method__doli">
-              <UIRadio disabled class="radio" />
+              <UIRadio class="radio" disabled/>
               <p class="title">
                 Оплата "Долями"<span
-                  >Доступно в настоящих интернет-магазинах</span
-                >
+              >Доступно в настоящих интернет-магазинах</span
+              >
               </p>
             </div>
           </div>
@@ -160,33 +161,35 @@
         <p class="goods-block__title" @click="showGoodsList = !showGoodsList">
           Товары в заказе
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            class="arrow"
-            :class="showGoodsList ? 'arrow--up' : ''"
+              :class="showGoodsList ? 'arrow--up' : ''"
+              class="arrow"
+              height="24"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M5.21967 9.21967C5.51256 8.92678 5.98744 8.92678 6.28033 9.21967L12 14.9393L17.7197 9.21967C18.0126 8.92678 18.4874 8.92678 18.7803 9.21967C19.0732 9.51256 19.0732 9.98744 18.7803 10.2803L12.5303 16.5303C12.2374 16.8232 11.7626 16.8232 11.4697 16.5303L5.21967 10.2803C4.92678 9.98744 4.92678 9.51256 5.21967 9.21967Z"
+                d="M5.21967 9.21967C5.51256 8.92678 5.98744 8.92678 6.28033 9.21967L12 14.9393L17.7197 9.21967C18.0126 8.92678 18.4874 8.92678 18.7803 9.21967C19.0732 9.51256 19.0732 9.98744 18.7803 10.2803L12.5303 16.5303C12.2374 16.8232 11.7626 16.8232 11.4697 16.5303L5.21967 10.2803C4.92678 9.98744 4.92678 9.51256 5.21967 9.21967Z"
             ></path>
           </svg>
         </p>
-        <div class="goods-list" v-if="showGoodsList">
+        <div v-if="showGoodsList" class="goods-list">
           <CartItem
-            v-for="item in order"
-            :key="item.id"
-            :item-info="item"
-            no-input
-            class="list__item"
+              v-for="item in order"
+              :key="item.id"
+              :item-info="item"
+              class="list__item"
+              no-input
           />
         </div>
       </div>
     </div>
     <div class="order__order-info">
       <p class="info__title">
-        Ваш заказ<nuxt-link class="link" to="/cart"
-          >Перейти в корзину</nuxt-link
+        Ваш заказ
+        <nuxt-link class="link" to="/cart"
+        >Перейти в корзину
+        </nuxt-link
         >
       </p>
       <p class="info__worth">
@@ -202,21 +205,27 @@
         <span>{{ formatter.format(deliveryWorth + orderWorth) }}</span>
       </p>
       <UIButton
-        :disabled="!formValid"
-        @click="handleSubmitButton"
-        class="btn"
-        value="Подтвердить и оплатить"
+          :disabled="!formValid"
+          class="btn"
+          value="Подтвердить и оплатить"
+          @click="handleSubmitButton"
       />
     </div>
   </div>
 </template>
 
-<script setup>
-import vSelect from "vue-select";
-import "vue-select/dist/vue-select.css";
 
-const { user } = useAuth();
-const { supabase } = useSupabase();
+<script setup>
+import "vue-select/dist/vue-select.css";
+import vSelect from "vue-select";
+import {defineComponent} from "vue";
+
+defineComponent({
+  vSelect
+})
+
+const {user} = useAuth();
+const {supabase} = useSupabase();
 const pageMeta = definePageMeta({
   middleware: ["auth"],
 });
@@ -230,7 +239,7 @@ const getQueryData = () => {
   const router = useRouter();
   if (router.currentRoute.value.query.order) {
     const orderID = router.currentRoute.value.query.order;
-    router.replace({ query: null });
+    router.replace({query: null});
     return orderID;
   } else {
     navigateTo("/");
@@ -241,25 +250,25 @@ const getOrderInfo = async (id) => {
   try {
     /* get order info from database */
     const response = await supabase
-      .from("orders")
-      .select("order")
-      .eq("order_id", id);
+        .from("orders")
+        .select("order")
+        .eq("order_id", id);
 
     /* list all goods ids */
     const ids = response?.data[0].order.map((item) => item.id);
 
     /* select goods with listed ids from database */
     let goods = await supabase
-      .from("goods")
-      .select("title, thumbnail_url, model, color, pk_id")
-      .in("pk_id", ids);
+        .from("goods")
+        .select("title, image_url, model, color, pk_id")
+        .in("pk_id", ids);
 
     /* push price and qty from order to goods list */
     goods.data.forEach((item) => {
       const index =
-        response.data[0].order[
-          response.data[0].order.findIndex((i) => i.id == item.pk_id)
-        ];
+          response.data[0].order[
+              response.data[0].order.findIndex((i) => i.id == item.pk_id)
+              ];
       item.qty = index.qty;
       item.final_price = index.price;
     });
@@ -270,26 +279,26 @@ const getOrderInfo = async (id) => {
   }
 };
 const orderWorth = computed(() =>
-  order.value?.reduce((acc, curr) => acc + curr.qty * curr.final_price, 0)
+    order.value?.reduce((acc, curr) => acc + curr.qty * curr.final_price, 0)
 );
 const orderWorthFormatted = computed(() => formatter.format(orderWorth.value));
 
 const deliveryWorth = computed(() => (orderWorth.value < 8000 ? 1000 : 0));
 const deliveryWorthFormatted = computed(() =>
-  formatter.format(deliveryWorth.value)
+    formatter.format(deliveryWorth.value)
 );
 
 const form = ref();
 const formValid = ref(false);
 const checkValid = () =>
-  (formValid.value = Array.from(form.value.elements)
-    .map((item) => item.validity.valid)
-    .every(Boolean));
+    (formValid.value = Array.from(form.value.elements)
+        .map((item) => item.validity.valid)
+        .every(Boolean));
 
 const handleSubmitButton = async () => {
   if (formValid.value) {
     const router = useRouter();
-    router.push({ name: "order-success", query: { referrer: "order" } });
+    router.push({name: "order-success", query: {referrer: "order"}});
   }
 };
 
@@ -333,6 +342,7 @@ onBeforeMount(async () => {
 
       .order__delivery-block {
         width: 500px;
+
         .delivery-block {
           &__title {
             font-size: 1.2rem;
@@ -399,6 +409,7 @@ onBeforeMount(async () => {
             p {
               font-size: 0.95rem;
             }
+
             input {
               width: 100%;
               height: 35px;
@@ -417,6 +428,7 @@ onBeforeMount(async () => {
           &__street {
             grid-area: first-row;
           }
+
           &__comment {
             grid-area: fourth-row;
 
@@ -430,6 +442,7 @@ onBeforeMount(async () => {
 
       .order__receiver-block {
         width: 500px;
+
         .receiver-block {
           &__title {
             font-size: 1.2rem;
@@ -461,6 +474,7 @@ onBeforeMount(async () => {
                     margin: 0 0 0 3px;
                   }
                 }
+
                 input {
                   width: 100%;
                   height: 35px;
@@ -490,6 +504,7 @@ onBeforeMount(async () => {
           }
         }
       }
+
       .subscription {
         display: flex;
         align-items: flex-start;
@@ -501,14 +516,17 @@ onBeforeMount(async () => {
           width: 500px;
         }
       }
+
       .order__payment-block {
         padding: 0 0 20px 0;
+
         .payment-block {
           &__title {
             font-size: 1.2rem;
             font-weight: 500;
           }
         }
+
         .payment__method {
           display: grid;
           width: 90%;
@@ -577,6 +595,7 @@ onBeforeMount(async () => {
 
       .goods-list {
         margin: 0 15px;
+
         .list__item {
           border-top: 1px solid $default;
         }
@@ -627,6 +646,7 @@ onBeforeMount(async () => {
         }
       }
     }
+
     .btn {
       width: 100%;
       border-radius: 10px;

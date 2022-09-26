@@ -23,7 +23,7 @@ export const useOrdersStore = defineStore('order', {
 
       const goodsIdsToFetch = Array.from(new Set(orders.map(order => order.order.map(good => good.id)).flat()))
       const { data: goods } = await supabase.from('goods')
-        .select('pk_id, title, thumbnail_url, model, color')
+        .select('pk_id, title, image_url, model, color')
         .in('pk_id', goodsIdsToFetch)
 
       this._goods = goods

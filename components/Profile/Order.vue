@@ -43,7 +43,7 @@
           <div class="item__image-wrapper">
             <nuxt-img
               :alt="item.title"
-              :src="item.thumbnail_url"
+              :src="item.image_url"
               class="item__image"
               format="webp"
               height="100%"

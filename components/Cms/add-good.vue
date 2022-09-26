@@ -50,10 +50,6 @@
         @change="handleImageUpload"
       >
     </div>
-    <div class="item__thumbnail_url">
-      thumbnail_url:
-      <input v-model="itemToAdd.thumbnail_url" class="input">
-    </div>
     <div class="item__model">
       model:
       <input v-model="itemToAdd.model" class="input">
@@ -76,7 +72,6 @@
 </template>
 
 <script setup>
-import { Image } from 'image-js'
 import { ref } from 'vue'
 import useSupabase from '@/composables/useSupabase'
 
@@ -94,7 +89,6 @@ const handleAddButtonClick = async () => {
   itemToAdd.value.final_price = 0
   itemToAdd.value.units_in_stock = 0
   itemToAdd.value.image_url = ''
-  itemToAdd.value.thumbnail_url = ''
   itemToAdd.value.model = null
   itemToAdd.value.color = ''
   itemToAdd.value.orders = 0
@@ -107,7 +101,6 @@ const itemToAdd = ref({
   final_price: 0,
   units_in_stock: 0,
   image_url: '',
-  thumbnail_url: '',
   model: null,
   color: '',
   orders: 0
@@ -122,23 +115,7 @@ const handleImageUpload = async () => {
     .from('images')
     .getPublicUrl(`full/${file.name}`)
 
-  /* make thumbnail */
-  const image = await Image.load(url)
-  image
-    .resize({ width: 150 })
-    .toBlob('image/jpeg')
-    .then(
-      async blob =>
-      /* then upload it to storage */
-        await db.storage.from('images').upload(`thumb/${file.name}`, blob)
-    )
-  /* and get thumbnail url */
-  const { publicURL: thumbnailUrl } = db.storage
-    .from('images')
-    .getPublicUrl(`thumb/${file.name}`)
-  /* push urls to form */
   itemToAdd.value.image_url = url
-  itemToAdd.value.thumbnail_url = thumbnailUrl
 }
 </script>
 
@@ -171,7 +148,6 @@ const handleImageUpload = async () => {
   &__final_price,
   &__units_in_stock,
   &__image_url,
-  &__thumbnail_url,
   &__model,
   &__color,
   &__orders {

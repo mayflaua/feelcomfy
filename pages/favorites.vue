@@ -30,8 +30,14 @@
 </template>
 
 <script setup>
+import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import {useFavoritesStore} from "~~/stores/favorites";
+import {defineComponent} from "vue";
+
+defineComponent({
+  vSelect
+})
 
 const favoritesStore = useFavoritesStore();
 

@@ -115,7 +115,7 @@ export default {
       this.cartStore.handleCartAction(this.card.pk_id)
       this.$emit('show-popup', {
         name: this.card.title,
-        url: this.card.thumbnail_url,
+        url: this.card.image_url,
         event: this.isInCart ? 'add' : 'remove'
       })
     }

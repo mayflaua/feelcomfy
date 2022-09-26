@@ -68,15 +68,7 @@
         class="input"
       >
     </div>
-    <div class="item__thumbnail_url">
-      thumbnail_url:
-      <input
-        v-model="item.thumbnail_url"
-        :class="isEditting || 'input--disabled'"
-        :disabled="!isEditting"
-        class="input"
-      >
-    </div>
+
     <div class="item__model">
       model:
       <input
@@ -132,19 +124,7 @@ import { ref, toRaw } from 'vue'
 import useSupabase from '@/composables/useSupabase'
 
 const { supabase: db } = useSupabase()
-// interface ItemProps {
-//   readonly pk_id: number;
-//   category_id: number;
-//   title: string;
-//   old_price: number;
-//   final_price: number;
-//   units_in_stock: number;
-//   image_url: string;
-//   thumbnail_url: string;
-//   model?: string;
-//   color: string;
-//   orders: number;
-// }
+
 const itemProps = defineProps({
   info: {
     type: Object,
@@ -212,7 +192,6 @@ const handleDeleteButtonClick = async () => {
   &__final_price,
   &__units_in_stock,
   &__image_url,
-  &__thumbnail_url,
   &__model,
   &__color,
   &__orders {

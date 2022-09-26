@@ -8,7 +8,7 @@
     <div class="item__image">
       <nuxt-img
         :alt="itemInfo.title"
-        :src="itemInfo.thumbnail_url"
+        :src="itemInfo.image_url"
         format="webp"
         height="100%"
         prelaod
