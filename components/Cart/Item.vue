@@ -13,7 +13,7 @@
         height="100%"
         prelaod
         quality="60"
-        width="100px"
+        sizes="md:70px lg:100px"
       />
     </div>
     <div class="item__desc">
