@@ -27,9 +27,34 @@
           <p class="orders__title">
             Мои заказы
           </p>
-
+          <div class="orders__filter">
+            <div
+              :class="currentFilterTab === 'all' && 'filter__button--active'"
+              class="filter__button"
+              @click="currentFilterTab = 'all'"
+            >
+              Все заказы
+            </div>
+            <div
+              :class="currentFilterTab === 'active' && 'filter__button--active'"
+              class="
+              filter__button"
+              @click="currentFilterTab = 'active'"
+            >
+              Активные
+            </div>
+            <div
+              :class="currentFilterTab === 'delivered' && 'filter__button--active'"
+              class="
+              filter__button"
+              @click="currentFilterTab = 'delivered'"
+            >
+              Подтвержденные
+            </div>
+          </div>
           <div
-            class="orders__list"
+            class="
+              orders__list"
           >
             <ProfileOrder v-for="order in ordersList" :key="order.order_id" :order-info="order" />
           </div>
@@ -57,8 +82,17 @@ const orderStore = useOrdersStore()
 const { user } = useAuth()
 const { supabase } = useSupabase()
 const currentTab = ref('orders')
+const currentFilterTab = ref('all')
 
-const ordersList = computed(() => orderStore.orders)
+const ordersList = computed(() => {
+  if (currentFilterTab.value === 'all') {
+    return orderStore.orders
+  } else if (currentFilterTab.value === 'active') {
+    return orderStore.orders.filter(order => order.status === 'created')
+  } else {
+    return orderStore.orders.filter(order => order.status !== 'created')
+  }
+})
 
 onBeforeMount(() => orderStore.getOrders(user.value.id))
 
@@ -136,6 +170,34 @@ onBeforeMount(() => orderStore.getOrders(user.value.id))
             flex-direction: column;
             gap: 20px;
           }
+
+          &__filter {
+            display: flex;
+            border: 1px solid lighten($default, 12);
+            width: fit-content;
+
+            margin: 20px 0;
+
+            @media (max-width: 768px) {
+              margin: 20px auto;
+            }
+
+            .filter__button {
+              padding: 8px 15px;
+              border-right: 1px solid lighten($default, 12);
+              cursor: pointer;
+              font-size: 0.9rem;
+
+              &:last-child {
+                border: none;
+              }
+
+              &--active {
+                background-color: darken($light, 4);
+              }
+            }
+          }
+
         }
       }
     }
