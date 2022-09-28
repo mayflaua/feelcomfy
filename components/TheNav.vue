@@ -2,7 +2,11 @@
   <header class="header">
     <nav class="nav">
       <nuxt-link class="nav__logo" to="/">
-        <img alt="logo" class="logo" src="~/assets/icons/logo.png">
+        <img
+          alt="logo"
+          class="logo"
+          src="~/assets/icons/logo.webp"
+        >
       </nuxt-link>
       <div class="nav__actions">
         <div class="nav__search-form">
@@ -65,7 +69,7 @@
           <div class="header__links">
             <a
               class="header__links-link"
-              @click="openAuthModal"
+              @click="handleAccountClick"
             >Войти / Зарегистрироваться</a>
           </div>
         </header>

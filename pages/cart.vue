@@ -105,17 +105,17 @@
 </template>
 
 <script setup>
-import CircleProgress from 'vue3-circle-progress'
-import { computed, defineComponent } from 'vue'
+import { computed } from 'vue'
 import useAuth from '../composables/useAuth'
 import useSupabase from '../composables/useSupabase'
 import { useCartStore } from '~~/stores/cart'
+
+const CircleProgress = () => import('vue3-circle-progress')
 
 const { user } = useAuth()
 const { supabase } = useSupabase()
 
 // FIXME: unauthorized access
-defineComponent({ CircleProgress })
 /* currency formatter */
 const formatter = new Intl.NumberFormat('ru-RU', {
   style: 'currency',

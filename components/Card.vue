@@ -6,10 +6,9 @@
         :src="card.image_url"
         class="img"
         format="webp"
-        height="100%"
         preload
         quality="80"
-        width="250px"
+        sizes="450:150px 600:200px sm:250px"
       />
     </div>
     <div class="card__favorites-btn" @click="_handleFavoritesClick">

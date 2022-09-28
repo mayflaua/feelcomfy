@@ -39,7 +39,7 @@ export default {
       }
     }
   },
-  beforeMount () {
+  created () {
     this._pushCardsData()
   },
   methods: {

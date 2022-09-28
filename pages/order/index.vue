@@ -217,12 +217,9 @@
 
 <script setup>
 import "vue-select/dist/vue-select.css";
-import vSelect from "vue-select";
-import {defineComponent} from "vue";
 
-defineComponent({
-  vSelect
-})
+const vSelect = () => import( "vue-select");
+
 
 const {user} = useAuth();
 const {supabase} = useSupabase();
