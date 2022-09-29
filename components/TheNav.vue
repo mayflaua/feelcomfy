@@ -11,11 +11,12 @@
       <div class="nav__actions">
         <div class="nav__search-form">
           <input
+            v-model.lazy.trim="searchQuery"
             class="search-form__input"
             placeholder="Найти товары"
             type="text"
           >
-          <button class="search-form__search-btn" />
+          <button class="search-form__search-btn" @click="handleSearchClick" />
         </div>
         <div class="nav__user-actions">
           <button class="nav__burger" @click="sideMenuOpened = true">
@@ -134,6 +135,8 @@ export default {
     cartStore: useCartStore(),
     auth: useAuth(),
 
+    searchQuery: '',
+
     categoriesList: [
       {
         name: 'mouse',
@@ -189,6 +192,17 @@ export default {
         this.$emit('open-auth-modal')
       } else {
         this.$router.push('/profile')
+      }
+    },
+
+    handleSearchClick () {
+      if (this.searchQuery) {
+        this.$router.push({
+          path: '/search',
+          query: {
+            q: this.searchQuery
+          }
+        })
       }
     }
   }
@@ -431,6 +445,7 @@ export default {
         border: 1px solid $default;
         outline: none;
         border-left: none;
+        cursor: pointer;
 
         background: $light url("~/assets/icons/search.png") no-repeat center/18px;
 

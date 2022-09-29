@@ -1,9 +1,8 @@
 <template>
-  <div>
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-  </div>
+  <NuxtLayout>
+    <NuxtLoadingIndicator color="lightblue" />
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 <script setup>
 import { useFavoritesStore } from '~/stores/favorites'

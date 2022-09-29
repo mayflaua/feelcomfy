@@ -92,6 +92,7 @@ $animation-speed: 1s;
 }
 
 .new-loader {
+  margin: 35px auto;
 
   .circles {
     position: relative;
