@@ -123,162 +123,162 @@ export default {
 
 <style lang="scss" scoped>
 .card {
-	width: 250px;
-	min-height: 350px;
-	background: #eee;
-	border: 1px solid $light;
-	border-radius: 7px;
-	overflow: hidden;
+  width: 250px;
+  min-height: 350px;
+  background: #eee;
+  border: 1px solid $light;
+  border-radius: 7px;
+  overflow: hidden;
 
-	transition: box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease;
 
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
-	@media (max-width: 600px) {
-		width: 200px;
-		min-height: 300px;
-	}
-	@media (max-width: 450px) {
-		width: 150px;
-		min-height: 250px;
-		font-size: 14px;
-	}
+  @media (max-width: 600px) {
+    width: 200px;
+    min-height: 300px;
+  }
+  @media (max-width: 450px) {
+    width: 150px;
+    min-height: 250px;
+    font-size: 14px;
+  }
 
-	&__image {
-		transition: transform 0.2s ease;
-		height: 300px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background-color: white;
-		overflow: hidden;
+  &__image {
+    transition: transform 0.2s ease;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    overflow: hidden;
 
-		@media (max-width: 450px) {
-			height: 220px;
-		}
-	}
+    @media (max-width: 450px) {
+      height: 220px;
+    }
+  }
 
-	&__favorites-btn {
-		position: absolute;
-		right: 12px;
-		top: 15px;
-		transition: opacity 0.3s ease;
-		cursor: pointer;
-		opacity: 0.8;
+  &__favorites-btn {
+    position: absolute;
+    right: 12px;
+    top: 15px;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+    opacity: 0.8;
 
-		.icon {
-			fill: none;
-			stroke: black;
-			stroke-opacity: 0.6;
-			transition: stroke-opacity 0.1s ease;
+    .icon {
+      fill: none;
+      stroke: black;
+      stroke-opacity: 0.6;
+      transition: stroke-opacity 0.1s ease;
 
-			&:hover {
-				stroke-opacity: 1;
-			}
+      &:hover {
+        stroke-opacity: 1;
+      }
 
-			&--favorite {
-				stroke: red;
-				fill: red;
-				animation: like 0.3s ease;
+      &--favorite {
+        stroke: red;
+        fill: red;
+        animation: like 0.3s ease;
 
-				@keyframes like {
-					0%,
-					100% {
-						transform: none;
-					}
-					40% {
-						transform: scale(1.2);
-					}
-				}
-			}
-		}
+        @keyframes like {
+          0%,
+          100% {
+            transform: none;
+          }
+          40% {
+            transform: scale(1.2);
+          }
+        }
+      }
+    }
 
-		&:hover {
-			opacity: 1;
-		}
-	}
+    &:hover {
+      opacity: 1;
+    }
+  }
 
-	&__title {
-		width: 100%;
-		padding: 5px 10px;
-		font-size: 1.1rem;
-	}
+  &__title {
+    width: 100%;
+    padding: 5px 10px;
+    font-size: 1.1rem;
+  }
 
-	&__orders {
-		display: flex;
-		gap: 5px;
-		padding: 0 10px;
-		margin: -7px 0 0 0;
-		font-size: 0.7rem;
-		color: $dark;
+  &__orders {
+    display: flex;
+    gap: 5px;
+    padding: 0 10px;
+    margin: -7px 0 0 0;
+    font-size: 0.7rem;
+    color: $dark;
 
-		.rating {
-			background: url("~/assets/icons/star.svg") no-repeat left/14px;
-			background-position: 0 -1px;
-			padding-left: 14px;
-		}
-	}
+    .rating {
+      background: url("~/assets/icons/star.svg") no-repeat left/14px;
+      background-position: 0 -1px;
+      padding-left: 14px;
+    }
+  }
 
-	&__info {
-		width: 100%;
+  &__info {
+    width: 100%;
 
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-	&__price {
-		padding: 0 10px;
-		font-size: 1.2rem;
-		font-weight: 600;
-		display: flex;
-		align-items: center;
-		gap: 5px;
+  &__price {
+    padding: 0 10px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 
-		.card__old-price {
-			font-size: 0.8rem;
-			color: $dark;
-			text-decoration: line-through;
-		}
-	}
+    .card__old-price {
+      font-size: 0.8rem;
+      color: $dark;
+      text-decoration: line-through;
+    }
+  }
 
-	&__cart-btn {
-		width: 30px;
-		height: 30px;
-		margin: 3px 8px;
+  &__cart-btn {
+    width: 30px;
+    height: 30px;
+    margin: 3px 8px;
 
-		box-sizing: border-box;
-		border: 1px solid $default;
-		border-radius: 50%;
+    box-sizing: border-box;
+    border: 1px solid $default;
+    border-radius: 50%;
 
-		background-image: url("~/assets/icons/cart-add.png");
-		background-size: 100%;
-		background-repeat: no-repeat;
-		background-position: 0 0;
+    background-image: url("~/assets/icons/cart-add.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: 0 0;
 
-		cursor: pointer;
-		transition: background 0.2s ease;
+    cursor: pointer;
+    transition: background 0.2s ease;
 
-		&--incart {
-			background-position: 0 100%;
-		}
+    &--incart {
+      background-position: 0 100%;
+    }
 
-		&:hover {
-			background-color: $default;
-		}
-	}
+    &:hover {
+      background-color: $default;
+    }
+  }
 
-	@media (min-width: 768px) {
-		&:hover {
-			box-shadow: 0 7px 6px rgba(black, 0.2);
+  @media (min-width: 768px) {
+    &:hover {
+      box-shadow: 0 7px 6px rgba(black, 0.2);
 
-			& > .card__image {
-				transform: scale(1.05);
-			}
-		}
-	}
+      & > .card__image {
+        transform: scale(1.05);
+      }
+    }
+  }
 }
 </style>

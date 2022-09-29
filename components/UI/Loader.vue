@@ -1,5 +1,5 @@
 <template>
-  <div class="loader">
+  <div v-if="!v2" class="loader">
     <div class="loader-circles">
       <div class="circle circle1" />
       <div class="circle circle2" />
@@ -9,6 +9,12 @@
       {{ text }}
     </p>
   </div>
+  <div v-else class="new-loader">
+    <div class="circles">
+      <div class="circle circle-outer" />
+      <div class="circle circle-inner" />
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -16,6 +22,11 @@ defineProps({
   text: {
     type: String,
     default: ''
+  },
+
+  v2: {
+    type: Boolean,
+    default: false
   }
 })
 </script>
@@ -23,10 +34,30 @@ defineProps({
 <style lang="scss" scoped>
 
 $animation-speed: 1s;
+@keyframes animate-new {
+  from {
+    transform: scale(0)
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes animate {
+  from {
+    opacity: 0.9;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-5px);
+  }
+}
 
 .loader {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
   max-width: 230px;
   margin: 0 auto;
 
@@ -40,14 +71,14 @@ $animation-speed: 1s;
     justify-content: space-between;
     align-items: center;
     width: 50px;
-    height: 50px;
+    height: 30px;
 
     .circle {
       width: 15px;
       height: 15px;
       border-radius: 50%;
       background-color: $blue;
-      animation: $animation-speed loading infinite alternate;
+      animation: $animation-speed animate infinite alternate;
 
       &1 {
         animation-delay: calc($animation-speed / 3);
@@ -60,13 +91,28 @@ $animation-speed: 1s;
   }
 }
 
-@keyframes loading {
-  from {
-    opacity: 0.9;
-  }
-  to {
-    opacity: 1;
-    transform: translateY(-5px);
+.new-loader {
+
+  .circles {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .circle {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: $blue;
+      opacity: 0.7;
+      animation: $animation-speed animate-new linear infinite alternate;
+
+      &-outer {
+        animation-direction: alternate-reverse;
+      }
+    }
   }
 }
+
 </style>

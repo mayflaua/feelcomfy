@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="cart">
-      <UILoader v-if="!cartStore.cartReady" text="Загружаю корзину" />
+      <UILoader v-if="!cartStore.cartReady" />
 
       <div v-if="totalItemsFormatted && cartStore.cartReady" class="cart__body">
         <div class="cart__info">

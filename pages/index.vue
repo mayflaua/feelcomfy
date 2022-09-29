@@ -15,7 +15,7 @@
       value="Загрузить еще"
       @click.prevent="handleLoadMoreClick"
     />
-    <UILoader v-if="productsStore.isLoading" />
+    <UILoader v-if="productsStore.isLoading" text="Загружаю товары" />
   </div>
 </template>
 
