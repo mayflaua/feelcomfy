@@ -62,6 +62,10 @@
       orders:
       <input v-model="itemToAdd.orders" class="input">
     </div>
+    <div class="item__orders">
+      desc:
+      <input v-model="itemToAdd.description" class="input">
+    </div>
     <UIButton
       :value="sending ? 'Отправка' : 'Добавить'"
       class="submit-btn"

@@ -96,6 +96,12 @@
         class="input"
       >
     </div>
+    <input
+      v-model="item.description"
+      :class="isEditting || 'input--disabled'"
+      :disabled="!isEditting"
+      class="input"
+    >
     <UIButton
       :value="isEditting ? 'Подтвердить' : 'Редактировать'"
       class="edit-btn"
@@ -141,7 +147,7 @@ const handleEditButtonClick = async () => {
     /* handle edit confirmation and update db */
     await db
       .from('goods')
-      .update({ ...itemProps.info }, { returning: 'minimal' })
+      .update({ ...item.value }, { returning: 'minimal' })
       .eq('pk_id', itemProps.info.pk_id)
   } else {
     prevValues = structuredClone(toRaw(item.value))

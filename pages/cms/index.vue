@@ -32,7 +32,8 @@ const { supabase: db } = useSupabase()
 const loadedGoods = ref({ data: [] })
 const loadAllGoods = async () => {
   loadingState.value = 'Загрузка'
-  loadedGoods.value = await db.from('goods').select('*')
+  loadedGoods.value = await
+  db.from('goods').select('pk_id, category_id, title, old_price, final_price, units_in_stock, image_url, model, color, orders, description')
   loadingState.value = null
 }
 const loadingState = ref(null)
