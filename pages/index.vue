@@ -1,75 +1,56 @@
 <template>
   <div>
     <CartPopup ref="popup" />
-    <div v-if="!cardsLoading" class="cards">
+    <div v-if="productsStore.totalProductsLoaded" ref="cardsTable" class="cards">
       <Card
-        v-for="card in cards"
+        v-for="card in products"
         :key="card.pk_id"
         :card="card"
         @show-popup="_showPopup"
       />
     </div>
-    <UILoader
-      v-if="cardsLoading || moreContentLoading"
-      :text="'Загружаю товары...'"
+    <UIButton
+      v-if="canLoadMore"
+      class="load-more-btn"
+      value="Загрузить еще"
+      @click.prevent="handleLoadMoreClick"
     />
+    <UILoader v-if="productsStore.isLoading" />
   </div>
 </template>
 
-<script>
-import { useCartStore } from '~/stores/cart'
-import useSupabase from '@/composables/useSupabase'
+<script setup>
+import { useProductsStore } from '@/stores/products'
 
-export default {
-  data: () => ({
-    cards: [],
-    cardsLoaded: 10,
-    itemsToLoad: 10,
-    cardsLoading: true,
-    moreContentLoading: false,
-    cartStore: useCartStore(),
-    sb: useSupabase()
-  }),
-  mounted () {
-    window.onscroll = () => {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-        if (!this.cardsLoading) {
-          this._loadMore()
-        }
-      }
-    }
-  },
-  created () {
-    this._pushCardsData()
-  },
-  methods: {
-    async _getCardsData () {
-      // this.cardsLoading = true;
-      const res = await this.sb.supabase
-        .from('goods')
-        .select()
-        .range(this.cardsLoaded, this.cardsLoaded + this.itemsToLoad - 1)
-      return res.data
-    },
-    async _pushCardsData () {
-      const res = await this._getCardsData()
-      this.cards.push(...res)
-      this.cardsLoading = false
-    },
-    async _loadMore () {
-      this.moreContentLoading = true
-      this.cardsLoaded += this.itemsToLoad
-      await this._pushCardsData()
-      this.moreContentLoading = false
-    },
-    _showPopup ({ name, url, event }) {
-      this.$refs.popup.show(name, url, event)
-    }
-  }
+const productsStore = useProductsStore()
+
+const products = ref([])
+const popup = ref(null)
+
+const _showPopup = ({ name, url, event }) =>
+  popup.value.show(name, url, event)
+
+const handleLoadMoreClick = () => {
+  productsStore.getProductsFromDatabase(10)
 }
+
+const canLoadMore = computed(() => {
+  return !productsStore.isLoading && productsStore.totalProductsLoaded && productsStore.productsCanBeLoaded !== 0
+})
+
+// created() hook
+productsStore.getProductsFromDatabase(10).then(() => (products.value = productsStore.productsList))
+
 </script>
 
 <style lang="scss" scoped>
+.load-more-btn {
+  margin: 20px auto;
+  border-radius: 20px;
+  display: block;
+  width: 140px;
+}
+
 .cards {
   width: 100%;
   display: grid;

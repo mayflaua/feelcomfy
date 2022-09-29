@@ -6,21 +6,21 @@
   </div>
 </template>
 <script setup>
-import { useFavoritesStore } from "~/stores/favorites";
-import { useCartStore } from "~/stores/cart";
+import { useFavoritesStore } from '~/stores/favorites'
+import { useCartStore } from '~/stores/cart'
 
-const { supabase } = useSupabase();
-const { user } = useAuth();
+const { supabase } = useSupabase()
+const { user } = useAuth()
 
-const favoritesStore = useFavoritesStore();
-const cart = useCartStore();
+const favoritesStore = useFavoritesStore()
+const cartStore = useCartStore()
 
-onBeforeMount(async () => {
-  supabase.auth.onAuthStateChange(async (event, session) => {
-    if (event == "SIGNED_IN") {
-      await favoritesStore.getFavoritesFromDatabase();
-      await cart.getCartFromDatabase(user.value.id);
-    }
-  });
-});
+// created() hook
+supabase.auth.onAuthStateChange(async (event, session) => {
+  if (event === 'SIGNED_IN') {
+    await favoritesStore.getFavoritesFromDatabase()
+    await cartStore.getCartFromDatabase(user.value.id)
+  }
+})
+
 </script>

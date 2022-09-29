@@ -7,7 +7,6 @@
         class="img"
         format="webp"
         preload
-        quality="80"
         sizes="450:150px 600:200px sm:250px"
       />
     </div>
@@ -36,7 +35,7 @@
       <div class="rating">
         5.0
       </div>
-      <!-- заменить кол-во заказов на кол-во оценок -->
+      <!-- TODO: заменить кол-во заказов на кол-во оценок -->
       <div class="evaluations">
         ({{ formattedOrders }})
       </div>
@@ -124,157 +123,162 @@ export default {
 
 <style lang="scss" scoped>
 .card {
-  width: 250px;
-  min-height: 350px;
-  background: #eee;
-  border: 1px solid $light;
-  border-radius: 7px;
-  overflow: hidden;
+	width: 250px;
+	min-height: 350px;
+	background: #eee;
+	border: 1px solid $light;
+	border-radius: 7px;
+	overflow: hidden;
 
-  transition: box-shadow 0.2s ease;
+	transition: box-shadow 0.2s ease;
 
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 
-  @media (max-width: 600px) {
-    width: 200px;
-    min-height: 300px;
-  }
-  @media (max-width: 450px) {
-    width: 150px;
-    min-height: 250px;
-    font-size: 14px;
-  }
+	@media (max-width: 600px) {
+		width: 200px;
+		min-height: 300px;
+	}
+	@media (max-width: 450px) {
+		width: 150px;
+		min-height: 250px;
+		font-size: 14px;
+	}
 
-  &__image {
-    transition: transform 0.2s ease;
-    height: 70%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-  }
+	&__image {
+		transition: transform 0.2s ease;
+		height: 300px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: white;
+		overflow: hidden;
 
-  &__favorites-btn {
-    position: absolute;
-    right: 12px;
-    top: 15px;
-    transition: opacity 0.3s ease;
-    cursor: pointer;
-    opacity: 0.8;
+		@media (max-width: 450px) {
+			height: 220px;
+		}
+	}
 
-    .icon {
-      fill: none;
-      stroke: black;
-      stroke-opacity: 0.6;
-      transition: stroke-opacity 0.1s ease;
+	&__favorites-btn {
+		position: absolute;
+		right: 12px;
+		top: 15px;
+		transition: opacity 0.3s ease;
+		cursor: pointer;
+		opacity: 0.8;
 
-      &:hover {
-        stroke-opacity: 1;
-      }
+		.icon {
+			fill: none;
+			stroke: black;
+			stroke-opacity: 0.6;
+			transition: stroke-opacity 0.1s ease;
 
-      &--favorite {
-        stroke: red;
-        fill: red;
-        animation: like 0.3s ease;
+			&:hover {
+				stroke-opacity: 1;
+			}
 
-        @keyframes like {
-          0%,
-          100% {
-            transform: none;
-          }
-          40% {
-            transform: scale(1.2);
-          }
-        }
-      }
-    }
+			&--favorite {
+				stroke: red;
+				fill: red;
+				animation: like 0.3s ease;
 
-    &:hover {
-      opacity: 1;
-    }
-  }
+				@keyframes like {
+					0%,
+					100% {
+						transform: none;
+					}
+					40% {
+						transform: scale(1.2);
+					}
+				}
+			}
+		}
 
-  &__title {
-    width: 100%;
-    padding: 5px 10px;
-    font-size: 1.1rem;
-  }
+		&:hover {
+			opacity: 1;
+		}
+	}
 
-  &__orders {
-    display: flex;
-    gap: 5px;
-    padding: 0 10px;
-    margin: -7px 0 0 0;
-    font-size: 0.7rem;
-    color: $dark;
+	&__title {
+		width: 100%;
+		padding: 5px 10px;
+		font-size: 1.1rem;
+	}
 
-    .rating {
-      background: url("~/assets/icons/star.svg") no-repeat left/14px;
-      background-position: 0 -1px;
-      padding-left: 14px;
-    }
-  }
+	&__orders {
+		display: flex;
+		gap: 5px;
+		padding: 0 10px;
+		margin: -7px 0 0 0;
+		font-size: 0.7rem;
+		color: $dark;
 
-  &__info {
-    width: 100%;
+		.rating {
+			background: url("~/assets/icons/star.svg") no-repeat left/14px;
+			background-position: 0 -1px;
+			padding-left: 14px;
+		}
+	}
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+	&__info {
+		width: 100%;
 
-  &__price {
-    padding: 0 10px;
-    font-size: 1.2rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 5px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
 
-    .card__old-price {
-      font-size: 0.8rem;
-      color: $dark;
-      text-decoration: line-through;
-    }
-  }
+	&__price {
+		padding: 0 10px;
+		font-size: 1.2rem;
+		font-weight: 600;
+		display: flex;
+		align-items: center;
+		gap: 5px;
 
-  &__cart-btn {
-    width: 30px;
-    height: 30px;
-    margin: 3px 8px;
+		.card__old-price {
+			font-size: 0.8rem;
+			color: $dark;
+			text-decoration: line-through;
+		}
+	}
 
-    box-sizing: border-box;
-    border: 1px solid $default;
-    border-radius: 50%;
+	&__cart-btn {
+		width: 30px;
+		height: 30px;
+		margin: 3px 8px;
 
-    background-image: url("~/assets/icons/cart-add.png");
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-position: 0 0;
+		box-sizing: border-box;
+		border: 1px solid $default;
+		border-radius: 50%;
 
-    cursor: pointer;
-    transition: background 0.2s ease;
+		background-image: url("~/assets/icons/cart-add.png");
+		background-size: 100%;
+		background-repeat: no-repeat;
+		background-position: 0 0;
 
-    &--incart {
-      background-position: 0 100%;
-    }
+		cursor: pointer;
+		transition: background 0.2s ease;
 
-    &:hover {
-      background-color: $default;
-    }
-  }
+		&--incart {
+			background-position: 0 100%;
+		}
 
-  @media (min-width: 768px) {
-    &:hover {
-      box-shadow: 0 7px 6px rgba(black, 0.2);
+		&:hover {
+			background-color: $default;
+		}
+	}
 
-      & > .card__image {
-        transform: scale(1.05);
-      }
-    }
-  }
+	@media (min-width: 768px) {
+		&:hover {
+			box-shadow: 0 7px 6px rgba(black, 0.2);
+
+			& > .card__image {
+				transform: scale(1.05);
+			}
+		}
+	}
 }
 </style>
