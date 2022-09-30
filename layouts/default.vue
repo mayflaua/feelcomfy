@@ -10,6 +10,13 @@
 <script setup>
 import { ref } from 'vue'
 
+const route = useRoute()
+useHead({
+  link: [
+    { rel: 'canonical', href: 'https://feelcomfy.netlify.app' + route.path }
+  ]
+})
+
 const isAuthModalOpened = ref(false)
 
 const closeAuthModal = () => {

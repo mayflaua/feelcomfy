@@ -1,10 +1,10 @@
 <template>
   <div class="cart-wrapper">
     <div v-if="cartStore.cartReady" class="title-wrapper">
-      <p v-if="totalItemsFormatted" class="cart__title">
+      <h1 v-if="totalItemsFormatted" class="cart__title">
         Ваша корзина
         <span class="cart__cart-counter">{{ totalItemsFormatted }}</span>
-      </p>
+      </h1>
       <div v-else class="cart--empty">
         <p class="cart__title">
           В корзине пока нет товаров
@@ -109,6 +109,10 @@ import { computed } from 'vue'
 import useAuth from '../composables/useAuth'
 import useSupabase from '../composables/useSupabase'
 import { useCartStore } from '~~/stores/cart'
+
+useHead({
+  title: 'Корзина - FeelComfy'
+})
 
 const CircleProgress = defineAsyncComponent({
   loader: () => import('vue3-circle-progress')

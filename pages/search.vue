@@ -2,9 +2,9 @@
   <div class="search">
     <UILoader v-if="isSearching" v2 />
     <div v-if="!isSearching" class="search__title-wrapper">
-      <p v-if="products.length !== 0 && !isSearching" class="search__title">
+      <h2 v-if="products.length !== 0 && !isSearching" class="search__title">
         Результаты поиска по запросу "{{ route.query.q }}"
-      </p>
+      </h2>
       <p v-else class="search__title">
         По запросу "{{ route.query.q }}" ничего не найдено.
       </p>
@@ -22,6 +22,11 @@ import useSearch from '@/composables/useSearch'
 const { findByQuery } = useSearch()
 
 const route = useRoute()
+
+useHead({
+  title: `Результаты поиска по запросу '${route.query.q}'`
+})
+
 const products = ref(await findByQuery(route.query.q))
 // return to index page if no query provided
 if (!route.query.q) {

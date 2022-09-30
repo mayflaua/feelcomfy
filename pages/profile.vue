@@ -74,15 +74,18 @@ import useSupabase from '@/composables/useSupabase'
 
 import { useOrdersStore } from '~/stores/orders'
 
-// eslint-disable-next-line no-undef
-definePageMeta({
-  middleware: 'auth'
-})
 const orderStore = useOrdersStore()
 const { user } = useAuth()
 const { supabase } = useSupabase()
 const currentTab = ref('orders')
 const currentFilterTab = ref('all')
+
+definePageMeta({
+  middleware: 'auth'
+})
+useHead({
+  title: 'Личный кабинет'
+})
 
 const ordersList = computed(() => {
   if (currentFilterTab.value === 'all') {

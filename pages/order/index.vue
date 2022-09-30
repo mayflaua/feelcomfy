@@ -1,8 +1,8 @@
 <template>
   <div class="order">
-    <p class="order__title">
+    <h1 class="order__title">
       Оформление заказа
-    </p>
+    </h1>
 
     <div class="order__body">
       <div class="delivery-block-wrapper">
@@ -247,6 +247,17 @@
 
 <script setup>
 import 'vue-select/dist/vue-select.css'
+
+useHead({
+  title: 'Оформление заказа - FeelComfy'
+})
+
+definePageMeta({
+  middleware: 'auth',
+  meta: [
+    { name: 'robots', content: 'none, noyaca, noarchive' }
+  ]
+})
 
 const vSelect = defineAsyncComponent({
   loader: () => import('vue-select')

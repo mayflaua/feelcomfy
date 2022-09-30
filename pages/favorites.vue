@@ -2,9 +2,9 @@
   <div class="favorites">
     <CartPopup ref="popup" />
     <div class="favorites__header">
-      <div class="favorites__title">
+      <h1 class="favorites__title">
         Мои желания
-      </div>
+      </h1>
       <div class="sorting-wrapper">
         <p class="sorting__title">
           Сортировка
@@ -39,6 +39,10 @@ import { useFavoritesStore } from '~~/stores/favorites'
 
 const vSelect = defineAsyncComponent({
   loader: () => import('vue-select')
+})
+
+useHead({
+  title: 'Избранное - FeelComfy'
 })
 
 const favoritesStore = useFavoritesStore()

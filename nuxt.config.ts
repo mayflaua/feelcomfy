@@ -4,8 +4,29 @@ import { defineNuxtConfig } from 'nuxt/config'
 export default defineNuxtConfig({
   app: {
     head: {
+      title: 'FeelComfy - интернет магазин для программистов',
       link: [
         { rel: 'preconnect', href: 'https://ik.imagekit.io' }
+      ],
+      meta: [
+        {
+          name: 'description',
+          content: 'Интернет магазин для программистов со всем необходимым для комфортной' +
+            ' разработки.'
+        },
+        {
+          name: 'robots',
+          content: 'all'
+        },
+        {
+          name: 'keywords',
+          content: 'интернет магазин, маркетплейс, низкие цены, для программистов'
+        },
+        {
+          httpEquiv: 'content-language',
+          content: 'ru'
+        },
+        {}
       ]
     }
   },

@@ -20,7 +20,13 @@
 
 <script setup>
 definePageMeta({
-  middleware: 'order'
+  middleware: 'order',
+  meta: [
+    { name: 'robots', content: 'none, noyaca, noarchive' }
+  ]
+})
+useHead({
+  title: 'Спасибо за заказ! - FeelComfy'
 })
 
 </script>

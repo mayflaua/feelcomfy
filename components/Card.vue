@@ -7,7 +7,6 @@
         :src="card.netlify_name"
         class="img"
         placeholder="/assets/images/img-placeholder.webp"
-        preload
         sizes="450:150px 600:200px sm:250px"
       />
     </div>

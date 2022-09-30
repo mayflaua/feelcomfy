@@ -29,6 +29,17 @@
 import { ref } from 'vue'
 import useSupabase from '@/composables/useSupabase'
 
+useHead({
+  title: 'Управление товарами'
+})
+
+definePageMeta({
+  middleware: 'admin',
+  meta: [
+    { name: 'robots', content: 'none, noyaca, noarchive' }
+  ]
+})
+
 const { supabase: db } = useSupabase()
 const loadedGoods = ref({ data: [] })
 const loadAllGoods = async () => {
