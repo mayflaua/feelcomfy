@@ -3,9 +3,10 @@
     <div class="card__image">
       <nuxt-img
         :alt="card.title"
-        :src="card.image_url"
+        :modifiers="{f: 'webp'}"
+        :src="card.netlify_name"
         class="img"
-        format="webp"
+        placeholder="/assets/images/img-placeholder.webp"
         preload
         sizes="450:150px 600:200px sm:250px"
       />

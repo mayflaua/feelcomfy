@@ -18,6 +18,7 @@
     <p class="loading-state">
       {{ loadingState }}
     </p>
+    <pre>{{ test }}</pre>
     <div class="items">
       <CmsItem v-for="item in loadedGoods.data" :key="item.id" :info="item" />
     </div>

@@ -1,4 +1,5 @@
 <template>
+  <!--  // TODO: optimize icons-->
   <header class="header">
     <nav class="nav">
       <nuxt-link class="nav__logo" to="/">
