@@ -28,7 +28,7 @@ const val = ref(props.defaultValue)
   &:checked:before {
     background-color: $blue;
     border-color: $blue;
-    background-image: url("~/assets/icons/check.png");
+    background-image: url("~/assets/icons/check.webp");
     background-repeat: no-repeat;
     background-size: 90%;
     background-position: center;

@@ -12,47 +12,47 @@
         <input
           ref="emailElement"
           v-model.lazy="signUpEmail"
-          type="email"
           class="body__email-input"
           placeholder="Email"
           required
+          type="email"
         >
         <input
           v-model.lazy="signUpName"
-          type="text"
           class="body__name-input"
           placeholder="Имя"
+          type="text"
         >
         <input
           v-model="signUpPassword"
-          type="password"
           class="body__password-input"
           placeholder="Придумайте пароль"
+          type="password"
         >
         <div class="body__validation">
           <div
-            class="validate"
             :class="validations.length && 'validate--valid'"
+            class="validate"
           >
             Не менее 8 символов
           </div>
           <div
-            class="validate"
             :class="validations.numbers && 'validate--valid'"
+            class="validate"
           >
             Состоит из цифр и латинских букв
           </div>
           <div
-            class="validate"
             :class="validations.letters && 'validate--valid'"
+            class="validate"
           >
             Содержит строчные и заглавные буквы
           </div>
         </div>
         <button
+          :class="!isFormValid && 'body__signup-btn--disabled'"
           class="body__signup-btn"
           type="submit"
-          :class="!isFormValid && 'body__signup-btn--disabled'"
         >
           Зарегистрироваться
         </button>
@@ -200,7 +200,7 @@ const handleSignUp = () => {
           margin: 0 10px 0 0;
           width: 15px;
           height: 15px;
-          background: url("~/assets/icons/valid.png") no-repeat center/contain;
+          background: url("~/assets/icons/valid.webp") no-repeat center/contain;
           filter: grayscale(100);
           transition: filter 0.3s ease;
         }

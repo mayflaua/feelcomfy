@@ -43,10 +43,11 @@
           <div class="item__image-wrapper">
             <nuxt-img
               :alt="item.title"
-              :src="item.image_url"
+              :src="item.netlify_name"
               class="item__image"
               format="webp"
               height="100%"
+              placeholder="/assets/images/img-placeholder.webp"
               preload
               quality="60"
               width="90px"

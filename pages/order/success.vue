@@ -3,7 +3,7 @@
     <img
       alt="success"
       class="order-success__image"
-      src="~/assets/images/order-success.png"
+      src="~/assets/images/order-success.webp"
     >
     <p class="order-success__title">
       Спасибо за заказ!

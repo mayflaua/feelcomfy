@@ -8,9 +8,10 @@
     <div class="item__image">
       <nuxt-img
         :alt="itemInfo.title"
-        :src="itemInfo.image_url"
+        :src="itemInfo.netlify_name"
         format="webp"
         height="100%"
+        placeholder="/assets/images/img-placeholder.webp"
         prelaod
         quality="60"
         sizes="md:70px lg:100px"
@@ -148,7 +149,7 @@ $qtySize: 40px;
 
     border: none;
     outline: none;
-    background: transparent url("~/assets/icons/bin.png") no-repeat left/contain;
+    background: transparent url("~/assets/icons/bin.webp") no-repeat left/contain;
     cursor: pointer;
     opacity: 0.7;
 

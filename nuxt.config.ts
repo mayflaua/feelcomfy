@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       link: [
-        { rel: 'preconnect', href: 'https://ltxvxjjipthpwfyluwmj.supabase.co/' }
+        { rel: 'preconnect', href: 'https://ik.imagekit.io' }
       ]
     }
   },

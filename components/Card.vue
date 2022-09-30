@@ -250,7 +250,7 @@ export default {
     border: 1px solid $default;
     border-radius: 50%;
 
-    background-image: url("~/assets/icons/cart-add.png");
+    background-image: url("~/assets/icons/cart-add.webp");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: 0 0;

@@ -1,15 +1,15 @@
 <template>
   <div class="signin-wrapper">
-    <div class="signin-modal" :class="showLoading && 'signin-modal--blocked'">
+    <div :class="showLoading && 'signin-modal--blocked'" class="signin-modal">
       <UILoader v-if="showLoading" class="loading" />
       <div class="modal__header">
         <p class="header__title">
           {{ isSigningIn ? "Вход" : "Регистрация" }}
         </p>
         <img
-          src="~/assets/icons/close.png"
-          class="header__close-btn"
           alt="close icon"
+          class="header__close-btn"
+          src="~/assets/icons/close.webp"
           @click="$emit('close-modal')"
         >
       </div>
@@ -17,15 +17,15 @@
         <div class="modal__body">
           <input
             v-model.lazy="signInEmail"
-            type="email"
             class="body__email-input"
             placeholder="Email"
+            type="email"
           >
           <input
             v-model.lazy="signInPassword"
-            type="password"
             class="body__password-input"
             placeholder="Пароль"
+            type="password"
           >
           <button class="body__login-btn" @click="handleSignIn">
             Войти
@@ -164,11 +164,13 @@ const switchAuthMethod = () => {
       cursor: pointer;
     }
   }
+
   .body-wrapper {
     display: flex;
     flex-direction: column;
     height: 100%;
   }
+
   .modal__body {
     display: flex;
     flex-direction: column;

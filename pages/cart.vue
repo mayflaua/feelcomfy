@@ -216,7 +216,7 @@ await cartStore.getCartFromDatabase()
 
   &--empty {
     text-align: center;
-    background: url("~/assets/images/empty-cart-bg.png") no-repeat top/8rem;
+    background: url("~/assets/images/empty-cart-bg.webp") no-repeat top/8rem;
     padding: 100px 6px 0 6px;
 
     .cart__subtitle {

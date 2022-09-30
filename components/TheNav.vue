@@ -448,7 +448,7 @@ export default {
         border-left: none;
         cursor: pointer;
 
-        background: $light url("~/assets/icons/search.png") no-repeat center/18px;
+        background: $light url("~/assets/icons/search.webp") no-repeat center/18px;
 
         @media (max-width: 768px) {
           border-top-right-radius: 0;
@@ -563,11 +563,11 @@ export default {
       }
 
       &__pa {
-        background-image: url("~/assets/icons/login.png");
+        background-image: url("~/assets/icons/login.webp");
       }
 
       &__favorites {
-        background-image: url("~/assets/icons/favorites.png");
+        background-image: url("~/assets/icons/favorites.webp");
         position: relative;
 
         .favorites__icon {
@@ -591,7 +591,7 @@ export default {
       }
 
       &__cart {
-        background-image: url("~/assets/icons/cart.png");
+        background-image: url("~/assets/icons/cart.webp");
         position: relative;
 
         .cart__icon {
