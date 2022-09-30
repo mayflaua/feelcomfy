@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <AuthSignIn v-if="isAuthModalOpened" @close-modal="closeAuthModal" />
+    <LazyAuthSignIn v-if="isAuthModalOpened" @close-modal="closeAuthModal" />
     <TheNav @open-auth-modal="openAuthModal" />
     <main class="content">
       <slot />

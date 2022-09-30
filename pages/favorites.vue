@@ -1,6 +1,6 @@
 <template>
   <div class="favorites">
-    <CartPopup ref="popup" />
+    <LazyCartPopup ref="popup" />
     <div class="favorites__header">
       <h1 class="favorites__title">
         Мои желания
@@ -21,7 +21,7 @@
     </div>
     <main class="favorites__body">
       <div class="favorites-list">
-        <Card
+        <LazyCard
           v-for="card in favoritesCards"
           :key="card.id"
           :card="card"
@@ -34,8 +34,8 @@
 </template>
 
 <script setup>
-import 'vue-select/dist/vue-select.css'
 import { useFavoritesStore } from '~~/stores/favorites'
+import 'vue-select/dist/vue-select.css'
 
 const vSelect = defineAsyncComponent({
   loader: () => import('vue-select')

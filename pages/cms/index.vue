@@ -1,26 +1,26 @@
 <template>
   <div class="cms">
     <div class="cms__buttons">
-      <UIButton
+      <LazyUIButton
         class="cms__btn"
         path=""
         value="Добавить товар"
         @click.prevent="addGoodBtnClicked = !addGoodBtnClicked"
       />
-      <UIButton
+      <LazyUIButton
         class="cms__btn"
         path=""
         value="Загрузить все товары"
         @click.prevent="loadAllGoods"
       />
     </div>
-    <CmsAddGood v-if="addGoodBtnClicked" />
+    <LazyCmsAddGood v-if="addGoodBtnClicked" />
     <p class="loading-state">
       {{ loadingState }}
     </p>
     <pre>{{ test }}</pre>
     <div class="items">
-      <CmsItem v-for="item in loadedGoods.data" :key="item.id" :info="item" />
+      <LazyCmsItem v-for="item in loadedGoods.data" :key="item.id" :info="item" />
     </div>
   </div>
 </template>

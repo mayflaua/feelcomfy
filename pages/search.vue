@@ -1,6 +1,6 @@
 <template>
   <div class="search">
-    <UILoader v-if="isSearching" v2 />
+    <LazyUILoader v-if="isSearching" v2 />
     <div v-if="!isSearching" class="search__title-wrapper">
       <h2 v-if="products.length !== 0 && !isSearching" class="search__title">
         Результаты поиска по запросу "{{ route.query.q }}"
@@ -11,7 +11,7 @@
     </div>
 
     <div v-if="products.length !==0" class="search__result">
-      <Card v-for="item in products" :key="item.pk_id" :card="item" />
+      <LazyCard v-for="item in products" :key="item.pk_id" :card="item" />
     </div>
   </div>
 </template>

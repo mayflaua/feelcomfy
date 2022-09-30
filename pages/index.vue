@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CartPopup ref="popup" />
+    <LazyCartPopup ref="popup" />
     <div v-if="productsStore.totalProductsLoaded" ref="cardsTable" class="cards">
       <Card
         v-for="card in products"

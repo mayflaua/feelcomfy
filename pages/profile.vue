@@ -56,7 +56,7 @@
             class="
               orders__list"
           >
-            <ProfileOrder v-for="order in ordersList" :key="order.order_id" :order-info="order" />
+            <LazyProfileOrder v-for="order in ordersList" :key="order.order_id" :order-info="order" />
           </div>
         </div>
         <div v-else class="profile__preferences">
@@ -97,7 +97,7 @@ const ordersList = computed(() => {
   }
 })
 
-onBeforeMount(() => orderStore.getOrders(user.value.id))
+await orderStore.getOrders(user.value.id)
 
 </script>
 

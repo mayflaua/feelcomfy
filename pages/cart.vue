@@ -13,15 +13,15 @@
           Начните с подборок на главной странице или найдите нужный товар через
           поиск
         </p>
-        <UIButton path="/" value="На главную" />
+        <LazyUIButton path="/" value="На главную" />
       </div>
     </div>
     <div class="cart">
-      <UILoader v-if="!cartStore.cartReady" />
+      <LazyUILoader v-if="!cartStore.cartReady" />
 
       <div v-if="totalItemsFormatted && cartStore.cartReady" class="cart__body">
         <div class="cart__info">
-          <UICheckbox
+          <LazyUICheckbox
             :checked="cartStore.allChecked"
             class="info__checkbox"
             @click="cartStore.handleCheckAllClick"
@@ -30,7 +30,7 @@
           <span v-else class="info__checkbox-text">Выбрать все</span>
         </div>
         <div class="items">
-          <CartItem
+          <LazyCartItem
             v-for="(item) in cartItems"
             :key="item.id"
             :item-info="item"
@@ -92,7 +92,7 @@
           <p v-if="cartStore.summarySavings" class="info__saving">
             Вы экономите {{ formatter.format(cartStore.summarySavings) }}
           </p>
-          <UIButton
+          <LazyUIButton
             class="info__button"
             path=""
             value="Перейти к оформлению"
