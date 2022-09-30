@@ -110,7 +110,9 @@ import useAuth from '../composables/useAuth'
 import useSupabase from '../composables/useSupabase'
 import { useCartStore } from '~~/stores/cart'
 
-const CircleProgress = () => import('vue3-circle-progress')
+const CircleProgress = defineAsyncComponent({
+  loader: () => import('vue3-circle-progress')
+})
 
 const { user } = useAuth()
 const { supabase } = useSupabase()
@@ -173,6 +175,9 @@ const handleMakeOrderClick = async () => {
     })
   }
 }
+
+// created()
+await cartStore.getCartFromDatabase()
 
 </script>
 

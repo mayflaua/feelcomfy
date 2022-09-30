@@ -10,7 +10,7 @@
         sizes="450:150px 600:200px sm:250px"
       />
     </div>
-    <div class="card__favorites-btn" @click="_handleFavoritesClick">
+    <div class="card__favorites-btn" @click="_handleFavoritesAction">
       <svg
         :class="isInFavorites ? 'icon--favorite' : ''"
         class="icon"
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { useFavoritesStore } from '~/stores/favorites'
+import { useFavoritesStore } from '@/stores/favorites'
 import { useCartStore } from '~/stores/cart'
 
 export default {
@@ -101,16 +101,11 @@ export default {
   },
 
   methods: {
-    _handleFavoritesClick () {
-      if (this.isInFavorites) {
-        this.favoritesStore.removeFromFavorites(this.card.pk_id)
-        this.$emit('unlike', this.card.pk_id)
-      } else {
-        this.favoritesStore.addToFavorites(this.card.pk_id)
-      }
+    async _handleFavoritesAction () {
+      await this.favoritesStore.handleFavoritesAction(this.card.pk_id)
     },
-    _handleCartAction () {
-      this.cartStore.handleCartAction(this.card.pk_id)
+    async _handleCartAction () {
+      await this.cartStore.handleCartAction(this.card.pk_id)
       this.$emit('show-popup', {
         name: this.card.title,
         url: this.card.image_url,

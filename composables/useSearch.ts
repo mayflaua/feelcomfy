@@ -1,7 +1,7 @@
 import useSupabase from '~/composables/useSupabase'
 
 const { supabase } = useSupabase()
-
+// TODO: добавить как то поиск по частичному совпадению в title к результату fts а то ищет херово
 const useSearch = () => {
   const findByQuery = async (query) => {
     const { data: res } = await supabase

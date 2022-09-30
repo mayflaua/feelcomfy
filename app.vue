@@ -5,11 +5,10 @@
   </NuxtLayout>
 </template>
 <script setup>
-import { useFavoritesStore } from '~/stores/favorites'
+import { useFavoritesStore } from '@/stores/favorites'
 import { useCartStore } from '~/stores/cart'
 
 const { supabase } = useSupabase()
-const { user } = useAuth()
 
 const favoritesStore = useFavoritesStore()
 const cartStore = useCartStore()
@@ -17,8 +16,8 @@ const cartStore = useCartStore()
 // created() hook
 supabase.auth.onAuthStateChange(async (event, session) => {
   if (event === 'SIGNED_IN') {
-    await favoritesStore.getFavoritesFromDatabase()
-    await cartStore.getCartFromDatabase(user.value.id)
+    await favoritesStore.getCompressedFavoritesList()
+    await cartStore.getCompressedCart()
   }
 })
 

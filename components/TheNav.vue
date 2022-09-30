@@ -124,7 +124,7 @@
 </template>
 
 <script>
-import { useFavoritesStore } from '~/stores/favorites'
+import { useFavoritesStore } from '@/stores/favorites'
 import { useCartStore } from '~/stores/cart'
 import useAuth from '@/composables/useAuth'
 
@@ -175,12 +175,12 @@ export default {
   computed: {
     favoritesCount () {
       return this.favoritesStore.totalFavorites < 10
-        ? this.favoritesStore.totalFavorites.toString()
+        ? this.favoritesStore.totalFavorites?.toString() || '0'
         : '9+'
     },
     cartCount () {
       return this.cartStore.totalItems < 10
-        ? this.cartStore.totalItems.toString()
+        ? this.cartStore.totalItems?.toString() || '0'
         : '9+'
     }
   },
