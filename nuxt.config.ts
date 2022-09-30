@@ -32,6 +32,10 @@ export default defineNuxtConfig({
   },
 
   image: {
+    provider: 'imagekit',
+    imagekit: {
+      baseURL: 'https://ik.imagekit.io/sweetie/images'
+    },
     domains: ['ltxvxjjipthpwfyluwmj.supabase.co'],
     screens: {
       600: 600,
