@@ -109,7 +109,7 @@ export default {
       await this.cartStore.handleCartAction(this.card.pk_id)
       this.$emit('show-popup', {
         name: this.card.title,
-        url: this.card.image_url,
+        url: this.card.netlify_name,
         event: this.isInCart ? 'add' : 'remove'
       })
     }

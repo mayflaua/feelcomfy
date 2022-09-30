@@ -177,6 +177,7 @@ export const useCartStore: StoreDefinition = defineStore('cart', {
         .eq('user_id', supabase.auth.user().id)
       this._cartCompressed = compressedCart[0].cart
       this._fetchingCompressed = false
+      this.cartReady = true
     },
 
     async getCartFromDatabase (): Promise<void> {
@@ -200,7 +201,6 @@ export const useCartStore: StoreDefinition = defineStore('cart', {
         }
 
         this.cart = fullCart
-        this.cartReady = true
       } else {
         // retry fetch if compressedCart isnt fetched yet
         setTimeout(async () => {
