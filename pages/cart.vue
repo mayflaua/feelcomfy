@@ -13,7 +13,7 @@
           Начните с подборок на главной странице или найдите нужный товар через
           поиск
         </p>
-        <LazyUIButton path="/" value="На главную" />
+        <LazyUIButton path="/" text="На главную" />
       </div>
     </div>
     <div class="cart">
@@ -95,7 +95,7 @@
           <LazyUIButton
             class="info__button"
             path=""
-            value="Перейти к оформлению"
+            text="Перейти к оформлению"
             @click="handleMakeOrderClick"
           />
         </div>

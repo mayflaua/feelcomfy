@@ -103,7 +103,7 @@
       class="input"
     >
     <UIButton
-      :value="isEditting ? 'Подтвердить' : 'Редактировать'"
+      :text="isEditting ? 'Подтвердить' : 'Редактировать'"
       class="edit-btn"
       path=""
       @click.prevent="handleEditButtonClick"
@@ -112,14 +112,14 @@
       v-if="!isEditting"
       class="cancel-btn"
       path=""
-      value="Удалить"
+      text="Удалить"
       @click.prevent="handleDeleteButtonClick"
     />
     <UIButton
       v-if="isEditting"
       class="cancel-btn"
       path=""
-      value="Отменить"
+      text="Отменить"
       @click.prevent="handleCancelButtonClick"
     />
   </div>

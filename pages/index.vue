@@ -15,7 +15,7 @@
     <UIButton
       v-if="canLoadMore"
       class="load-more-btn"
-      value="Загрузить еще"
+      text="Загрузить еще"
       @click.prevent="handleLoadMoreClick"
     />
     <UILoader v-if="productsStore.isLoading" text="Загружаю товары" />

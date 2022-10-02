@@ -14,7 +14,7 @@
     <p class="order-success__subtitle">
       Заказ не будет выполнен, ведь это ненастоящий интернет-магазин :)
     </p>
-    <UIButton class="order-success__btn" path="/" value="На главную" />
+    <UIButton class="order-success__btn" path="/" text="На главную" />
   </div>
 </template>
 

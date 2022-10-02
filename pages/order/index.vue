@@ -238,7 +238,7 @@
       <UIButton
         :disabled="!formValid"
         class="btn"
-        value="Подтвердить и оплатить"
+        text="Подтвердить и оплатить"
         @click="handleSubmitButton"
       />
     </div>

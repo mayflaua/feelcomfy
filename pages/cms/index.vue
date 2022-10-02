@@ -4,13 +4,13 @@
       <LazyUIButton
         class="cms__btn"
         path=""
-        value="Добавить товар"
+        text="Добавить товар"
         @click.prevent="addGoodBtnClicked = !addGoodBtnClicked"
       />
       <LazyUIButton
         class="cms__btn"
         path=""
-        value="Загрузить все товары"
+        text="Загрузить все товары"
         @click.prevent="loadAllGoods"
       />
     </div>
