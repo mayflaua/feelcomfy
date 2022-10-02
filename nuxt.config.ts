@@ -32,7 +32,7 @@ export default defineNuxtConfig({
     }
   },
   modern: true,
-  css: ['~/assets/style/normalize.css', '~/assets/style/font.css'],
+  css: ['~/assets/style/main.scss'],
 
   modules: ['@pinia/nuxt', '@nuxt/image-edge'],
   vite: {
