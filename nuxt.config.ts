@@ -6,7 +6,8 @@ export default defineNuxtConfig({
     head: {
       title: 'FeelComfy - интернет магазин для программистов',
       link: [
-        { rel: 'preconnect', href: 'https://ik.imagekit.io' }
+        { rel: 'preconnect', href: 'https://ik.imagekit.io' },
+        { rel: 'preconnect', href: 'https://ltxvxjjipthpwfyluwmj.supabase.co' }
       ],
       meta: [
         {

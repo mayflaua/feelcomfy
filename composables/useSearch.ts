@@ -2,7 +2,7 @@ import useSupabase from '~/composables/useSupabase'
 
 const { supabase } = useSupabase()
 const useSearch = () => {
-  const findByQuery = async (query) => {
+  const findByQuery = async (query: string, limit?: number) => {
     // find products matches based on title (title contains query)
     const { data: matchedByTitle } = await supabase
       .from('goods')
@@ -23,7 +23,8 @@ const useSearch = () => {
         temp.pk_id === value.pk_id
       )
     )
-    return res
+
+    return limit ? res.slice(limit) : res
   }
   return {
     findByQuery

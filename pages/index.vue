@@ -1,14 +1,17 @@
 <template>
   <div>
     <LazyCartPopup ref="popup" />
-    <div v-if="productsStore.totalProductsLoaded" ref="cardsTable" class="cards">
-      <Card
-        v-for="card in products"
-        :key="card.pk_id"
-        :card="card"
-        @show-popup="_showPopup"
-      />
-    </div>
+    <UITitledWrapper title="Популярное">
+      <div class="cards">
+        <Card
+          v-for="card in products.popular"
+          :key="card.pk_id"
+          :card="card"
+          @show-popup="_showPopup"
+        />
+      </div>
+    </UITitledWrapper>
+
     <UIButton
       v-if="canLoadMore"
       class="load-more-btn"
@@ -39,7 +42,7 @@ const canLoadMore = computed(() => {
 })
 
 // created() hook
-productsStore.getProductsFromDatabase(10).then(() => (products.value = productsStore.productsList))
+productsStore.getProductsByFilter('popular').then(res => products.value.popular = res)
 
 </script>
 
