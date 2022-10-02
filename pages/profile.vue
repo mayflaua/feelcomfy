@@ -27,26 +27,24 @@
           <p class="orders__title">
             Мои заказы
           </p>
-          <div class="orders__filter">
+          <div class="orders__filter" ui-switcher>
             <div
-              :class="currentFilterTab === 'all' && 'filter__button--active'"
-              class="filter__button"
+              :class="currentFilterTab === 'all' && 'active'"
+              ui-switcher-button
               @click="currentFilterTab = 'all'"
             >
               Все заказы
             </div>
             <div
-              :class="currentFilterTab === 'active' && 'filter__button--active'"
-              class="
-              filter__button"
+              :class="currentFilterTab === 'active' && 'active'"
+              ui-switcher-button
               @click="currentFilterTab = 'active'"
             >
               Активные
             </div>
             <div
-              :class="currentFilterTab === 'delivered' && 'filter__button--active'"
-              class="
-              filter__button"
+              :class="currentFilterTab === 'delivered' && 'active'"
+              ui-switcher-button
               @click="currentFilterTab = 'delivered'"
             >
               Подтвержденные
@@ -59,8 +57,124 @@
             <LazyProfileOrder v-for="order in ordersList" :key="order.order_id" :order-info="order" />
           </div>
         </div>
+
         <div v-else class="profile__preferences">
-          настройки
+          <p class="preferences__title">
+            Мои данные
+          </p>
+          <form class="preferences__form" @submit.prevent="handleSaveClick">
+            <div class="form__fio">
+              <div>
+                <label class="label" for="last-name">Фамилия</label>
+                <input
+                  v-model="formFields.data.lastName"
+                  name="last-name"
+                  placeholder="Фамилия"
+                  required
+                  type="text"
+                  ui-input
+                >
+              </div>
+
+              <div>
+                <label class="label" for="name">Имя</label>
+                <input
+                  v-model="formFields.data.name"
+                  name="name"
+                  placeholder="Имя"
+                  required
+                  type="text"
+                  ui-input
+                >
+              </div>
+
+              <div>
+                <label class="label" for="middle-name">Отчество</label>
+                <input
+                  v-model="formFields.data.middleName"
+                  name="middle-name"
+                  placeholder="Отчество"
+                  type="text"
+                  ui-input
+                >
+              </div>
+            </div>
+
+            <div class="form__contacts">
+              <div>
+                <label class="label" for="name">Электронная почта</label>
+                <input
+                  v-model="formFields.email"
+                  name="name"
+                  placeholder="Электронная почта"
+                  required
+                  type="email"
+                  ui-input
+                >
+              </div>
+
+              <div>
+                <label class="label" for="middle-name">Номер телефона</label>
+                <input
+                  v-model="formFields.data.phone"
+                  name="middle-name"
+                  placeholder="Номер телефона"
+                  required
+                  type="phone"
+                  ui-input
+                >
+              </div>
+            </div>
+
+            <div class="form__gender">
+              <p class="gender__label">
+                Пол
+              </p>
+              <div class="gender__switcher" ui-switcher>
+                <div
+                  :class="formFields.data.gender === 'male' && 'active'"
+                  class="switcher__male"
+                  ui-switcher-button
+                  @click="formFields.data.gender = 'male'"
+                >
+                  Мужской
+                </div>
+                <div
+                  :class="formFields.data.gender === 'female' && 'active'"
+                  class="switcher__female"
+                  ui-switcher-button
+                  @click="formFields.data.gender = 'female'"
+                >
+                  Женский
+                </div>
+              </div>
+            </div>
+
+            <div class="form__birthday">
+              <p class="label">
+                Дата рождения
+              </p>
+              <input
+                v-model="formFields.data.birthday"
+                class="input__birthday"
+                min="2018-01-01"
+                name="birthday"
+                type="date"
+                ui-input
+              >
+            </div>
+
+            <div class="form__buttons">
+              <button class="buttons__logout" @click="signOut">
+                Выйти из системы
+              </button>
+              <LazyUIButton
+                class="buttons__save"
+                text="Сохранить"
+                type="submit"
+              />
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -68,15 +182,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import useAuth from '@/composables/useAuth'
 import useSupabase from '@/composables/useSupabase'
-
 import { useOrdersStore } from '~/stores/orders'
 
-const orderStore = useOrdersStore()
-const { user } = useAuth()
 const { supabase } = useSupabase()
+
+const orderStore = useOrdersStore()
+const { user, signOut } = useAuth()
 const currentTab = ref('orders')
 const currentFilterTab = ref('all')
 
@@ -97,13 +210,37 @@ const ordersList = computed(() => {
   }
 })
 
+// TODO: loading indicator
+const handleSaveClick = async () => {
+  await supabase.auth.update({
+    ...formFields
+  })
+}
+
+const formFields = reactive({
+  email: user.value.email,
+  data: {
+    name: user.value.user_metadata.name,
+    phone: user.value.user_metadata.phone || '',
+    lastName: user.value.user_metadata?.lastName || '',
+    middleName: user.value.user_metadata?.middleName || '',
+    gender: user.value.user_metadata?.gender || '',
+    birthday: user.user_metadata?.birthday || ''
+  }
+})
+
 await orderStore.getOrders(user.value.id)
 
 </script>
 
 <style lang="scss" scoped>
+
 .profile {
   padding: 0 10px;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
 
   &__header {
     display: flex;
@@ -131,6 +268,8 @@ await orderStore.getOrders(user.value.id)
         }
 
         .aside__menu {
+          position: sticky;
+          top: 2rem;
           list-style: none;
           padding: 0;
 
@@ -175,28 +314,75 @@ await orderStore.getOrders(user.value.id)
           }
 
           &__filter {
-            display: flex;
-            border: 1px solid lighten($default, 12);
-            width: fit-content;
-
             margin: 20px 0;
-
             @media (max-width: 768px) {
               margin: 20px auto;
             }
+          }
+        }
+      }
 
-            .filter__button {
-              padding: 8px 15px;
-              border-right: 1px solid lighten($default, 12);
-              cursor: pointer;
-              font-size: 0.9rem;
+      &__preferences {
+        border: 1px solid $light;
+        padding: 0 20px 20px;
 
-              &:last-child {
-                border: none;
+        .preferences {
+
+          &__title {
+            font-size: 1.4rem;
+            font-weight: 500;
+          }
+
+          &__form {
+            color: darken($dark, 20);
+
+            .form {
+              &__fio,
+              &__contacts {
+                display: flex;
+                gap: 10px;
+                margin: 20px 0 0 0;
+                padding: 0 0 35px 0;
+                border-bottom: 1px solid $light;
+
+                @media (max-width: 500px) {
+                  flex-direction: column;
+                }
+
+                .label {
+                  margin: 0 0 3px 0;
+                  display: inline-block;
+                }
               }
 
-              &--active {
-                background-color: darken($light, 4);
+              &__birthday {
+                margin: 20px 0 0 0;
+
+                input {
+                  width: 150px;
+                }
+              }
+
+              &__buttons {
+                margin: 20px 0 0 0;
+                display: flex;
+                justify-content: space-between;
+
+                .buttons {
+                  &__logout {
+                    border: none;
+                    outline: none;
+                    background: none;
+                    cursor: pointer;
+
+                    font-size: 1.05rem;
+                    font-weight: 500;
+                  }
+
+                  &__save {
+                    border-radius: 20px;
+                  }
+                }
               }
             }
           }
