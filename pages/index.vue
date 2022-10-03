@@ -43,7 +43,6 @@ const canLoadMore = computed(() => {
 
 // created() hook
 productsStore.getProductsByFilter('popular').then(res => products.value.popular = res)
-
 </script>
 
 <style lang="scss" scoped>
