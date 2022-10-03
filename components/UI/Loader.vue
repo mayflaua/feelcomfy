@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!v2" class="loader">
+  <div v-if="!v2" :class="{'fullscreen': fullscreen}" class="loader">
     <div class="loader-circles">
       <div class="circle circle1" />
       <div class="circle circle2" />
@@ -9,7 +9,7 @@
       {{ text }}
     </p>
   </div>
-  <div v-else class="new-loader">
+  <div v-else :class="{'fullscreen': fullscreen}" class="new-loader">
     <div class="circles">
       <div class="circle circle-outer" />
       <div class="circle circle-inner" />
@@ -25,6 +25,11 @@ defineProps({
   },
 
   v2: {
+    type: Boolean,
+    default: false
+  },
+
+  fullscreen: {
     type: Boolean,
     default: false
   }
@@ -114,6 +119,23 @@ $animation-speed: 1s;
       }
     }
   }
+}
+
+.fullscreen {
+  width: 100vw;
+  height: 100vh;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 0;
+  max-width: none;
+
+  background-color: rgba(0, 0, 0, 0.2);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 </style>
