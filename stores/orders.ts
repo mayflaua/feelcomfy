@@ -6,11 +6,14 @@ const { supabase } = useSupabase()
 export const useOrdersStore = defineStore('order', {
   state: () => ({
     _goods: [],
-    orders: []
+    orders: [],
+
+    fetchState: null
   }),
   getters: {},
   actions: {
     getOrders: async function (userId) {
+      this.fetchState = true
       const { data: orders } = await supabase.from('orders')
         .select('order_id, order, created_at, status')
         .eq('user_id', userId)
@@ -39,6 +42,7 @@ export const useOrdersStore = defineStore('order', {
       })
 
       this.orders = orders
+      this.fetchState = false
     }
   }
 })

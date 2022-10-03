@@ -1,5 +1,6 @@
-<template />
 <script setup>
+import useAuth from '~/composables/useAuth'
+
 const { user } = useAuth()
 if (user) {
   await navigateTo('/profile/orders')
@@ -7,8 +8,3 @@ if (user) {
   await navigateTo('/')
 }
 </script>
-<style>
-a {
-
-}
-</style>

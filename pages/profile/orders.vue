@@ -1,6 +1,6 @@
 <template>
-  <NuxtLayout name="profile">
-    <div class="profile__orders">
+  <NuxtLayout v-if="isLoggedIn() && _mounted" name="profile">
+    <div v-if="!orderStore.fetchState" class="profile__orders">
       <p class="orders__title">
         Мои заказы
       </p>
@@ -31,10 +31,18 @@
         class="
               orders__list"
       >
-        <LazyProfileOrder v-for="order in ordersList" :key="order.order_id" :order-info="order" />
+        <ProfileOrder v-for="order in ordersList" :key="order.order_id" :order-info="order" />
       </div>
     </div>
+    <UILoader v-else v2 />
   </NuxtLayout>
+  <p v-else-if="_mounted && !isLoggedIn()">
+    <!--    TODO: 404 component-->
+    no user
+  </p>
+  <p v-else>
+    <UILoader fullscreen v2 />
+  </p>
 </template>
 
 <script setup>
@@ -46,7 +54,18 @@ useHead({
 })
 
 const orderStore = useOrdersStore()
-const { user } = useAuth()
+const { user, isLoggedIn } = useAuth()
+
+const _mounted = ref(false)
+onMounted(() => {
+  _mounted.value = true
+})
+// watch for user to sign in to fetch orders
+watch(user, async () => {
+  if (user.value) {
+    await orderStore.getOrders(user.value.id)
+  }
+})
 
 const currentFilterTab = ref('all')
 
@@ -60,13 +79,15 @@ const ordersList = computed(() => {
   }
 })
 
-await orderStore.getOrders(user.value.id)
-
 </script>
 
 <style lang="scss" scoped>
 .profile__orders {
   width: 75%;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 
   .orders {
     &__title {

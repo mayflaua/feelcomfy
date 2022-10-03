@@ -53,7 +53,6 @@ export const useFavoritesStore = defineStore('favorites', {
 
     async getCompressedFavoritesList (): Promise<void> {
       this._fetchingCompressed = true
-
       const { data: response } = await supabase
         .from('favorites')
         .select('favorites')

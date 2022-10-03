@@ -254,7 +254,6 @@ useHead({
 })
 
 definePageMeta({
-  middleware: 'auth',
   meta: [
     { name: 'robots', content: 'none, noyaca, noarchive' }
   ]

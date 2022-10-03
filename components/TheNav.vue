@@ -192,7 +192,7 @@ export default {
         this.sideMenuOpened = false
         this.$emit('open-auth-modal')
       } else {
-        this.$router.push('/profile')
+        this.$router.push('/profile/orders')
       }
     },
 

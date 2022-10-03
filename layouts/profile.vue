@@ -2,7 +2,7 @@
   <div class="profile">
     <div class="profile__header">
       <div class="profile__title">
-        {{ user?.user_metadata.name || 'rerer' }}
+        {{ user?.user_metadata.name }}
       </div>
     </div>
     <div class="profile__body">
@@ -29,6 +29,7 @@
 import useAuth from '@/composables/useAuth'
 
 const { user } = useAuth()
+
 </script>
 
 <style lang="scss" scoped>

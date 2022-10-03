@@ -14,26 +14,32 @@ const useAuth = () => {
     )
     await supabase.from('carts').insert({
       user_id: u.id,
-      cart: {}
+      cart: []
     })
     await supabase.from('favorites').insert({
       user_id: u.id,
       favorites: []
     })
-    if (error) { throw error }
+    if (error) {
+      throw error
+    }
     return u
   }
 
   const signIn = async ({ email, password }) => {
     const { user: u, error } = await supabase.auth.signIn({ email, password })
-    if (error) { throw error }
+    if (error) {
+      throw error
+    }
     return u
   }
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
-    if (error) { throw error }
-    router.push('/')
+    if (error) {
+      throw error
+    }
+    await navigateTo('/')
   }
 
   const isLoggedIn = () => {

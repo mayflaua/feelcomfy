@@ -15,10 +15,10 @@ const cartStore = useCartStore()
 
 // created() hook
 supabase.auth.onAuthStateChange(async (event, session) => {
+  // TODO: не срабатывает при логине
   if (event === 'SIGNED_IN') {
     await favoritesStore.getCompressedFavoritesList()
     await cartStore.getCompressedCart()
   }
 })
-
 </script>

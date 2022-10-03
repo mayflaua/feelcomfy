@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout name="profile">
-    <div class="profile__preferences">
+    <div v-if="_mounted && authState" class="profile__preferences">
       <p class="preferences__title">
         Мои данные
       </p>
@@ -119,12 +119,18 @@
         </div>
       </form>
     </div>
+    <UILoader v-else v2 />
   </NuxtLayout>
 </template>
 
 <script setup>
+// TODO: signOut не удаляет сессию из localStorage или что то ее пересоздает после удаления
 import useSupabase from '@/composables/useSupabase'
 import useAuth from '@/composables/useAuth'
+
+useHead({
+  title: 'Настройки'
+})
 
 const { supabase } = useSupabase()
 
@@ -139,23 +145,47 @@ const handleSaveClick = async () => {
   saveState.value = false
 }
 
+const authState = ref(null)
+
 const formFields = reactive({
-  email: user.value.email,
+  email: '',
   data: {
-    name: user.value.user_metadata.name,
-    phone: user.value.user_metadata.phone || '',
-    lastName: user.value.user_metadata?.lastName || '',
-    middleName: user.value.user_metadata?.middleName || '',
-    gender: user.value.user_metadata?.gender || '',
-    birthday: user.user_metadata?.birthday || ''
+    name: '',
+    phone: '',
+    lastName: '',
+    middleName: '',
+    gender: '',
+    birthday: ''
   }
 })
+
+watch(user, () => {
+  if (user.value) {
+    formFields.email = user.value?.email || ''
+    formFields.data = {
+      name: user.value.user_metadata.name,
+      phone: user.value.user_metadata.phone,
+      lastName: user.value.user_metadata.lastName,
+      middleName: user.value.user_metadata.middleName,
+      gender: user.value.user_metadata.gender,
+      birthday: user.value.user_metadata.birthday
+    }
+    authState.value = true
+  }
+})
+const _mounted = ref(false)
+onMounted(() => (_mounted.value = true))
 </script>
 
 <style lang="scss" scoped>
 .profile__preferences {
   border: 1px solid $light;
   padding: 0 20px 20px;
+  width: 75%;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 
   .preferences {
 
