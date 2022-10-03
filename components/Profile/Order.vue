@@ -5,6 +5,7 @@
         ID заказа {{ orderInfo.order_id }}
         <UIButton
           v-if="orderStatus ==='created'"
+          :loading-state="confirmDeliveryState"
           class="submit-btn"
           text="Подтвердить получение"
           @click.prevent="handleSubmitButton"
@@ -89,6 +90,7 @@ const props = defineProps({
 })
 
 const showGoods = ref(false)
+const confirmDeliveryState = ref(false)
 
 const formatter = new Intl.NumberFormat('ru-RU', {
   style: 'currency',
@@ -107,14 +109,16 @@ const orderDate = new Intl.DateTimeFormat('ru-RU', {
 
 const orderStatus = ref(props.orderInfo.status)
 const orderStatusFormatted = computed(() => {
-  /* поменяй если чето со статусами поприкольнее сделаешь */
+  /* TODO: поменяй если чето со статусами поприкольнее сделаешь */
   return orderStatus.value === 'created' ? 'Создан' : 'Выдан покупателю'
 })
 
 const handleSubmitButton = async () => {
+  confirmDeliveryState.value = true
   await supabase.from('orders').update({ status: 'granted' }).eq('order_id', props.orderInfo.order_id)
-  /* поменяй если чето со статусами поприкольнее сделаешь */
+  /* TODO: поменяй если чето со статусами поприкольнее сделаешь */
   orderStatus.value = 'че бы я сюда не вставил все равно заказ будет доставлен'
+  confirmDeliveryState.value = false
 }
 
 </script>
@@ -138,6 +142,10 @@ const handleSubmitButton = async () => {
       font-size: 1.3rem;
       font-weight: 500;
       margin: 0 15px;
+    }
+
+    .submit-btn {
+      width: 13rem;
     }
   }
 

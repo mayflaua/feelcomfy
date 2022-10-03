@@ -237,6 +237,7 @@
       </p>
       <UIButton
         :disabled="!formValid"
+        :loading-state="submitOrderState"
         class="btn"
         text="Подтвердить и оплатить"
         @click="handleSubmitButton"
@@ -272,6 +273,7 @@ const order = ref(null)
 const cities = await $fetch('/api/cities')
 
 const showGoodsList = ref(false)
+const submitOrderState = ref(false)
 
 const getQueryData = () => {
   /* get order_id from query and clear query */
@@ -336,8 +338,10 @@ const checkValid = () =>
 
 const handleSubmitButton = async () => {
   if (formValid.value) {
+    submitOrderState.value = true
     const router = useRouter()
     router.push({ name: 'order-success', query: { referrer: 'order' } })
+    submitOrderState.value = false
   }
 }
 

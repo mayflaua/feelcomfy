@@ -93,6 +93,7 @@
             Вы экономите {{ formatter.format(cartStore.summarySavings) }}
           </p>
           <LazyUIButton
+            :loading-state="makeOrderState"
             class="info__button"
             path=""
             text="Перейти к оформлению"
@@ -120,6 +121,8 @@ const CircleProgress = defineAsyncComponent({
 
 const { user } = useAuth()
 const { supabase } = useSupabase()
+
+const makeOrderState = ref(false)
 
 // FIXME: unauthorized access
 /* currency formatter */
@@ -150,6 +153,7 @@ const totalItemsFormatted = computed(() => {
 
 const handleMakeOrderClick = async () => {
   if (cartStore.totalSelectedItemsWorth !== 0) {
+    makeOrderState.value = true
     /* make orders list from selected items */
     const order = []
     cartItems.value.forEach((item) => {
@@ -172,11 +176,13 @@ const handleMakeOrderClick = async () => {
       .select('order_id')
       .order('created_at', { ascending: false })
       .limit(1)
+
     /* redirect to order confirmation page */
     await navigateTo({
       path: '/order',
       query: { order: orderID.data[0].order_id }
     })
+    makeOrderState.value = false
   }
 }
 

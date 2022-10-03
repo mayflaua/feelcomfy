@@ -169,6 +169,7 @@
                 Выйти из системы
               </button>
               <LazyUIButton
+                :loading-state="saveState"
                 class="buttons__save"
                 text="Сохранить"
                 type="submit"
@@ -210,11 +211,13 @@ const ordersList = computed(() => {
   }
 })
 
-// TODO: loading indicator
+const saveState = ref(false)
 const handleSaveClick = async () => {
+  saveState.value = true
   await supabase.auth.update({
     ...formFields
   })
+  saveState.value = false
 }
 
 const formFields = reactive({
@@ -381,6 +384,7 @@ await orderStore.getOrders(user.value.id)
 
                   &__save {
                     border-radius: 20px;
+                    width: 8rem;
                   }
                 }
               }
