@@ -1,6 +1,7 @@
 <template>
-  <button :class="disabled && 'ui-button--disabled'" class="ui-button">
-    {{ text }}
+  <button :class="(disabled || loadingState) && 'ui-button--disabled'" class="ui-button">
+    <span v-if="!loadingState">{{ text }}</span>
+    <UIButtonLoader v-else />
   </button>
 </template>
 
@@ -11,12 +12,17 @@ defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  loadingState: {
+    type: Boolean,
+    default: false
   }
 })
 </script>
 
 <style lang="scss" scoped>
 .ui-button {
+  width: 100%;
   display: inline-block;
   padding: 10px 17px;
   background-color: $blue;
