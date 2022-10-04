@@ -1,48 +1,50 @@
 <template>
-  <NuxtLayout v-if="isLoggedIn() && _mounted" name="profile">
-    <div v-if="!orderStore.fetchState" class="profile__orders">
-      <p class="orders__title">
-        Мои заказы
-      </p>
-      <div class="orders__filter" ui-switcher>
-        <div
-          :class="currentFilterTab === 'all' && 'active'"
-          ui-switcher-button
-          @click="currentFilterTab = 'all'"
-        >
-          Все заказы
+  <NuxtLayout name="profile">
+    <div v-if="isLoggedIn() && _mounted" class="profile__orders">
+      <div v-if="!orderStore.fetchState">
+        <p class="orders__title">
+          Мои заказы
+        </p>
+        <div class="orders__filter" ui-switcher>
+          <div
+            :class="currentFilterTab === 'all' && 'active'"
+            ui-switcher-button
+            @click="currentFilterTab = 'all'"
+          >
+            Все заказы
+          </div>
+          <div
+            :class="currentFilterTab === 'active' && 'active'"
+            ui-switcher-button
+            @click="currentFilterTab = 'active'"
+          >
+            Активные
+          </div>
+          <div
+            :class="currentFilterTab === 'delivered' && 'active'"
+            ui-switcher-button
+            @click="currentFilterTab = 'delivered'"
+          >
+            Подтвержденные
+          </div>
         </div>
         <div
-          :class="currentFilterTab === 'active' && 'active'"
-          ui-switcher-button
-          @click="currentFilterTab = 'active'"
-        >
-          Активные
-        </div>
-        <div
-          :class="currentFilterTab === 'delivered' && 'active'"
-          ui-switcher-button
-          @click="currentFilterTab = 'delivered'"
-        >
-          Подтвержденные
-        </div>
-      </div>
-      <div
-        class="
+          class="
               orders__list"
-      >
-        <ProfileOrder v-for="order in ordersList" :key="order.order_id" :order-info="order" />
+        >
+          <ProfileOrder v-for="order in ordersList" :key="order.order_id" :order-info="order" />
+        </div>
       </div>
+      <UILoader v-else v2 />
     </div>
-    <UILoader v-else v2 />
+    <p v-else-if="_mounted && !isLoggedIn()">
+      <!--    TODO: 404 component-->
+      no user
+    </p>
+    <p v-else>
+      <UILoader fullscreen v2 />
+    </p>
   </NuxtLayout>
-  <p v-else-if="_mounted && !isLoggedIn()">
-    <!--    TODO: 404 component-->
-    no user
-  </p>
-  <p v-else>
-    <UILoader fullscreen v2 />
-  </p>
 </template>
 
 <script setup>
