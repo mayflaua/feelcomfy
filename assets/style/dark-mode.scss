@@ -214,27 +214,57 @@
       }
     }
 
-    .favorites {
-      &__header {
-        .sorting-wrapper {
-          --vs-controls-color: #81a5be;
-          --vs-border-color: #81a5be;
+    .order {
+      &__body {
+        .delivery-block-wrapper {
+          .order__delivery-block {
+            .delivery-block {
+              &__pick-method {
+                .pick-method__courier,
+                .pick-method__pvz {
+                  background-color: $dark;
+                }
+              }
+            }
+          }
+        }
 
-          --vs-dropdown-bg: #002945;
-          --vs-dropdown-color: #fff;
-          --vs-dropdown-option-color: #fff;
+        .goods-block {
+          .qty__qty-label span {
+            color: $font;
+          }
+        }
 
-          --vs-selected-bg: #81a5be;
-          --vs-selected-color: #eeeeee;
-
-          --vs-search-input-color: #eeeeee;
-
-          --vs-dropdown-option--active-bg: #81a5be;
-          --vs-dropdown-option--active-color: #eeeeee;
+        .payment-block-wrapper {
+          .order__payment-block {
+            .payment__method {
+              .method__card,
+              .method__installment,
+              .method__doli {
+                background-color: $dark;
+              }
+            }
+          }
         }
       }
     }
   }
 
+  .v-select {
+    --vs-controls-color: #81a5be;
+    --vs-border-color: #81a5be;
+
+    --vs-dropdown-bg: #002945;
+    --vs-dropdown-color: #fff;
+    --vs-dropdown-option-color: #fff;
+
+    --vs-selected-bg: #81a5be;
+    --vs-selected-color: #eeeeee;
+
+    --vs-search-input-color: #eeeeee;
+
+    --vs-dropdown-option--active-bg: #81a5be;
+    --vs-dropdown-option--active-color: #eeeeee;
+  }
 
 }

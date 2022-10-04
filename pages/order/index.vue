@@ -48,37 +48,37 @@
               <p class="street__label">
                 Улица, дом
               </p>
-              <input class="street__input" type="text">
+              <input class="street__input" type="text" ui-input>
             </div>
             <div class="form__apartment">
               <p class="apartment__label">
                 Квартира/офис
               </p>
-              <input class="apartment__input" type="text">
+              <input class="apartment__input" type="text" ui-input>
             </div>
             <div class="form__entrance">
               <p class="entrance__label">
                 Подъезд
               </p>
-              <input class="entrance__input" type="text">
+              <input class="entrance__input" type="text" ui-input>
             </div>
             <div class="form__floor">
               <p class="floor__label">
                 Этаж
               </p>
-              <input class="floor__input" type="text">
+              <input class="floor__input" type="text" ui-input>
             </div>
             <div class="form__code">
               <p class="code__label">
                 Код домофона
               </p>
-              <input class="code__input" type="text">
+              <input class="code__input" type="text" ui-input>
             </div>
             <div class="form__comment">
               <p class="comment__label">
                 Комментарий для курьера
               </p>
-              <input class="comment__input" type="text">
+              <input class="comment__input" type="text" ui-input>
               <span class="comment__subtitle">
                 Например, куда именно привезти заказ, ближайший адрес или
                 ориентир
@@ -102,6 +102,7 @@
                 placeholder="Введите фамилию"
                 required
                 type="text"
+                ui-input
               >
             </div>
             <div class="form__first-name">
@@ -113,6 +114,7 @@
                 placeholder="Введите имя"
                 required
                 type="text"
+                ui-input
               >
             </div>
             <div class="form__courier-tip">
@@ -134,6 +136,7 @@
                 placeholder="Введите номер телефона"
                 required
                 type="tel"
+                ui-input
               >
             </div>
             <div class="form__email">
@@ -145,6 +148,7 @@
                 placeholder="Введите email"
                 required
                 type="email"
+                ui-input
               >
             </div>
           </form>
@@ -203,7 +207,7 @@
           </svg>
         </p>
         <div v-if="showGoodsList" class="goods-list">
-          <CartItem
+          <LazyCartItem
             v-for="item in order"
             :key="item.id"
             :item-info="item"
@@ -256,7 +260,8 @@ useHead({
 definePageMeta({
   meta: [
     { name: 'robots', content: 'none, noyaca, noarchive' }
-  ]
+  ],
+  middleware: ['auth']
 })
 
 const vSelect = defineAsyncComponent({
@@ -265,9 +270,7 @@ const vSelect = defineAsyncComponent({
 
 const { user } = useAuth()
 const { supabase } = useSupabase()
-const pageMeta = definePageMeta({
-  middleware: ['auth']
-})
+
 const order = ref(null)
 const cities = await $fetch('/api/cities')
 
@@ -287,36 +290,32 @@ const getQueryData = () => {
 }
 
 const getOrderInfo = async (id) => {
-  try {
-    /* get order info from database */
-    const response = await supabase
-      .from('orders')
-      .select('order')
-      .eq('order_id', id)
+  /* get order info from database */
+  const response = await supabase
+    .from('orders')
+    .select('order')
+    .eq('order_id', id)
 
-    /* list all goods ids */
-    const ids = response?.data[0].order.map(item => item.id)
+  /* list all goods ids */
+  const ids = response?.data[0].order.map(item => item.id)
 
-    /* select goods with listed ids from database */
-    const goods = await supabase
-      .from('goods')
-      .select('title, image_url, model, color, pk_id')
-      .in('pk_id', ids)
+  /* select goods with listed ids from database */
+  const goods = await supabase
+    .from('goods')
+    .select('title, netlify_name, model, color, pk_id')
+    .in('pk_id', ids)
 
-    /* push price and qty from order to goods list */
-    goods.data.forEach((item) => {
-      const index =
-        response.data[0].order[
-          response.data[0].order.findIndex(i => i.id == item.pk_id)
-        ]
-      item.qty = index.qty
-      item.final_price = index.price
-    })
+  /* push price and qty from order to goods list */
+  goods.data.forEach((item) => {
+    const index =
+      response.data[0].order[
+        response.data[0].order.findIndex(i => i.id === item.pk_id)
+      ]
+    item.qty = index.qty
+    item.final_price = index.price
+  })
 
-    return goods.data
-  } catch (err) {
-    throw err
-  }
+  return goods.data
 }
 const orderWorth = computed(() =>
   order.value?.reduce((acc, curr) => acc + curr.qty * curr.final_price, 0)

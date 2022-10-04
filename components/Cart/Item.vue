@@ -1,6 +1,7 @@
 <template>
   <div class="item">
     <UICheckbox
+      v-if="!noInput"
       :checked="cartStore.getCheckValue(itemInfo.pk_id)"
       class="item__checkbox"
       @change="cartStore.handleCheck(itemInfo.pk_id)"
