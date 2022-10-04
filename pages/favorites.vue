@@ -1,5 +1,5 @@
 <template>
-  <div class="favorites">
+  <div v-if="favoritesCards.length !== 0" class="favorites">
     <LazyCartPopup ref="popup" />
     <div class="favorites__header">
       <h1 class="favorites__title">
@@ -31,6 +31,7 @@
       </div>
     </main>
   </div>
+  <UILoader v-else fullscreen v2 />
 </template>
 
 <script setup>

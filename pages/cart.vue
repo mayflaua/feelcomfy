@@ -1,6 +1,6 @@
 <template>
-  <div class="cart-wrapper">
-    <div v-if="cartStore.cartReady" class="title-wrapper">
+  <div v-if="cartStore.cartReady" class="cart-wrapper">
+    <div class="title-wrapper">
       <h1 v-if="totalItemsFormatted" class="cart__title">
         Ваша корзина
         <span class="cart__cart-counter">{{ totalItemsFormatted }}</span>
@@ -16,10 +16,8 @@
         <LazyUIButton path="/" text="На главную" />
       </div>
     </div>
-    <div class="cart">
-      <UILoader v-if="!cartStore.cartReady" />
-
-      <div v-if="totalItemsFormatted && cartStore.cartReady" class="cart__body">
+    <div v-if="totalItemsFormatted && cartStore.cartReady" class="cart">
+      <div class="cart__body">
         <div class="cart__info">
           <LazyUICheckbox
             :checked="cartStore.allChecked"
@@ -38,7 +36,7 @@
           />
         </div>
       </div>
-      <div v-if="totalItemsFormatted && cartStore.cartReady" class="order">
+      <div class="order">
         <div class="order__free-delivery">
           <div class="free-delivery__indicator">
             <CircleProgress
@@ -104,6 +102,7 @@
       </div>
     </div>
   </div>
+  <UILoader v-else fullscreen v2 />
 </template>
 
 <script setup>

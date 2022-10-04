@@ -1,7 +1,7 @@
 <template>
   <div>
     <LazyCartPopup ref="popup" />
-    <UITitledWrapper title="Популярное">
+    <UITitledWrapper v-if="products.popular" title="Популярное">
       <div class="cards">
         <Card
           v-for="card in products.popular"
@@ -11,6 +11,7 @@
         />
       </div>
     </UITitledWrapper>
+    <UILoader v-else fullscreen v2 />
 
     <UIButton
       v-if="canLoadMore"
