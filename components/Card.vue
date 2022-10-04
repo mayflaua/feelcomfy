@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <nuxt-link :title="card.title" :to="`/product/${slug}-${card.pk_id}`" class="card" target="_blank">
     <div class="card__image">
       <nuxt-img
         :alt="card.title"
@@ -56,10 +56,11 @@
         @click="_handleCartAction"
       />
     </div>
-  </div>
+  </nuxt-link>
 </template>
 
 <script>
+import slugify from 'slugify'
 import { useFavoritesStore } from '@/stores/favorites'
 import { useCartStore } from '~/stores/cart'
 
@@ -67,16 +68,19 @@ export default {
   props: {
     card: { type: Object, required: true }
   },
-  data: () => ({
-    favoritesStore: useFavoritesStore(),
-    cartStore: useCartStore(),
-    /* currency formatter */
-    formatter: new Intl.NumberFormat('ru-RU', {
-      style: 'currency',
-      currency: 'RUB',
-      maximumFractionDigits: 0
-    })
-  }),
+  data () {
+    return {
+      slug: slugify(this.$props.card.title),
+      favoritesStore: useFavoritesStore(),
+      cartStore: useCartStore(),
+      /* currency formatter */
+      formatter: new Intl.NumberFormat('ru-RU', {
+        style: 'currency',
+        currency: 'RUB',
+        maximumFractionDigits: 0
+      })
+    }
+  },
 
   computed: {
     isInFavorites () {
@@ -131,6 +135,9 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  color: $font;
+  text-decoration: none;
 
   @media (max-width: 600px) {
     width: 200px;
