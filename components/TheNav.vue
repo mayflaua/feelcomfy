@@ -2,10 +2,13 @@
   <!--  // TODO: optimize icons-->
   <header class="header">
     <nav class="nav">
+      <button class="dark-invert" @click="changeTheme">
+        тема
+      </button>
       <nuxt-link class="nav__logo" to="/">
         <img
           alt="logo"
-          class="logo"
+          class="logo dark-invert"
           src="~/assets/icons/logo.webp"
         >
       </nuxt-link>
@@ -16,31 +19,37 @@
             class="search-form__input"
             placeholder="Найти товары"
             type="text"
+            ui-input
           >
-          <button class="search-form__search-btn" @click="handleSearchClick" />
+          <button
+            class="search-form__search-btn"
+            @click="handleSearchClick"
+          >
+            <span class="search-btn__icon dark-invert" />
+          </button>
         </div>
         <div class="nav__user-actions">
           <button class="nav__burger" @click="sideMenuOpened = true">
             <span class="burger__line" />
           </button>
-          <a class="user-actions__pa" @click="handleAccountClick">{{
+          <a class="user-actions__pa dark-invert" @click="handleAccountClick">{{
             auth.isLoggedIn() ? auth.user.user_metadata.name : "Войти"
           }}</a>
           <nuxt-link
-            class="user-actions__favorites"
+            class="user-actions__favorites dark-invert"
             to="/favorites"
           >
             Избранное
-            <div v-if="favoritesCount != '0'" class="favorites__icon">
+            <div v-if="favoritesCount != '0'" class="favorites__icon dark-invert">
               {{ favoritesCount }}
             </div>
           </nuxt-link>
           <nuxt-link
-            class="user-actions__cart"
+            class="user-actions__cart dark-invert"
             to="/cart"
           >
             Корзина
-            <div v-if="cartCount != '0'" class="cart__icon">
+            <div v-if="cartCount != '0'" class="cart__icon dark-invert">
               {{ cartCount }}
             </div>
           </nuxt-link>
@@ -136,6 +145,8 @@ export default {
     cartStore: useCartStore(),
     auth: useAuth(),
 
+    colorMode: useColorMode(),
+
     searchQuery: '',
 
     categoriesList: [
@@ -187,6 +198,11 @@ export default {
   },
 
   methods: {
+    changeTheme () {
+      this.colorMode.preference === 'light'
+        ? this.colorMode.preference = 'dark'
+        : this.colorMode.preference = 'light'
+    },
     handleAccountClick () {
       if (!this.auth.isLoggedIn()) {
         this.sideMenuOpened = false
@@ -338,7 +354,6 @@ export default {
     }
 
     &-item {
-      display: block;
       text-decoration: none;
       padding: 0 35px;
       border-bottom: 1px solid $light;
@@ -420,6 +435,7 @@ export default {
         height: 100%;
 
         border: 1px solid $default;
+        border-radius: 0;
         border-top-left-radius: 5px;
         border-bottom-left-radius: 5px;
         border-right: none;
@@ -448,7 +464,14 @@ export default {
         border-left: none;
         cursor: pointer;
 
-        background: $light url("~/assets/icons/search.webp") no-repeat center/18px;
+        background-color: $light;
+
+        .search-btn__icon {
+          width: 100%;
+          height: 100%;
+          display: block;
+          background: url("~/assets/icons/search.webp") no-repeat center/18px;
+        }
 
         @media (max-width: 768px) {
           border-top-right-radius: 0;
@@ -630,6 +653,16 @@ export default {
     display: flex;
     justify-content: space-around;
     padding: 0;
+
+    li {
+      border-right: 1px solid $light;
+      flex-grow: 1;
+      text-align: center;
+
+      &:last-child {
+        border-right: none;
+      }
+    }
 
     &__item {
       text-decoration: none;

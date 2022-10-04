@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="cart">
-      <LazyUILoader v-if="!cartStore.cartReady" />
+      <UILoader v-if="!cartStore.cartReady" />
 
       <div v-if="totalItemsFormatted && cartStore.cartReady" class="cart__body">
         <div class="cart__info">
@@ -44,6 +44,7 @@
             <CircleProgress
               :border-bg-width="3"
               :border-width="3"
+              :empty-color="colorMode.preference === 'dark' ? '#fff':'#81a5be'"
               :percent="cartStore.freeDeliveryPercent"
               :size="35"
               class="circle"
@@ -118,6 +119,7 @@ useHead({
 const CircleProgress = defineAsyncComponent({
   loader: () => import('vue3-circle-progress')
 })
+const colorMode = useColorMode()
 
 const { user } = useAuth()
 const { supabase } = useSupabase()

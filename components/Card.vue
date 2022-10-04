@@ -10,7 +10,7 @@
         sizes="450:150px 600:200px sm:250px"
       />
     </div>
-    <div class="card__favorites-btn" @click="_handleFavoritesAction">
+    <div class="card__favorites-btn" @click.stop.prevent="_handleFavoritesAction">
       <svg
         :class="isInFavorites ? 'icon--favorite' : ''"
         class="icon"
@@ -53,8 +53,11 @@
         :class="
           isInCart ? 'card__cart-btn card__cart-btn--incart' : 'card__cart-btn'
         "
-        @click="_handleCartAction"
-      />
+
+        @click.stop.prevent="_handleCartAction"
+      >
+        <span class="cart-btn__icon dark-invert" />
+      </div>
     </div>
   </nuxt-link>
 </template>
@@ -256,13 +259,19 @@ export default {
     border: 1px solid $default;
     border-radius: 50%;
 
-    background-image: url("~/assets/icons/cart-add.webp");
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-position: 0 0;
-
     cursor: pointer;
     transition: background 0.2s ease;
+
+    .cart-btn__icon {
+      display: block;
+      width: 100%;
+      height: 100%;
+
+      background-image: url("~/assets/icons/cart-add.webp");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-position: 0 0;
+    }
 
     &--incart {
       background-position: 0 100%;

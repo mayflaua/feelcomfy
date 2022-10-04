@@ -34,7 +34,7 @@ export default defineNuxtConfig({
   modern: true,
   css: ['~/assets/style/main.scss'],
 
-  modules: ['@pinia/nuxt', '@nuxt/image-edge'],
+  modules: ['@pinia/nuxt', '@nuxt/image-edge', '@nuxtjs/color-mode'],
   vite: {
     css: {
       preprocessorOptions: {
@@ -43,6 +43,11 @@ export default defineNuxtConfig({
         }
       }
     }
+  },
+
+  colorMode: {
+    preference: 'system',
+    fallback: 'light'
   },
 
   build: {

@@ -3,7 +3,10 @@ $font: black;
 $light: #eee;
 $default: #aaa;
 $dark: #888;
-// TODO: синий нормальным сделать
 $blue: #6e6edf;
 
+.body {
+  background-color: $bg;
+  color: $font;
+}
 

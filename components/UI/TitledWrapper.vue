@@ -3,7 +3,7 @@
     <nuxt-link :to="props.path" class="wrapper__title">
       {{ title }}
       <svg
-        class="arrow"
+        class="arrow dark-invert"
         data-v-ca056c68=""
         fill="none"
         height="36"

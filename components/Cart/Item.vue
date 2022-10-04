@@ -24,7 +24,7 @@
         </div>
         <button
           v-if="!noInput"
-          class="item__delete-btn"
+          class="item__delete-btn dark-invert"
           @click.prevent="handleDeleteButton"
         >
           Удалить
@@ -33,10 +33,10 @@
       <div class="item__body">
         <div class="item__info">
           <p v-if="itemInfo.color" class="item__color">
-            Цвет: <span>{{ itemInfo.color }}</span>
+            Цвет: <span class="dark-invert">{{ itemInfo.color }}</span>
           </p>
           <p v-if="itemInfo.model" class="item__model">
-            Модель: <span>{{ itemInfo.model }}</span>
+            Модель: <span class="dark-invert">{{ itemInfo.model }}</span>
           </p>
         </div>
         <div class="item__qty">
@@ -48,6 +48,7 @@
               min="1"
               readonly
               type="number"
+              ui-input
             >
             <button
               :disabled="itemInfo.qty <= 1"
@@ -200,9 +201,13 @@ $qtySize: 40px;
       .item__qty-input {
         display: block;
         width: $qtySize;
+        height: $qtySize;
+        padding: 0;
+
         border: none;
         border-radius: 0;
         outline: none;
+
         border-top: 1px solid $default;
         border-bottom: 1px solid $default;
         text-align: center;

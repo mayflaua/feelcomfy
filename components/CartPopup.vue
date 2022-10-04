@@ -28,6 +28,7 @@
         <div class="popup__controls">
           <button class="popup__close" @click="close(i)">
             <svg
+              class="dark-invert"
               height="24px"
               viewBox="0 0 24 24"
               width="24px"
