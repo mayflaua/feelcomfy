@@ -53,6 +53,33 @@
       }
     }
 
+    .aside-menu {
+      background: $bg;
+
+      .aside__header {
+        background: $bg;
+
+        .header__links-link {
+          color: $light;
+        }
+      }
+
+      .aside__categories {
+        background-color: $default;
+
+        &-item {
+          color: $light;
+          border-color: $light;
+        }
+
+        &-folder {
+          .title {
+            color: $font;
+          }
+        }
+      }
+    }
+
     .categories {
       .list {
         li {

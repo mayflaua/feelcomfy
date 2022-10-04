@@ -302,6 +302,8 @@ $qtySize: 40px;
 
         .item__qty-input {
           width: $qtySize;
+          height: $qtySize;
+
         }
       }
 
@@ -353,6 +355,7 @@ $qtySize: 40px;
 
         .item__qty-input {
           width: $qtySize;
+          height: $qtySize;
         }
       }
 

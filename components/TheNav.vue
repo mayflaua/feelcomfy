@@ -29,7 +29,7 @@
           </button>
         </div>
         <div class="nav__user-actions">
-          <button class="nav__burger" @click="sideMenuOpened = true">
+          <button class="nav__burger dark-invert" @click="sideMenuOpened = true">
             <span class="burger__line" />
           </button>
           <a class="user-actions__pa dark-invert" @click="handleAccountClick">{{
@@ -74,10 +74,11 @@
         @click.self="sideMenuOpened = false"
       >
         <header class="aside__header">
-          <button class="aside__close" @click="sideMenuOpened = false">
+          <button class="aside__close dark-invert" @click="sideMenuOpened = false">
             <span class="close__line" />
           </button>
           <div class="header__links">
+            <!-- TODO: менять текст ссылки или ваще ее убирать если авторизован-->
             <a
               class="header__links-link"
               @click="handleAccountClick"
@@ -114,7 +115,7 @@
               >
                 {{ item.title }}
                 <svg
-                  class="arrow arrow--right"
+                  class="arrow arrow--right dark-invert"
                   height="24"
                   viewBox="0 0 24 24"
                   width="24"
