@@ -88,8 +88,8 @@ export const useCartStore: StoreDefinition = defineStore('cart', {
       )
   },
   actions: {
-    async _addToCart (itemID: number) {
-      this._cartCompressed.push({ pk_id: itemID, qty: 1 })
+    async _addToCart (itemID: number, qty: number = 1) {
+      this._cartCompressed.push({ pk_id: itemID, qty })
 
       const { data: addedItem } = await supabase
         .from('goods')
@@ -98,7 +98,7 @@ export const useCartStore: StoreDefinition = defineStore('cart', {
 
       this.cart.push({
         ...addedItem[0],
-        qty: 1,
+        qty,
         checked: this.defaultCheckboxValue
       })
       await this._updateDatabase()
@@ -158,7 +158,7 @@ export const useCartStore: StoreDefinition = defineStore('cart', {
       itemToChange.checked = !itemToChange.checked
     },
 
-    async handleCartAction (itemID: number): Promise<void> {
+    async handleCartAction (itemID: number, qty: number = 1): Promise<void> {
       // fetch cart if it wasnt fetched
       if (this.prefetchedCartSize) {
         await this.getCartFromDatabase()
@@ -166,7 +166,7 @@ export const useCartStore: StoreDefinition = defineStore('cart', {
       /* add or remove item from cart */
       this.isInCart(itemID)
         ? await this._removeFromCart(itemID)
-        : await this._addToCart(itemID)
+        : await this._addToCart(itemID, qty)
     },
 
     async getCompressedCart (): Promise<void> {

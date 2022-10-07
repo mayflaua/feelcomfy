@@ -99,6 +99,12 @@
 
 
   main.content {
+    .qty__plus-btn,
+    .qty__minus-btn {
+      color: $font !important;
+      background: $dark !important;
+    }
+
     .card {
       background-color: $dark;
       color: $font;
@@ -178,26 +184,6 @@
       }
     }
 
-    .cart {
-      &__body {
-        .items {
-          &__item {
-            .item__desc {
-              .item__body {
-                .item__qty {
-                  .qty__plus-btn,
-                  .qty__minus-btn {
-                    color: $font;
-                    background: $dark;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
     .popup {
       background-color: $default;
 
@@ -243,6 +229,20 @@
               .method__doli {
                 background-color: $dark;
               }
+            }
+          }
+        }
+      }
+    }
+
+    .product {
+      &__desc-wrapper {
+        .desc__tabs {
+          .tab {
+            color: $font;
+
+            &--current {
+              background: linear-gradient(to top, $blue, transparent 20%);
             }
           }
         }

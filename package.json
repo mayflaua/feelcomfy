@@ -19,11 +19,13 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.4.2",
+    "@splidejs/vue-splide": "^0.6.12",
     "@supabase/supabase-js": "^1.35.7",
     "@vueuse/core": "^9.3.0",
     "pinia": "^2.0.22",
     "sass": "^1.55.0",
     "slugify": "^1.6.5",
+    "v-viewer": "^3.0.10",
     "vue-select": "^4.0.0-beta.5",
     "vue3-circle-progress": "^1.0.7"
   }
