@@ -15,11 +15,13 @@
       <div class="nav__actions">
         <div class="nav__search-form">
           <input
-            v-model.lazy.trim="searchQuery"
+            v-model.trim="searchQuery"
             class="search-form__input"
             placeholder="Найти товары"
             type="text"
             ui-input
+            @blur="suggestionsList = []"
+            @input="getSuggestions"
           >
           <button
             class="search-form__search-btn"
@@ -27,6 +29,20 @@
           >
             <span class="search-btn__icon dark-invert" />
           </button>
+          <transition name="list">
+            <div
+              v-if="suggestionsList.length !== 0"
+              :class="{'suggestions-list--disabled':
+                fetchingSuggestions}"
+              class="suggestions-list"
+            >
+              <transition-group name="list">
+                <p v-for="item in suggestionsList" :key="item" class="suggestion" @click="searchQuery = item">
+                  {{ item }}
+                </p>
+              </transition-group>
+            </div>
+          </transition>
         </div>
         <div class="nav__user-actions">
           <button class="nav__burger dark-invert" @click="sideMenuOpened = true">
@@ -138,6 +154,7 @@
 import { useFavoritesStore } from '@/stores/favorites'
 import { useCartStore } from '~/stores/cart'
 import useAuth from '@/composables/useAuth'
+import useSearch from '@/composables/useSearch'
 
 export default {
   data: () => ({
@@ -145,6 +162,10 @@ export default {
     favoritesStore: useFavoritesStore(),
     cartStore: useCartStore(),
     auth: useAuth(),
+    search: useSearch(),
+    suggestionsList: [],
+
+    fetchingSuggestions: false,
 
     colorMode: useColorMode(),
 
@@ -222,12 +243,33 @@ export default {
           }
         })
       }
+    },
+
+    async getSuggestions () {
+      if (this.searchQuery) {
+        this.fetchingSuggestions = true
+        this.suggestionsList = await this.search.fetchSuggestions(this.searchQuery)
+        this.fetchingSuggestions = false
+      } else {
+        this.suggestionsList = []
+      }
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.4s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(15px);
+}
 
 .menu-enter-from,
 .menu-leave-to {
@@ -414,11 +456,49 @@ export default {
     width: 50%;
     height: 100%;
     display: flex;
+    position: relative;
 
     &:hover {
       & > .search-form__input,
       & > .search-form__search-btn {
         border-color: $dark;
+      }
+    }
+
+    .suggestions-list {
+      overflow: auto;
+
+      width: 100%;
+      max-height: 300px;
+      height: min-content;
+
+      position: absolute;
+      z-index: 1;
+      top: 95%;
+      left: 0;
+
+      padding: 0.4rem 0 0 0;
+
+      background-color: $light;
+      border: 1px solid $default;
+      border-radius: 0 0 3px 3px;
+
+      &--disabled {
+        opacity: 0.7;
+        pointer-events: none;
+      }
+
+      .suggestion {
+        font-size: 0.9rem;
+        padding: 0.35rem 1rem;
+        margin: 0;
+
+        cursor: pointer;
+
+        &:hover {
+          background-color: lighten($blue, 10);
+          color: white;
+        }
       }
     }
 
@@ -434,6 +514,9 @@ export default {
       &__input {
         width: 100%;
         height: 100%;
+
+        z-index: 2;
+        position: relative;
 
         border: 1px solid $default;
         border-radius: 0;
@@ -457,6 +540,9 @@ export default {
 
       &__search-btn {
         width: 40px;
+
+        z-index: 2;
+        position: relative;
 
         border-top-right-radius: 5px;
         border-bottom-right-radius: 5px;

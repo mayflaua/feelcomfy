@@ -45,6 +45,19 @@
   .header {
     .nav {
       &__search-form {
+        .suggestions-list {
+          background: $default;
+
+          .suggestion {
+            color: $font;
+
+            &:hover {
+              background: $blue;
+              color: $dark;
+            }
+          }
+        }
+
         .search-form {
           &__search-btn {
             background-color: $dark !important;

@@ -13,6 +13,7 @@
           Начните с подборок на главной странице или найдите нужный товар через
           поиск
         </p>
+        <!--        FIXME: path isnt working i removed this props from button comp-->
         <LazyUIButton path="/" text="На главную" />
       </div>
     </div>

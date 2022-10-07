@@ -37,11 +37,6 @@ export const useReviewsStore = defineStore('reviews', {
         user_name: supabase.auth.user().user_metadata.name,
         user_id: supabase.auth.user().id
       }, { returning: 'minimal' })
-      console.log({
-        ...review,
-        user_name: supabase.auth.user().user_metadata.name,
-        user_id: supabase.auth.user().id
-      })
     }
   }
 })
