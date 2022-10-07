@@ -248,6 +248,14 @@
         }
       }
     }
+
+    .add-review {
+      background: $default;
+
+      &__header {
+        background-color: $dark;
+      }
+    }
   }
 
   .v-select {

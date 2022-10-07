@@ -10,7 +10,7 @@ export const useReviewsStore = defineStore('reviews', {
     async getReviewsByProductId (id: number) {
       const { data: res } = await supabase
         .from('reviews')
-        .select('user_name, score, text, created_at')
+        .select('user_name, score, text, created_at, is_anon')
         .eq('item_id', id)
       return res
     },
@@ -29,6 +29,19 @@ export const useReviewsStore = defineStore('reviews', {
         reviews,
         rating
       }
+    },
+
+    async uploadReview (review: object): Promise<void> {
+      await supabase.from('reviews').insert({
+        ...review,
+        user_name: supabase.auth.user().user_metadata.name,
+        user_id: supabase.auth.user().id
+      }, { returning: 'minimal' })
+      console.log({
+        ...review,
+        user_name: supabase.auth.user().user_metadata.name,
+        user_id: supabase.auth.user().id
+      })
     }
   }
 })

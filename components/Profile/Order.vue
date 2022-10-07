@@ -70,6 +70,10 @@
             <div class="price">
               <span>Стоимость</span> <span>{{ item.price }}</span>
             </div>
+
+            <button v-if="allowReview" class="add-review-btn" @click="emit('add-review', item.pk_id)">
+              Оставить отзыв
+            </button>
           </div>
         </div>
       </div>
@@ -86,8 +90,13 @@ const props = defineProps({
   orderInfo: {
     type: Object,
     required: true
+  },
+  allowReview: {
+    type: Boolean,
+    default: false
   }
 })
+const emit = defineEmits(['add-review'])
 
 const showGoods = ref(false)
 const confirmDeliveryState = ref(false)
@@ -242,15 +251,25 @@ const handleSubmitButton = async () => {
                 }
               }
             }
+
+            .add-review-btn {
+              background: none;
+              outline: none;
+              border: none;
+              width: max-content;
+              align-self: flex-end;
+              font-size: 1rem;
+              color: $blue;
+              cursor: pointer;
+              font-weight: 500;
+
+              text-transform: uppercase;
+            }
           }
 
         }
       }
     }
   }
-}
-
-@media (max-width: 768px) {
-
 }
 </style>

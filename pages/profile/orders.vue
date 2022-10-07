@@ -1,5 +1,6 @@
 <template>
   <NuxtLayout name="profile">
+    <LazyProfileAddReview v-if="_showReviewModal" :item-id="_itemIdForReview" @close="_showReviewModal = false" />
     <div v-if="isLoggedIn() && _mounted" class="profile__orders">
       <div v-if="!orderStore.fetchState">
         <p class="orders__title">
@@ -32,7 +33,13 @@
           class="
               orders__list"
         >
-          <ProfileOrder v-for="order in ordersList" :key="order.order_id" :order-info="order" />
+          <ProfileOrder
+            v-for="order in ordersList"
+            :key="order.order_id"
+            :allow-review="order.status !== 'created'"
+            :order-info="order"
+            @add-review="handleAddReview"
+          />
         </div>
       </div>
       <UILoader v-else v2 />
@@ -57,6 +64,14 @@ useHead({
 
 const orderStore = useOrdersStore()
 const { user, isLoggedIn } = useAuth()
+
+const _showReviewModal = ref(false)
+const _itemIdForReview = ref(0)
+
+const handleAddReview = (id) => {
+  _itemIdForReview.value = id
+  _showReviewModal.value = true
+}
 
 const _mounted = ref(false)
 onMounted(() => {

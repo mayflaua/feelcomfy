@@ -1,7 +1,7 @@
 <template>
   <div class="review">
     <p class="review__name">
-      {{ review.user_name }}
+      {{ review.is_anon ? 'Анонимный пользователь' : review.user_name }}
     </p>
     <div class="review__info">
       <div class="review__score">
