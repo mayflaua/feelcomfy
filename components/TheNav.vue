@@ -24,7 +24,7 @@
           >
           <button
             class="search-form__search-btn"
-            @click="handleSearchClick"
+            @click="handleSearchClick(searchQuery)"
           >
             <span class="search-btn__icon dark-invert" />
           </button>
@@ -36,7 +36,7 @@
               class="suggestions-list"
             >
               <transition-group name="list">
-                <p v-for="item in suggestionsList" :key="item" class="suggestion" @click="searchQuery = item">
+                <p v-for="item in suggestionsList" :key="item" class="suggestion" @click="handleSearchClick(item)">
                   {{ item }}
                 </p>
               </transition-group>
@@ -240,14 +240,15 @@ export default {
       }
     },
 
-    handleSearchClick () {
-      if (this.searchQuery) {
+    handleSearchClick (query) {
+      if (query) {
         this.$router.push({
           path: '/search',
           query: {
-            q: this.searchQuery
+            q: query
           }
         })
+        this.searchQuery = ''
       }
     },
 

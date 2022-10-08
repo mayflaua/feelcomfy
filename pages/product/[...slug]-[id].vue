@@ -154,13 +154,13 @@
           <p v-if="item.reviews === 0 && currentTab === 'reviews'" class="reviews--no-reviews">
             На этот товар пока нет отзывов
           </p>
-          <div v-if="currentTab === 'reviews' && reviews && item.reviewsCount !== 0" class="reviews">
+          <div v-if="currentTab === 'reviews' && reviewsList && item.reviews !== 0" class="reviews">
             <div class="reviews__title">
               Все отзывы ({{ item.reviews }})
             </div>
             <ProductReview v-for="review in reviewsList" :key="review.created_at" :review="review" />
           </div>
-          <UILoader v-if="currentTab === 'reviews' && !reviews" />
+          <UILoader v-if="currentTab === 'reviews' && !reviewsList" />
         </div>
       </div>
     </div>

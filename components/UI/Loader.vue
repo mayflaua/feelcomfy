@@ -66,6 +66,8 @@ $animation-speed: 1s;
   max-width: 230px;
   margin: 0 auto;
 
+  z-index: 5;
+
   &-text {
     font-size: 1.1rem;
     font-weight: 600;
@@ -98,6 +100,8 @@ $animation-speed: 1s;
 
 .new-loader {
   margin: 35px auto;
+
+  z-index: 5;
 
   .circles {
     position: relative;

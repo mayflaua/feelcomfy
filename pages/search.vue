@@ -10,24 +10,24 @@
       </p>
     </div>
 
-    <div v-if="products.length !==0" class="search__result">
+    <div v-if="products.length !== 0" class="search__result">
       <LazyCard v-for="item in products" :key="item.pk_id" :card="item" />
     </div>
   </div>
 </template>
 
 <script setup>
-import useSearch from '@/composables/useSearch'
 
-const { findByQuery } = useSearch()
+import { useProductsStore } from '@/stores/products'
 
+const productsStore = useProductsStore()
 const route = useRoute()
 
 useHead({
   title: `Результаты поиска по запросу '${route.query.q}'`
 })
 
-const products = ref(await findByQuery(route.query.q))
+const products = ref(await productsStore.getProductsByQuery(route.query.q))
 // return to index page if no query provided
 if (!route.query.q) {
   await navigateTo('/')
@@ -37,7 +37,7 @@ const isSearching = ref(false)
 
 watch(() => route.query.q, async () => {
   isSearching.value = true
-  const res = await findByQuery(route.query.q)
+  const res = await productsStore.getProductsByQuery(route.query.q)
   isSearching.value = false
   products.value = res
 })

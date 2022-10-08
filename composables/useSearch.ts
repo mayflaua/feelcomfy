@@ -7,14 +7,13 @@ const useSearch = () => {
     const { data: matchedByTitle } = await supabase
       .from('goods')
       .select('pk_id, title, old_price, final_price, netlify_name, model, color,' +
-        ' orders')
+        ' orders, reviews!left(score)')
       .ilike('title', `%${query}%`)
-
     // find products matches based on fts vector
     const { data: matchedByFts } = await supabase
       .from('goods')
       .select('pk_id, title, old_price, final_price, netlify_name, model, color,' +
-        ' orders')
+        ' orders, reviews!left(score)')
       .textSearch('title', query, { config: 'russian', type: 'websearch' })
 
     // concat results and remove duplicates
@@ -24,7 +23,7 @@ const useSearch = () => {
       )
     )
 
-    return limit ? res.slice(limit) : res
+    return limit ? res.slice(0, limit) : res
   }
 
   const fetchSuggestions = async (query: string): Promise<string[]> => {

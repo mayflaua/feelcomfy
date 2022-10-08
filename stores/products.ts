@@ -54,7 +54,9 @@ export const useProductsStore = defineStore('products', {
     async getProductsByQuery (query: string, limit: number = 10): Promise<Object[]> {
       // eslint-disable-next-line no-undef
       const { findByQuery } = useSearch()
-      return await findByQuery(query, limit)
+      const res = await findByQuery(query, limit)
+      console.log(res)
+      return this._destructureRating(res)
     },
 
     async getProductsByFilter (filter: Filter, limit: number = 10): Promise<Object[]> {
