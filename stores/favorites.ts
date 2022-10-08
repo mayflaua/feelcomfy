@@ -66,10 +66,10 @@ export const useFavoritesStore = defineStore('favorites', {
         // fetch all products info by compressed list ids if compressed already fetched
         const { data: res } = await supabase
           .from('goods')
-          .select()
+          .select('*, reviews!left(score)')
           .in('pk_id', this._compressedFavoritesList)
 
-        this.favoritesList = res
+        this.favoritesList = this._destructureRating(res)
         this.favoritesReady = true
       } else {
         // retry fetch if compressedFavorites isnt fetched yet
@@ -85,6 +85,15 @@ export const useFavoritesStore = defineStore('favorites', {
         .select('favorites_size')
         .eq('user_id', supabase.auth.user().id)
       this.prefetchedFavoritesSize = res[0].favorites_size
+    },
+
+    _destructureRating (arr: Array<Object>): Array<Object> {
+      arr.forEach((product) => {
+        const reviews = product.reviews
+        product.reviews = reviews.length
+        product.score = (reviews.map(i => i.score).reduce((acc, num) => acc + num, 0) / (product.reviews || 1)).toFixed(1)
+      })
+      return arr
     }
   }
 })

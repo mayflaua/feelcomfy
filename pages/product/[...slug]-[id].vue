@@ -144,21 +144,21 @@
             Описание товара
           </button>
           <button :class="{'tab--current': currentTab === 'reviews'}" class="tab" @click="handleReviewsClick">
-            Отзывы ({{ item.reviewsCount }})
+            Отзывы ({{ item.reviews }})
           </button>
         </div>
         <div ref="_reviewsBody" class="desc__body">
           <div v-if="currentTab === 'desc'" class="desc">
             {{ item.description }}
           </div>
-          <p v-if="item.reviewsCount === 0 && currentTab === 'reviews'" class="reviews--no-reviews">
+          <p v-if="item.reviews === 0 && currentTab === 'reviews'" class="reviews--no-reviews">
             На этот товар пока нет отзывов
           </p>
           <div v-if="currentTab === 'reviews' && reviews && item.reviewsCount !== 0" class="reviews">
             <div class="reviews__title">
-              Все отзывы ({{ item.reviewsCount }})
+              Все отзывы ({{ item.reviews }})
             </div>
-            <ProductReview v-for="review in reviews" :key="review.created_at" :review="review" />
+            <ProductReview v-for="review in reviewsList" :key="review.created_at" :review="review" />
           </div>
           <UILoader v-if="currentTab === 'reviews' && !reviews" />
         </div>
@@ -175,19 +175,21 @@ import { Splide, SplideSlide } from '@splidejs/vue-splide'
 import { useReviewsStore } from '@/stores/reviews'
 import { useFavoritesStore } from '@/stores/favorites'
 import { useCartStore } from '@/stores/cart'
+import { useProductsStore } from '@/stores/products'
 
 const VueViewer = await import('v-viewer')
 const { supabase } = useSupabase()
 const reviewsStore = useReviewsStore()
 const favoritesStore = useFavoritesStore()
 const cartStore = useCartStore()
+const productStore = useProductsStore()
 
 const mainSplide = ref(null)
 const thumbsSplide = ref(null)
 
 const route = useRoute()
 const item = ref(null)
-const reviews = ref(null)
+const reviewsList = ref(null)
 const _fetchingItem = ref(true)
 const _splideMounted = ref(false)
 
@@ -202,7 +204,7 @@ const formatter = new Intl.NumberFormat('ru-RU', {
 })
 
 const reviewsFormatted = computed(() => {
-  const count = item.value.reviewsCount
+  const count = item.value.reviews
   if (count.toString().endsWith('1')) {
     return `${count} оценка`
   } else if (['2', '3', '4'].includes(count.toString().slice(-1))) {
@@ -263,23 +265,20 @@ const inStockFormatted = computed(() => {
 
 const handleReviewsClick = async () => {
   currentTab.value = 'reviews'
-  if (!reviews.value) {
-    reviews.value = await reviewsStore.getReviewsByProductId(item.value.pk_id)
+  if (!reviewsList.value) {
+    reviewsList.value = await reviewsStore.getReviewsByProductId(item.value.pk_id)
   }
 }
 
 // created()
-item.value = await supabase.from('goods').select().eq('pk_id', route.params.id)
-if (item.value.data.length !== 0) {
-  if (slugify(item.value?.data[0].title) !== route.params.slug[0]) {
+item.value = await productStore.getProductById(route.params.id)
+if (item.value[0].length !== 0) {
+  if (slugify(item.value[0].title) !== route.params.slug[0]) {
     item.value = null
   } else {
-    item.value = item.value.data[0]
+    item.value = item.value[0]
     item.value.units_in_stock === 0 ? item.value.qty = 0 : item.value.qty = 1
 
-    const { rating, reviews } = await reviewsStore.getRatingByProductId(item.value.pk_id)
-    item.value.reviewsCount = reviews
-    item.value.rating = rating
     _fetchingItem.value = false
   }
 }

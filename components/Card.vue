@@ -31,13 +31,11 @@
       {{ card.title }}
     </div>
     <div class="card__orders">
-      <!-- TODO: система оценок -->
       <div class="rating">
-        5.0
+        {{ card.score }}
       </div>
-      <!-- TODO: заменить кол-во заказов на кол-во оценок -->
       <div class="evaluations">
-        ({{ formattedOrders }})
+        ({{ formattedReviews }})
       </div>
     </div>
     <div class="card__info">
@@ -50,6 +48,7 @@
         </div>
       </div>
       <div
+        v-if="card.units_in_stock !== 0"
         :class="
           isInCart ? 'card__cart-btn card__cart-btn--incart' : 'card__cart-btn'
         "
@@ -58,6 +57,7 @@
       >
         <span class="cart-btn__icon dark-invert" />
       </div>
+      <span v-else class="cart__no-stock">Нет в наличии</span>
     </div>
   </nuxt-link>
 </template>
@@ -92,17 +92,17 @@ export default {
     isInCart () {
       return this.cartStore.isInCart(this.card.pk_id)
     },
-    formattedOrders () {
-      if (this.card.orders === 0) {
+    formattedReviews () {
+      if (this.card.reviews === 0) {
         return '0 оценок'
-      } else if (this.card.orders.toString().endsWith('1')) {
-        return `${this.card.orders} оценка`
+      } else if (this.card.reviews.toString().endsWith('1')) {
+        return `${this.card.reviews} оценка`
       } else if (
-        ['2', '3', '4'].includes(this.card.orders.toString().slice(-1))
+        ['2', '3', '4'].includes(this.card.reviews.toString().slice(-1))
       ) {
-        return `${this.card.orders} оценки`
+        return `${this.card.reviews} оценки`
       } else {
-        return `${this.card.orders} оценок`
+        return `${this.card.reviews} оценок`
       }
     }
   },
@@ -233,6 +233,12 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    .cart__no-stock {
+      font-size: 0.9rem;
+      color: $dark;
+      margin: 0 3px 0 0;
+    }
   }
 
   &__price {
