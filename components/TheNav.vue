@@ -3,11 +3,13 @@
   <header class="header">
     <nav class="nav">
       <nuxt-link class="nav__logo" to="/">
-        <img
+        <nuxt-img
+          :src="colorMode.preference === 'light' ? 'logo.png' :'logo-dark.png'"
           alt="logo"
-          class="logo dark-invert"
-          src="~/assets/icons/logo.webp"
-        >
+          class="logo"
+          format="webp"
+          preload
+        />
       </nuxt-link>
       <div class="nav__actions">
         <div class="nav__search-form">
