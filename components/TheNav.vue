@@ -2,9 +2,6 @@
   <!--  // TODO: optimize icons-->
   <header class="header">
     <nav class="nav">
-      <button class="dark-invert" @click="changeTheme">
-        тема
-      </button>
       <nuxt-link class="nav__logo" to="/">
         <img
           alt="logo"
@@ -44,6 +41,13 @@
             </div>
           </transition>
         </div>
+        <button
+          :class="colorMode.preference === 'light'
+            ? 'theme-light'
+            : 'theme-dark'"
+          class="change-theme"
+          @click="changeTheme"
+        />
         <div class="nav__user-actions">
           <button class="nav__burger dark-invert" @click="sideMenuOpened = true">
             <span class="burger__line" />
@@ -723,6 +727,56 @@ export default {
           }
         }
       }
+    }
+  }
+
+  .change-theme {
+    min-width: 24px;
+    height: 24px;
+    margin: 0 10px 0 0;
+    border: none;
+    outline: none;
+
+    opacity: 0.8;
+
+    align-self: center;
+    cursor: pointer;
+
+    transition: opacity 0.2s ease;
+
+    @keyframes theme-light {
+      from {
+        transform: rotate(0.5turn);
+        opacity: 0;
+      }
+      to {
+        transform: rotate(1turn);
+        opacity: 0.8;
+      }
+    }
+    @keyframes theme-dark {
+      from {
+        transform: rotate(0.5turn);
+        opacity: 0;
+      }
+      to {
+        transform: rotate(1turn);
+        opacity: 0.8;
+      }
+    }
+
+    &.theme-light {
+      background: url('~/assets/icons/moon.png') transparent center/cover no-repeat;
+      animation: 1s theme-light ease;
+    }
+
+    &.theme-dark {
+      background: url('~/assets/icons/sun.png') transparent center/cover no-repeat;
+      animation: 1s theme-dark ease;
+    }
+
+    &:hover {
+      opacity: 1;
     }
   }
 }
