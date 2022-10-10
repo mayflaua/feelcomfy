@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <LazyAuthSignIn v-if="isAuthModalOpened" @close-modal="closeAuthModal" />
-    <TheNav @open-auth-modal="openAuthModal" />
+    <ClientOnly>
+      <TheNav @open-auth-modal="openAuthModal" />
+    </ClientOnly>
     <main class="content">
       <slot />
     </main>

@@ -35,7 +35,10 @@ const useAuth = () => {
   }
 
   const signOut = async () => {
+    // FIXME: doesnt remove the session
     const { error } = await supabase.auth.signOut()
+    localStorage.removeItem('supabase.auth.token')
+
     if (error) {
       throw error
     }

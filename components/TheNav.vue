@@ -1,15 +1,16 @@
 <template>
-  <!--  // TODO: optimize icons-->
   <header class="header">
     <nav class="nav">
       <nuxt-link class="nav__logo" to="/">
-        <nuxt-img
-          :src="colorMode.preference === 'light' ? 'logo.png' :'logo-dark.png'"
-          alt="logo"
-          class="logo"
-          format="webp"
-          preload
-        />
+        <ColorScheme>
+          <nuxt-img
+            :src="colorMode.preference === 'light' ? 'logo.png' :'logo-dark.png'"
+            alt="logo"
+            class="logo"
+            format="webp"
+            preload
+          />
+        </ColorScheme>
       </nuxt-link>
       <div class="nav__actions">
         <div class="nav__search-form">
@@ -43,14 +44,16 @@
             </div>
           </transition>
         </div>
-        <button
-          :class="colorMode.preference === 'light'
-            ? 'theme-light'
-            : 'theme-dark'"
-          class="change-theme"
-          @click="changeTheme"
-        />
         <div class="nav__user-actions">
+          <ColorScheme>
+            <button
+              :class="colorMode.preference === 'light'
+                ? 'theme-light'
+                : 'theme-dark'"
+              class="change-theme"
+              @click="changeTheme"
+            />
+          </ColorScheme>
           <button class="nav__burger dark-invert" @click="sideMenuOpened = true">
             <span class="burger__line" />
           </button>
@@ -222,7 +225,9 @@ export default {
       return this.cartStore.totalItems < 10
         ? this.cartStore.totalItems?.toString() || '0'
         : '9+'
-    }
+    },
+
+    color: () => this.colorMode.preference
   },
 
   methods: {
@@ -440,6 +445,17 @@ export default {
     .logo {
       height: 40px;
       margin: 0 15px 0 0;
+
+      animation: .4s logo ease;
+
+      @keyframes logo {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
 
       @media (max-width: 768px) {
         margin: 0 auto 15px auto;
@@ -749,11 +765,11 @@ export default {
 
     @keyframes theme-light {
       from {
-        transform: rotate(0.5turn);
+        transform: rotate(1turn);
         opacity: 0;
       }
       to {
-        transform: rotate(1turn);
+        transform: rotate(0.5turn);
         opacity: 0.8;
       }
     }
@@ -769,12 +785,12 @@ export default {
     }
 
     &.theme-light {
-      background: url('~/assets/icons/moon.png') transparent center/cover no-repeat;
+      background: url('~/assets/icons/sun.png') transparent center/cover no-repeat;
       animation: 1s theme-light ease;
     }
 
     &.theme-dark {
-      background: url('~/assets/icons/sun.png') transparent center/cover no-repeat;
+      background: url('~/assets/icons/moon.png') transparent center/cover no-repeat;
       animation: 1s theme-dark ease;
     }
 
