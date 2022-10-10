@@ -1,5 +1,5 @@
 <template>
-  <div class="signin-wrapper">
+  <div class="signin-wrapper" @click.self="$emit('close-modal')">
     <div :class="showLoading && 'signin-modal--blocked'" class="signin-modal">
       <UILoader v-if="showLoading" class="loading" />
       <div class="modal__header">
@@ -8,7 +8,7 @@
         </p>
         <img
           alt="close icon"
-          class="header__close-btn"
+          class="header__close-btn dark-invert"
           src="~/assets/icons/close.webp"
           @click="$emit('close-modal')"
         >
@@ -20,12 +20,14 @@
             class="body__email-input"
             placeholder="Email"
             type="email"
+            ui-input
           >
           <input
             v-model.lazy="signInPassword"
             class="body__password-input"
             placeholder="Пароль"
             type="password"
+            ui-input
           >
           <button class="body__login-btn" @click="handleSignIn">
             Войти

@@ -16,18 +16,21 @@
           placeholder="Email"
           required
           type="email"
+          ui-input
         >
         <input
           v-model.lazy="signUpName"
           class="body__name-input"
           placeholder="Имя"
           type="text"
+          ui-input
         >
         <input
           v-model="signUpPassword"
           class="body__password-input"
           placeholder="Придумайте пароль"
           type="password"
+          ui-input
         >
         <div class="body__validation">
           <div

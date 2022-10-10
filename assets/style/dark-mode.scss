@@ -65,6 +65,17 @@
           }
         }
       }
+
+      &__user-actions {
+        .user-actions {
+          &__pa, &__favorites, &__cart {
+
+            &:hover {
+              background-color: invert($default, 100);
+            }
+          }
+        }
+      }
     }
 
     .aside-menu {
@@ -108,6 +119,40 @@
           }
         }
       }
+    }
+  }
+
+  .signin-wrapper {
+    .signin-modal {
+      box-shadow: 0 0 15px 1px rgba($light, 0.1);
+
+      .modal__header {
+        background-color: $dark;
+      }
+
+      .body-wrapper {
+        .modal__body {
+          background-color: $default;
+
+          .body__forgot-password-btn {
+            color: $light;
+
+            &:hover {
+              color: $font;
+            }
+          }
+        }
+
+        .modal__footer {
+          background-color: $default;
+          border-color: $dark;
+
+          .signup__text, .signup__link {
+            color: $font;
+          }
+        }
+      }
+
     }
   }
 
