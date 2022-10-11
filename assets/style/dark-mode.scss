@@ -67,12 +67,26 @@
       }
 
       &__user-actions {
+        @media (max-width: 480px) {
+          background-color: $dark;
+          box-shadow: 0 -1px 12px rgba(white, 0.1);
+        }
+
         .user-actions {
-          &__pa, &__favorites, &__cart {
+          &__pa, &__favorites, &__cart, &__home {
+
+            &--current span {
+              color: invert($blue, 100) !important;
+            }
 
             &:hover {
               background-color: invert($default, 100);
+              @media (max-width: 480px) {
+                background-color: transparent;
+              }
             }
+
+
           }
         }
       }

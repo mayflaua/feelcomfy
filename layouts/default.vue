@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <LazyAuthSignIn v-if="isAuthModalOpened" @close-modal="closeAuthModal" />
     <ClientOnly>
       <TheNav @open-auth-modal="openAuthModal" />
     </ClientOnly>
