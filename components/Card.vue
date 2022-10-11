@@ -47,17 +47,15 @@
           {{ formatter.format(card.old_price) }}
         </div>
       </div>
+      <span v-if="isInCart" class="card__in-cart">В корзине</span>
       <div
-        v-if="card.units_in_stock !== 0"
-        :class="
-          isInCart ? 'card__cart-btn card__cart-btn--incart' : 'card__cart-btn'
-        "
-
+        v-else-if="card.units_in_stock !== 0"
+        class="card__cart-btn"
         @click.stop.prevent="_handleCartAction"
       >
         <span class="cart-btn__icon dark-invert" />
       </div>
-      <span v-else class="cart__no-stock">Нет в наличии</span>
+      <span v-else class="card__no-stock">Нет в наличии</span>
     </div>
   </nuxt-link>
 </template>
@@ -234,10 +232,26 @@ export default {
     justify-content: space-between;
     align-items: center;
 
-    .cart__no-stock {
+    @media (max-width: 450px) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .card__in-cart {
+      font-size: 0.9rem;
+      color: $blue;
+      font-weight: 500;
+      margin: 0 5px 0 0;
+
+      align-self: flex-end;
+    }
+
+    .card__no-stock {
       font-size: 0.9rem;
       color: $dark;
-      margin: 0 3px 0 0;
+      margin: 0 5px 0 0;
+
+      align-self: flex-end;
     }
   }
 
@@ -268,6 +282,8 @@ export default {
     cursor: pointer;
     transition: background 0.2s ease;
 
+    align-self: flex-end;
+
     .cart-btn__icon {
       display: block;
       width: 100%;
@@ -276,11 +292,6 @@ export default {
       background-image: url("~/assets/icons/cart-add.webp");
       background-size: 100%;
       background-repeat: no-repeat;
-      background-position: 0 0;
-    }
-
-    &--incart {
-      background-position: 0 100%;
     }
 
     &:hover {
