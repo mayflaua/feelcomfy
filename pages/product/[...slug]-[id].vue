@@ -55,7 +55,6 @@
           </Splide>
         </div>
         <div class="product__info">
-          <!-- TODO: rating -->
           <div class="info__stats">
             <span class="stats__rating">
               {{ item.rating }}
@@ -131,6 +130,7 @@
             </div>
           </div>
           <UIButton
+            v-if="isLoggedIn()"
             :disabled="item.units_in_stock === 0 || isInCart"
             :text="isInCart ? 'Уже в корзине' : 'Добавить в корзину'"
             class="add-to-cart-btn"
@@ -176,9 +176,11 @@ import { useReviewsStore } from '@/stores/reviews'
 import { useFavoritesStore } from '@/stores/favorites'
 import { useCartStore } from '@/stores/cart'
 import { useProductsStore } from '@/stores/products'
+import useAuth from '@/composables/useAuth'
 
 const VueViewer = await import('v-viewer')
 const { supabase } = useSupabase()
+const { isLoggedIn } = useAuth()
 const reviewsStore = useReviewsStore()
 const favoritesStore = useFavoritesStore()
 const cartStore = useCartStore()

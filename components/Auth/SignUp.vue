@@ -78,9 +78,11 @@
 
 <script setup>
 import { computed, reactive, ref } from 'vue'
-import useAuth from '../../composables/useAuth'
+import useAuth from '@/composables/useAuth'
+import useSupabase from '@/composables/useSupabase'
 
 const { signUp } = useAuth()
+const { supabase } = useSupabase()
 
 const signUpEmail = ref('')
 const signUpPassword = ref('')
@@ -115,8 +117,8 @@ const validateForm = () => {
   validations.email = emailElement.value.validity.valid
 }
 
-const handleSignUp = () => {
-  signUp({
+const handleSignUp = async () => {
+  await signUp({
     email: signUpEmail.value,
     password: signUpPassword.value,
     name: signUpName.value

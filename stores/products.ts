@@ -55,7 +55,6 @@ export const useProductsStore = defineStore('products', {
       // eslint-disable-next-line no-undef
       const { findByQuery } = useSearch()
       const res = await findByQuery(query, limit)
-      console.log(res)
       return this._destructureRating(res)
     },
 

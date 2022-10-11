@@ -1,5 +1,7 @@
 <template>
-  <div v-if="cartStore.cartReady" class="cart-wrapper">
+  <UILoader v-if="!_mounted" fullscreen v2 />
+  <UINoUser v-else-if="!isLoggedIn()" />
+  <div v-else-if="cartStore.cartReady" class="cart-wrapper">
     <div class="title-wrapper">
       <h1 v-if="totalItemsFormatted" class="cart__title">
         Ваша корзина
@@ -13,8 +15,7 @@
           Начните с подборок на главной странице или найдите нужный товар через
           поиск
         </p>
-        <!--        FIXME: path isnt working i removed this props from button comp-->
-        <LazyUIButton path="/" text="На главную" />
+        <LazyUIButton class="cart__btn" text="На главную" @click="navigateTo('/')" />
       </div>
     </div>
     <div v-if="totalItemsFormatted && cartStore.cartReady" class="cart">
@@ -116,12 +117,14 @@ useHead({
   title: 'Корзина - FeelComfy'
 })
 
+const _mounted = ref(false)
+
 const CircleProgress = defineAsyncComponent({
   loader: () => import('vue3-circle-progress')
 })
 const colorMode = useColorMode()
 
-const { user } = useAuth()
+const { user, isLoggedIn } = useAuth()
 const { supabase } = useSupabase()
 
 const makeOrderState = ref(false)
@@ -191,6 +194,8 @@ const handleMakeOrderClick = async () => {
 // created()
 await cartStore.getCartFromDatabase()
 
+onMounted(() => _mounted.value = true)
+
 </script>
 
 <style lang="scss" scoped>
@@ -237,6 +242,10 @@ await cartStore.getCartFromDatabase()
 
     .cart__title {
       border: none;
+    }
+
+    .cart__btn {
+      width: max-content;
     }
   }
 

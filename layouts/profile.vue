@@ -1,5 +1,6 @@
 <template>
-  <div class="profile">
+  <UILoader v-if="!_mounted" fullscreen v2 />
+  <div v-else-if="isLoggedIn()" class="profile">
     <div class="profile__header">
       <div class="profile__title">
         {{ user?.user_metadata.name }}
@@ -23,12 +24,17 @@
       <slot class="profile__content-wrapper" />
     </div>
   </div>
+  <LazyUINoUser v-else />
 </template>
 
 <script setup>
 import useAuth from '@/composables/useAuth'
 
-const { user } = useAuth()
+const { user, isLoggedIn } = useAuth()
+
+const _mounted = ref(false)
+
+onMounted(() => (_mounted.value = true))
 
 </script>
 

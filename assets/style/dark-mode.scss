@@ -140,13 +140,19 @@
     .signin-modal {
       box-shadow: 0 0 15px 1px rgba($light, 0.1);
 
+      .confirm-email {
+        background: $default;
+      }
+
       .modal__header {
         background-color: $dark;
+        color: $font;
       }
 
       .body-wrapper {
         .modal__body {
           background-color: $default;
+          color: $font;
 
           .body__forgot-password-btn {
             color: $light;

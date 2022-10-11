@@ -1,5 +1,8 @@
 <template>
-  <div v-if="favoritesCards.length !== 0" class="favorites">
+  <UILoader v-if="!_mounted" fullscreen v2 />
+  <UINoUser v-else-if="!isLoggedIn()" />
+
+  <div v-else-if="favoritesCards.length !== 0" class="favorites">
     <LazyCartPopup ref="popup" />
     <div class="favorites__header">
       <h1 class="favorites__title">
@@ -37,6 +40,7 @@
 <script setup>
 import { useFavoritesStore } from '~~/stores/favorites'
 import 'vue-select/dist/vue-select.css'
+import useAuth from '@/composables/useAuth'
 
 const vSelect = defineAsyncComponent({
   loader: () => import('vue-select')
@@ -46,9 +50,12 @@ useHead({
   title: 'Избранное - FeelComfy'
 })
 
+const _mounted = ref(false)
+
 const favoritesStore = useFavoritesStore()
 
 const { supabase } = useSupabase()
+const { isLoggedIn } = useAuth()
 
 const sortingSelectOptions = [
   {
@@ -102,6 +109,8 @@ const handleUnlikeEvent = async (id) => {
 
 // created()
 await favoritesStore.getFavoritesFromDatabase()
+
+onMounted(() => (_mounted.value = true))
 </script>
 
 <style lang="scss" scoped>

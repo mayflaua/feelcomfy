@@ -77,19 +77,15 @@ const handleAccountClick = async () => {
 
 .nav__user-actions {
   height: 100%;
+  width: max-content;
   display: flex;
   justify-content: flex-end;
-
-  @media (max-width: 1300px) {
-    width: 25%;
-  }
 
   @media (max-width: 768px) {
     height: 50px;
     padding: 0 15px 0 0;
-    width: 100%;
 
-    justify-content: flex-end;
+    align-self: flex-end;
 
     .change-theme {
       display: none;

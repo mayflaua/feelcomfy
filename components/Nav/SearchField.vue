@@ -8,6 +8,7 @@
       ui-input
       @blur="suggestionsList = []"
       @input="getSuggestions"
+      @keydown.enter="handleSearchClick(searchQuery)"
     >
     <button
       class="search-form__search-btn"

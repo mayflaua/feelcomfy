@@ -80,14 +80,10 @@ const handleSignIn = async () => {
     await signIn({
       email: signInEmail.value,
       password: signInPassword.value
-    }).then(async (user) => {
-      await sb.from('carts').insert({
-        user_id: user.id,
-        cart: null
-      })
-      showLoading.value = false
-      emit('close-modal')
     })
+    showLoading.value = false
+    // TODO: fetch cart and favorites on login without reload
+    location.reload()
   } catch (err) {
     showLoading.value = false
     err.message.startsWith('You')

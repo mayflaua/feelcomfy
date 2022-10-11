@@ -44,10 +44,7 @@
       </div>
       <UILoader v-else v2 />
     </div>
-    <p v-else-if="_mounted && !isLoggedIn()">
-      <!--    TODO: 404 component-->
-      no user
-    </p>
+
     <p v-else>
       <UILoader fullscreen v2 />
     </p>

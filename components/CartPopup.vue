@@ -60,7 +60,6 @@
 
 <script>
 export default {
-  // TODO: показывать если товар уже в корзине
   data: () => ({
     queue: [],
     showTime: 2000,
