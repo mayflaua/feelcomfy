@@ -74,9 +74,10 @@ const _mounted = ref(false)
 onMounted(() => {
   _mounted.value = true
 })
-// watch for user to sign in to fetch orders
-watch(user, async () => {
+// watch for user to sign in to fetch orders (once)
+const unwatchUser = watch(user, async () => {
   if (user.value) {
+    unwatchUser()
     await orderStore.getOrders(user.value.id)
   }
 })

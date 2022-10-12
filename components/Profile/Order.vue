@@ -4,10 +4,10 @@
       <p class="header__id">
         ID заказа {{ orderInfo.order_id }}
         <UIButton
-          v-if="orderStatus ==='created'"
+          v-if="orderStatus !=='granted'"
           :loading-state="confirmDeliveryState"
+          :text="orderStatus === 'created' ? 'Подтвердить получение' : 'Перейти к оплате'"
           class="submit-btn"
-          text="Подтвердить получение"
           @click.prevent="handleSubmitButton"
         />
       </p>
@@ -118,16 +118,24 @@ const orderDate = new Intl.DateTimeFormat('ru-RU', {
 
 const orderStatus = ref(props.orderInfo.status)
 const orderStatusFormatted = computed(() => {
-  /* TODO: поменяй если чето со статусами поприкольнее сделаешь */
-  return orderStatus.value === 'created' ? 'Создан' : 'Выдан покупателю'
+  if (orderStatus.value === 'not-paid') {
+    return 'Не оплачен'
+  } else if (orderStatus.value === 'created') {
+    return 'Создан'
+  } else {
+    return 'Выдан покупателю'
+  }
 })
 
 const handleSubmitButton = async () => {
-  confirmDeliveryState.value = true
-  await supabase.from('orders').update({ status: 'granted' }).eq('order_id', props.orderInfo.order_id)
-  /* TODO: поменяй если чето со статусами поприкольнее сделаешь */
-  orderStatus.value = 'че бы я сюда не вставил все равно заказ будет доставлен'
-  confirmDeliveryState.value = false
+  if (props.orderInfo.status === 'created') {
+    confirmDeliveryState.value = true
+    await supabase.from('orders').update({ status: 'granted' }).eq('order_id', props.orderInfo.order_id)
+    orderStatus.value = 'granted'
+    confirmDeliveryState.value = false
+  } else if (props.orderInfo.status === 'not-paid') {
+    await navigateTo({ name: 'order', query: { order: props.orderInfo.order_id } })
+  }
 }
 
 </script>
