@@ -28,6 +28,13 @@
           >
             Подтвержденные
           </div>
+          <div
+            :class="currentFilterTab === 'not-paid' && 'active'"
+            ui-switcher-button
+            @click="currentFilterTab = 'not-paid'"
+          >
+            Неоплаченные
+          </div>
         </div>
         <div
           class="
@@ -89,8 +96,10 @@ const ordersList = computed(() => {
     return orderStore.orders
   } else if (currentFilterTab.value === 'active') {
     return orderStore.orders.filter(order => order.status === 'created')
+  } else if (currentFilterTab.value === 'delivered') {
+    return orderStore.orders.filter(order => order.status === 'granted')
   } else {
-    return orderStore.orders.filter(order => order.status !== 'created')
+    return orderStore.orders.filter(order => order.status === 'not-paid')
   }
 })
 

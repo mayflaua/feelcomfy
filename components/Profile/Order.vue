@@ -96,6 +96,7 @@ const props = defineProps({
     default: false
   }
 })
+
 const emit = defineEmits(['add-review'])
 
 const showGoods = ref(false)

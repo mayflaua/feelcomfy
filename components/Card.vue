@@ -141,13 +141,16 @@ export default {
   text-decoration: none;
 
   @media (max-width: 600px) {
-    width: 200px;
+    width: 100%;
     min-height: 300px;
   }
   @media (max-width: 450px) {
-    width: 150px;
     min-height: 250px;
     font-size: 14px;
+  }
+  @media (max-width: 350px) {
+    width: 100%;
+    gap: 8px;
   }
 
   &__image {

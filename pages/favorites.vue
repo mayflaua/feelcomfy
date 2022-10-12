@@ -163,12 +163,15 @@ onMounted(() => (_mounted.value = true))
     @media (max-width: 1500px) {
       grid-template-columns: repeat(4, 1fr);
     }
-    @media (max-width: 1300px) {
+    @media (max-width: 1100px) {
       grid-template-columns: repeat(3, 1fr);
       grid-column-gap: 10px;
     }
     @media (max-width: 800px) {
       grid-template-columns: repeat(2, 1fr);
+    }
+    @media (max-width: 350px) {
+      grid-template-columns: 1fr;
     }
   }
 }
