@@ -252,6 +252,7 @@
 
 <script setup>
 import 'vue-select/dist/vue-select.css'
+import { useOrdersStore } from '@/stores/orders'
 
 useHead({
   title: 'Оформление заказа - FeelComfy'
@@ -260,8 +261,7 @@ useHead({
 definePageMeta({
   meta: [
     { name: 'robots', content: 'none, noyaca, noarchive' }
-  ],
-  middleware: ['auth']
+  ]
 })
 
 const vSelect = defineAsyncComponent({
@@ -271,52 +271,24 @@ const vSelect = defineAsyncComponent({
 const { user } = useAuth()
 const { supabase } = useSupabase()
 
+const ordersStore = useOrdersStore()
+
 const order = ref(null)
 const cities = await $fetch('/api/cities')
 
 const showGoodsList = ref(false)
 const submitOrderState = ref(false)
 
-const getQueryData = () => {
+const getQueryData = async () => {
   /* get order_id from query and clear query */
   const router = useRouter()
   if (router.currentRoute.value.query.order) {
-    const orderID = router.currentRoute.value.query.order
-    router.replace({ query: null })
-    return orderID
+    return router.currentRoute.value.query.order
   } else {
-    navigateTo('/')
+    await navigateTo('/')
   }
 }
 
-const getOrderInfo = async (id) => {
-  /* get order info from database */
-  const response = await supabase
-    .from('orders')
-    .select('order')
-    .eq('order_id', id)
-
-  /* list all goods ids */
-  const ids = response?.data[0].order.map(item => item.id)
-
-  /* select goods with listed ids from database */
-  const goods = await supabase
-    .from('goods')
-    .select('title, netlify_name, model, color, pk_id')
-    .in('pk_id', ids)
-
-  /* push price and qty from order to goods list */
-  goods.data.forEach((item) => {
-    const index =
-      response.data[0].order[
-        response.data[0].order.findIndex(i => i.id === item.pk_id)
-      ]
-    item.qty = index.qty
-    item.final_price = index.price
-  })
-
-  return goods.data
-}
 const orderWorth = computed(() =>
   order.value?.reduce((acc, curr) => acc + curr.qty * curr.final_price, 0)
 )
@@ -337,8 +309,8 @@ const checkValid = () =>
 const handleSubmitButton = async () => {
   if (formValid.value) {
     submitOrderState.value = true
-    const router = useRouter()
-    router.push({ name: 'order-success', query: { referrer: 'order' } })
+    await ordersStore.submitOrder(await getQueryData())
+    await navigateTo({ name: 'order-success', query: { referrer: 'order' } })
     submitOrderState.value = false
   }
 }
@@ -350,9 +322,8 @@ const formatter = new Intl.NumberFormat('ru-RU', {
   maximumFractionDigits: 0
 })
 
-onBeforeMount(async () => {
-  order.value = await getOrderInfo(getQueryData())
-})
+order.value = await ordersStore.getOrderInfo(await getQueryData())
+
 </script>
 
 <style lang="scss" scoped>

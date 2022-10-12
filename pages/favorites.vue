@@ -89,7 +89,7 @@ const sortItems = () => {
     cheap: arr => arr.sort((a, b) => a.final_price - b.final_price),
     expensive: arr => arr.sort((a, b) => b.final_price - a.final_price),
     // TODO: sort by rating when implement rating system
-    rating: arr => arr,
+    rating: arr => arr.sort((a, b) => b.score - a.score),
     orders: arr => arr.sort((a, b) => b.orders - a.orders)
   }
   favoritesCards.value = sorter[method](favoritesCards.value)

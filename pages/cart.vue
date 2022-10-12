@@ -112,6 +112,9 @@ import { computed } from 'vue'
 import useAuth from '../composables/useAuth'
 import useSupabase from '../composables/useSupabase'
 import { useCartStore } from '~~/stores/cart'
+import { useOrdersStore } from '@/stores/orders'
+
+const ordersStore = useOrdersStore()
 
 useHead({
   title: 'Корзина - FeelComfy'
@@ -161,31 +164,23 @@ const handleMakeOrderClick = async () => {
     makeOrderState.value = true
     /* make orders list from selected items */
     const order = []
-    cartItems.value.forEach((item) => {
-      // eslint-disable-next-line no-unused-expressions
+    cartItems.value.forEach(item => (
       item.checked
         ? order.push({
           id: item.pk_id,
           qty: item.qty,
-          price: item.final_price
+          price: item.final_price,
+          units_in_stock: item.units_in_stock
         })
         : null
-    })
+    ))
     /* insert order to database and get its order_id */
-    await supabase.from('orders').insert({
-      user_id: user.value.id,
-      order
-    })
-    const orderID = await supabase
-      .from('orders')
-      .select('order_id')
-      .order('created_at', { ascending: false })
-      .limit(1)
+    const orderID = await ordersStore.makeOrder(order)
 
     /* redirect to order confirmation page */
     await navigateTo({
       path: '/order',
-      query: { order: orderID.data[0].order_id }
+      query: { order: orderID }
     })
     makeOrderState.value = false
   }
@@ -194,7 +189,7 @@ const handleMakeOrderClick = async () => {
 // created()
 await cartStore.getCartFromDatabase()
 
-onMounted(() => _mounted.value = true)
+onMounted(() => (_mounted.value = true))
 
 </script>
 

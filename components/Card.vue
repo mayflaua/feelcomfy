@@ -114,7 +114,7 @@ export default {
       this.$emit('show-popup', {
         name: this.card.title,
         url: this.card.netlify_name,
-        event: this.isInCart ? 'add' : 'remove'
+        event: this.isInCart ? 'remove' : 'add'
       })
     }
   }
