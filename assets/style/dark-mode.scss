@@ -315,6 +315,20 @@
     }
 
     .product {
+      &__info-card {
+        .product__info {
+          .info__stats {
+            .stats__favorites-btn {
+              color: $font;
+
+              svg {
+                stroke: $font;
+              }
+            }
+          }
+        }
+      }
+
       &__desc-wrapper {
         .desc__tabs {
           .tab {
