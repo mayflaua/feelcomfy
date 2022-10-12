@@ -66,6 +66,14 @@ export default defineNuxtConfig({
     imagekit: {
       baseURL: 'https://ik.imagekit.io/sweetie/images'
     },
+    providers: {
+      imagekit_banners: {
+        provider: 'imagekit',
+        options: {
+          baseURL: 'https:/ik.imagekit.io/sweetie/banners'
+        }
+      }
+    },
     domains: ['ltxvxjjipthpwfyluwmj.supabase.co'],
     screens: {
       600: 600,

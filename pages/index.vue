@@ -1,6 +1,7 @@
 <template>
   <div>
     <LazyCartPopup ref="popup" />
+    <LazyBannerCarousel />
     <UITitledWrapper v-if="products.popular" title="Популярное">
       <div class="cards">
         <Card
