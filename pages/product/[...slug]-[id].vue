@@ -151,16 +151,16 @@
           <div v-if="currentTab === 'desc'" class="desc">
             {{ item.description }}
           </div>
-          <p v-if="item.reviews === 0 && currentTab === 'reviews'" class="reviews--no-reviews">
+          <UILoader v-if="currentTab === 'reviews' && _fetchingReviews" />
+          <p v-else-if="item.reviews === 0 && currentTab === 'reviews'" class="reviews--no-reviews">
             На этот товар пока нет отзывов
           </p>
-          <div v-if="currentTab === 'reviews' && item.reviews !== 0" class="reviews">
+          <div v-else-if="currentTab === 'reviews' && item.reviews !== 0 " class="reviews">
             <div class="reviews__title">
               Все отзывы ({{ item.reviews }})
             </div>
             <ProductReview v-for="review in reviewsList" :key="review.created_at" :review="review" />
           </div>
-          <UILoader v-if="currentTab === 'reviews' && item.reviews === 0" />
         </div>
       </div>
     </div>
@@ -193,6 +193,7 @@ const route = useRoute()
 const item = ref(null)
 const reviewsList = ref(null)
 const _fetchingItem = ref(true)
+const _fetchingReviews = ref(false)
 const _splideMounted = ref(false)
 
 const currentTab = ref('desc')
@@ -267,11 +268,13 @@ const inStockFormatted = computed(() => {
 
 const handleReviewsClick = async () => {
   currentTab.value = 'reviews'
+  _fetchingReviews.value = true
   if (!reviewsList.value) {
     reviewsList.value = await reviewsStore.getReviewsByProductId(item.value.pk_id)
   } else if (item.reviews === 0) {
     reviewsList.value = []
   }
+  _fetchingReviews.value = false
 }
 
 // created()
