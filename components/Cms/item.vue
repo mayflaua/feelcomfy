@@ -1,7 +1,7 @@
 <template>
   <div :class="!isEditting || 'item--highlight'" class="item">
     <img
-      :src="item.image_url"
+      :src="`https://ik.imagekit.io/sweetie/images/${item.netlify_name}`"
       alt="Нет изображения или битая ссылка"
       class="item__image"
     >
@@ -60,9 +60,9 @@
       >
     </div>
     <div class="item__image_url">
-      image_url:
+      netlify_name:
       <input
-        v-model="item.image_url"
+        v-model="item.netlify_name"
         :class="isEditting || 'input--disabled'"
         :disabled="!isEditting"
         class="input"

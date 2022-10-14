@@ -18,7 +18,6 @@
     <p class="loading-state">
       {{ loadingState }}
     </p>
-    <pre>{{ test }}</pre>
     <div class="items">
       <LazyCmsItem v-for="item in loadedGoods.data" :key="item.id" :info="item" />
     </div>
@@ -45,7 +44,7 @@ const loadedGoods = ref({ data: [] })
 const loadAllGoods = async () => {
   loadingState.value = 'Загрузка'
   loadedGoods.value = await
-  db.from('goods').select('pk_id, category_id, title, old_price, final_price, units_in_stock, image_url, model, color, orders, description')
+  db.from('goods').select('pk_id, category_id, title, old_price, final_price, units_in_stock, netlify_name, model, color, orders, description')
   loadingState.value = null
 }
 const loadingState = ref(null)

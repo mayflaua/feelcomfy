@@ -1,14 +1,17 @@
 <template>
   <div :class="!sending || 'item--disabled'" class="item">
-    <img :src="itemToAdd.image_url" alt="Изображение" class="item__image">
-
+    <img
+      :src="`https://ik.imagekit.io/sweetie/images/${itemToAdd.netlify_name}`"
+      alt="Изображение"
+      class="item__image"
+    >
     <div class="item__title">
       title:
-      <input v-model="itemToAdd.title" class="input">
+      <input v-model="itemToAdd.title" class="input" ui-input>
     </div>
     <div class="item__category_id">
       category_id:
-      <select v-model="itemToAdd.category_id" class="input">
+      <select v-model="itemToAdd.category_id" class="input" ui-input>
         <option selected value="1">
           мышь
         </option>
@@ -31,43 +34,44 @@
     </div>
     <div class="item__old_price">
       old_price:
-      <input v-model="itemToAdd.old_price" class="input">
+      <input v-model="itemToAdd.old_price" class="input" ui-input>
     </div>
     <div class="item__final_price">
       final_price:
-      <input v-model="itemToAdd.final_price" class="input">
+      <input v-model="itemToAdd.final_price" class="input" ui-input>
     </div>
     <div class="item__units_in_stock">
       units_in_stock:
-      <input v-model="itemToAdd.units_in_stock" class="input">
+      <input v-model="itemToAdd.units_in_stock" class="input" ui-input>
     </div>
     <div class="item__image_url">
-      image_url:
+      image:
       <input
         ref="fullImage"
         class="input"
         type="file"
+        ui-input
         @change="handleImageUpload"
       >
     </div>
     <div class="item__model">
       model:
-      <input v-model="itemToAdd.model" class="input">
+      <input v-model="itemToAdd.model" class="input" ui-input>
     </div>
     <div class="item__color">
       color:
-      <input v-model="itemToAdd.color" class="input">
+      <input v-model="itemToAdd.color" class="input" ui-input>
     </div>
     <div class="item__orders">
       orders:
-      <input v-model="itemToAdd.orders" class="input">
+      <input v-model="itemToAdd.orders" class="input" ui-input>
     </div>
     <div class="item__orders">
       desc:
-      <input v-model="itemToAdd.description" class="input">
+      <input v-model="itemToAdd.description" class="input" ui-input>
     </div>
     <UIButton
-      :value="sending ? 'Отправка' : 'Добавить'"
+      :text="sending ? 'Отправка' : 'Добавить'"
       class="submit-btn"
       path=""
       @click.prevent="handleAddButtonClick"
@@ -77,6 +81,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import ImageKit from 'imagekit-javascript'
 import useSupabase from '@/composables/useSupabase'
 
 const { supabase: db } = useSupabase()
@@ -92,7 +97,7 @@ const handleAddButtonClick = async () => {
   itemToAdd.value.old_price = null
   itemToAdd.value.final_price = 0
   itemToAdd.value.units_in_stock = 0
-  itemToAdd.value.image_url = ''
+  itemToAdd.value.netlify_name = ''
   itemToAdd.value.model = null
   itemToAdd.value.color = ''
   itemToAdd.value.orders = 0
@@ -104,22 +109,29 @@ const itemToAdd = ref({
   old_price: null,
   final_price: 0,
   units_in_stock: 0,
-  image_url: '',
+  netlify_name: '',
   model: null,
   color: '',
   orders: 0
+})
+
+const imagekit = new ImageKit({
+  urlEndpoint: 'https://ik.imagekit.io/sweetie',
+  publicKey: 'public_ztvv2RW/8vkArMlXq1pvMKKzqEM=',
+  authenticationEndpoint: 'http://localhost:3000/api/ik'
 })
 
 const fullImage = ref(null)
 const handleImageUpload = async () => {
   /* get file, upload it to storage and get its url */
   const file = fullImage.value.files[0]
-  await db.storage.from('images').upload(`full/${file.name}`, file)
-  const { publicURL: url } = db.storage
-    .from('images')
-    .getPublicUrl(`full/${file.name}`)
-
-  itemToAdd.value.image_url = url
+  await imagekit.upload({
+    file,
+    fileName: file.name,
+    useUniqueFileName: false,
+    folder: 'images'
+  })
+  itemToAdd.value.netlify_name = file.name
 }
 </script>
 
@@ -133,17 +145,15 @@ const handleImageUpload = async () => {
 
   border: 2px solid $blue;
   border-radius: 9px;
+
+  width: 27rem;
   padding: 10px;
   margin: 0 0 30px 0;
   font-size: 1.2rem;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  gap: 20px 10px;
-  grid-template-areas:
-    "img . . . . ."
-    "img . . . . ."
-    "btn btn btn btn btn btn";
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 
   &__img,
   &__title,
@@ -175,7 +185,8 @@ const handleImageUpload = async () => {
   &__image {
     grid-area: img;
     display: block;
-    height: 100px;
+    width: 25rem;
+    margin: 0 auto;
   }
 }
 </style>
