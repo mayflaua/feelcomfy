@@ -33,7 +33,7 @@ useHead({
 })
 
 definePageMeta({
-  middleware: 'admin',
+  middleware: 'only-dev',
   meta: [
     { name: 'robots', content: 'none, noyaca, noarchive' }
   ]

@@ -13,38 +13,7 @@
 </template>
 
 <script setup>
-const categoriesList = [
-  {
-    name: 'mouse',
-    title: 'Мыши',
-    link: ''
-  },
-  {
-    name: 'keyboards',
-    title: 'Клавиатуры',
-    link: ''
-  },
-  {
-    name: 'chairs',
-    title: 'Кресла',
-    link: ''
-  },
-  {
-    name: 'tables',
-    title: 'Столы',
-    link: ''
-  },
-  {
-    name: 'monitors',
-    title: 'Мониторы',
-    link: ''
-  },
-  {
-    name: 'merch',
-    title: 'Мерч',
-    link: ''
-  }
-]
+const categoriesList = await $fetch('/api/categories')
 
 </script>
 

@@ -30,6 +30,9 @@
         <option value="6">
           мерч
         </option>
+        <option value="7">
+          аксессуар
+        </option>
       </select>
     </div>
     <div class="item__old_price">

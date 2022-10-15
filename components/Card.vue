@@ -30,7 +30,7 @@
     <div class="card__title">
       {{ card.title }}
     </div>
-    <div class="card__orders">
+    <div v-if="card.reviews" class="card__orders">
       <div class="rating">
         {{ card.score }}
       </div>
@@ -217,7 +217,7 @@ export default {
     display: flex;
     gap: 5px;
     padding: 0 10px;
-    margin: -7px 0 0 0;
+    margin: -5px 0 0 0;
     font-size: 0.7rem;
     color: $dark;
 

@@ -1,8 +1,6 @@
 <template>
   <div class="container">
-    <ClientOnly>
-      <TheNav @open-auth-modal="openAuthModal" />
-    </ClientOnly>
+    <TheNav @open-auth-modal="openAuthModal" />
     <main class="content">
       <slot />
     </main>
