@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import useSupabase from '~/composables/useSupabase'
+import useSearch from '~/composables/useSearch'
 
 const { supabase } = useSupabase()
 

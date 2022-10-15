@@ -27,6 +27,16 @@
         class="suggestions-list"
       >
         <transition-group name="list">
+          <p key="history-label" class="suggestion__label">
+            Вы недавно искали:
+          </p>
+          <p v-for="item in searchHistory" :key="item" class="suggestion" @click="handleSearchClick(item)">
+            {{ item }}
+          </p>
+          <p key="results-label" class="suggestion__label">
+            Результаты поиска:
+          </p>
+
           <p v-for="item in suggestionsList" :key="item" class="suggestion" @click="handleSearchClick(item)">
             {{ item }}
           </p>
@@ -45,6 +55,8 @@ const emit = defineEmits(['open-aside'])
 const search = useSearch()
 
 const suggestionsList = ref([])
+const searchHistory = ref([])
+
 const fetchingSuggestions = ref(false)
 const searchQuery = ref('')
 
@@ -59,11 +71,12 @@ const handleSearchClick = async (query) => {
     searchQuery.value = ''
   }
 }
-
 const getSuggestions = async () => {
   if (searchQuery.value) {
     fetchingSuggestions.value = true
-    suggestionsList.value = await search.fetchSuggestions(searchQuery.value)
+    const { res, history } = await search.fetchSuggestions(searchQuery.value)
+    suggestionsList.value = res
+    searchHistory.value = history
     fetchingSuggestions.value = false
   } else {
     suggestionsList.value = []
@@ -132,6 +145,15 @@ const getSuggestions = async () => {
       &:hover {
         background-color: lighten($blue, 10);
         color: white;
+      }
+
+      &__label {
+        font-style: italic;
+        font-size: 0.8rem;
+        margin: 0;
+        padding: 0.6rem 1rem 0.35rem 1rem;
+        font-weight: 500;
+        color: $dark;
       }
     }
   }
