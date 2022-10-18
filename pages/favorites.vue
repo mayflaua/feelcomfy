@@ -38,9 +38,8 @@
 </template>
 
 <script setup>
-import { useFavoritesStore } from '~~/stores/favorites'
+import { useFavoritesStore } from '~/stores/favorites'
 import 'vue-select/dist/vue-select.css'
-import useAuth from '@/composables/useAuth'
 
 const vSelect = defineAsyncComponent({
   loader: () => import('vue-select')
