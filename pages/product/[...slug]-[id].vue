@@ -23,7 +23,7 @@
             <SplideSlide>
               <nuxt-img
                 :alt="item.title"
-                :src="item.netlify_name"
+                :src="`images/${item.netlify_name}`"
                 class="info__image"
                 fit="cover"
                 format="webp"
@@ -45,7 +45,7 @@
             <SplideSlide class="splide-slide">
               <nuxt-img
                 :alt="item.title"
-                :src="item.netlify_name"
+                :src="`images/${item.netlify_name}`"
                 class="info__image"
                 format="webp"
                 placeholder="/assets/images/img-placeholder.webp"

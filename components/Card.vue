@@ -4,7 +4,7 @@
       <nuxt-img
         :alt="card.title"
         :modifiers="{f: 'webp'}"
-        :src="card.netlify_name"
+        :src="`images/${card.netlify_name}`"
         class="img"
         placeholder="/assets/images/img-placeholder.webp"
         sizes="450:150px 600:200px sm:250px"

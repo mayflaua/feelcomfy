@@ -4,7 +4,7 @@
       <div v-for="(item, i) in queue" :key="item.name" class="popup">
         <div class="image-wrapper">
           <nuxt-img
-            :src="item.imageUrl"
+            :src="`images/${item.imageUrl}`"
             class="popup__image"
             format="webp"
             height="100%"

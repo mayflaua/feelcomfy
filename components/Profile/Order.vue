@@ -44,7 +44,7 @@
           <div class="item__image-wrapper">
             <nuxt-img
               :alt="item.title"
-              :src="item.netlify_name"
+              :src="`images/${item.netlify_name}`"
               class="item__image"
               format="webp"
               height="100%"

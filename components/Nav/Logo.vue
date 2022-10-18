@@ -2,7 +2,7 @@
   <nuxt-link class="nav__logo" to="/">
     <ColorScheme>
       <nuxt-img
-        :src="logoColorName"
+        :src="`images/${logoColorName}`"
         alt="logo"
         class="logo"
         format="webp"

@@ -9,7 +9,7 @@
     <div class="item__image">
       <nuxt-img
         :alt="itemInfo.title"
-        :src="itemInfo.netlify_name"
+        :src="`images/${itemInfo.netlify_name}`"
         format="webp"
         height="100%"
         placeholder="/assets/images/img-placeholder.webp"
