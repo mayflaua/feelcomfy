@@ -8,8 +8,8 @@ export default defineNuxtConfig({
       link: [
         { rel: 'preconnect', href: 'https://ik.imagekit.io' },
         { rel: 'preconnect', href: 'https://ltxvxjjipthpwfyluwmj.supabase.co' },
-        { rel: 'icon', type: 'image/svg+xml', href: '/assets/icons/favicon.svg' },
-        { rel: 'icon', type: 'image/png', href: '/assets/icons/favicon.png' }
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon/favicon.svg' },
+        { rel: 'icon', type: 'image/png', href: '/favicon/favicon.png' }
 
       ],
       meta: [
