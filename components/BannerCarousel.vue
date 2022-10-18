@@ -2,7 +2,7 @@
   <Splide :options="options" class="banner-carousel">
     <SplideSlide v-for="banner in banners" :key="banner.image">
       <nuxt-link :to="banner.path">
-        <nuxt-img :alt="banner.alt" :provider="banner.provider" :src="banner.image" format="webp" quality="100а " />
+        <nuxt-img :alt="banner.alt" :provider="banner.provider" :src="banner.image" format="webp" quality="100" />
       </nuxt-link>
     </SplideSlide>
   </Splide>
