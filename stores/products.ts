@@ -6,11 +6,12 @@ const { supabase } = useSupabase()
 
 enum ProductCategory {
   MOUSE = 1,
-  KEYBOARD = 2,
-  CHAIR = 3,
-  TABLE = 4,
-  MONITOR = 5,
-  MERCH = 6
+  KEYBOARDS = 2,
+  CHAIRS = 3,
+  TABLES = 4,
+  MONITORS = 5,
+  MERCH = 6,
+  ACCESSORIES = 7,
 }
 
 enum Filter {

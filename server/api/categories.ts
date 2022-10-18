@@ -4,43 +4,43 @@ export default defineEventHandler(() => {
       categoryID: 1,
       name: 'mouse',
       title: 'Мыши',
-      link: ''
+      link: '/category/mouse'
     },
     {
       categoryID: 2,
       name: 'keyboards',
       title: 'Клавиатуры',
-      link: ''
+      link: '/category/keyboards'
     },
     {
       categoryID: 3,
       name: 'chairs',
       title: 'Кресла',
-      link: ''
+      link: '/category/chairs'
     },
     {
       categoryID: 4,
       name: 'tables',
       title: 'Столы',
-      link: ''
+      link: '/category/tables'
     },
     {
       categoryID: 5,
       name: 'monitors',
       title: 'Мониторы',
-      link: ''
+      link: '/category/monitors'
     },
     {
       categoryID: 6,
       name: 'merch',
       title: 'Мерч',
-      link: ''
+      link: '/category/merch'
     },
     {
       categoryID: 7,
       name: 'accessories',
       title: 'Аксессуары',
-      link: ''
+      link: '/category/accessories'
     }
 
   ]
