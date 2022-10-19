@@ -42,7 +42,7 @@ const useAuth = () => {
     if (error) {
       throw error
     }
-    await navigateTo('/')
+    // await navigateTo('/')
   }
 
   const isLoggedIn = () => {

@@ -132,7 +132,6 @@ const { supabase } = useSupabase()
 
 const makeOrderState = ref(false)
 
-// FIXME: unauthorized access
 /* currency formatter */
 const formatter = new Intl.NumberFormat('ru-RU', {
   style: 'currency',

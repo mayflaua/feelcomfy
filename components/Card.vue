@@ -110,12 +110,13 @@ export default {
       await this.favoritesStore.handleFavoritesAction(this.card.pk_id)
     },
     async _handleCartAction () {
-      await this.cartStore.handleCartAction(this.card.pk_id)
       this.$emit('show-popup', {
         name: this.card.title,
         url: this.card.netlify_name,
+        // no remove event is used now
         event: this.isInCart ? 'remove' : 'add'
       })
+      await this.cartStore.handleCartAction(this.card.pk_id)
     }
   }
 }

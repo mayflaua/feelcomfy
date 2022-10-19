@@ -107,7 +107,7 @@
         </div>
 
         <div class="form__buttons">
-          <button class="buttons__logout" @click="signOut">
+          <button class="buttons__logout" @click="handleSigninOut">
             Выйти из системы
           </button>
           <LazyUIButton
@@ -143,6 +143,10 @@ const handleSaveClick = async () => {
     ...formFields
   })
   saveState.value = false
+}
+
+const handleSigninOut = async () => {
+  await signOut()
 }
 
 const authState = ref(null)
