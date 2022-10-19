@@ -2,7 +2,7 @@
   <div class="category-page">
     <div class="category-page__header">
       <p class="title">
-        {{ $route.params.name }}
+        {{ title }}
       </p>
       <div class="sorting-wrapper">
         <span class="sorting__title">Cортировка:</span>
@@ -22,6 +22,7 @@
     <div class="category-page__body">
       <CategoryAsideFilters
         v-show="showFilters || _isDesktopScreen"
+        :categories="categories"
         :colors="getAvailableColors()"
         :min-max-price="getMinMaxPriceValues()"
         @change="applyFilters"
@@ -38,11 +39,23 @@ import 'vue-select/dist/vue-select.css'
 import { useMediaQuery } from '@vueuse/core'
 import { useProductsStore } from '@/stores/products'
 
+const route = useRoute()
+const categories = await $fetch('/api/categories')
+const categoryObject = categories.find(i => i.name === route.params.name)
+const title = categoryObject.title
+const isProductCategory = !categoryObject.filter
+
+useHead({
+  title: `${title} в магазине FeelComfy`
+})
+
+definePageMeta({
+  middleware: 'valid-category'
+})
+
 const vSelect = defineAsyncComponent({
   loader: () => import('vue-select')
 })
-
-const route = useRoute()
 
 const _isDesktopScreen = useMediaQuery('(min-width: 768px)')
 const showFilters = ref(_isDesktopScreen.value)
@@ -99,7 +112,12 @@ const sortItems = () => {
   filteredCards.value = sorter[method](productCards)
 }
 
-const productCards = await productsStore.getProductsByCategory(route.params.name)
+let productCards
+if (isProductCategory) {
+  productCards = await productsStore.getProductsByCategory(categoryObject.name)
+} else {
+  productCards = await productsStore.getProductsByFilter(categoryObject.filter)
+}
 const filteredCards = ref(productCards)
 
 const getMinMaxPriceValues = () => {

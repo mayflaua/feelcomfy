@@ -1,11 +1,21 @@
 <template>
-  <div>
+  <div v-if="_mounted">
     <LazyCartPopup ref="popup" />
-    <LazyBannerCarousel />
-    <UITitledWrapper v-if="products.popular" title="Популярное">
+    <BannerCarousel />
+    <UITitledWrapper v-if="products.popular" path="category/popular" title="Популярное">
       <div class="cards">
         <Card
           v-for="card in products.popular"
+          :key="card.pk_id"
+          :card="card"
+          @show-popup="_showPopup"
+        />
+      </div>
+    </UITitledWrapper>
+    <UITitledWrapper v-if="products.xiaomi" path="search?q=xiaomi" title="Бренд Xiaomi">
+      <div class="cards">
+        <Card
+          v-for="card in products.xiaomi"
           :key="card.pk_id"
           :card="card"
           @show-popup="_showPopup"
@@ -20,8 +30,8 @@
       text="Загрузить еще"
       @click.prevent="handleLoadMoreClick"
     />
-    <UILoader v-if="productsStore.isLoading" text="Загружаю товары" />
   </div>
+  <UILoader v-else fullscreen v2 />
 </template>
 
 <script setup>
@@ -29,8 +39,10 @@ import { useProductsStore } from '@/stores/products'
 
 const productsStore = useProductsStore()
 
-const products = ref([])
+const products = reactive({})
 const popup = ref(null)
+
+const _mounted = ref(false)
 
 const _showPopup = ({ name, url, event }) =>
   popup.value.show(name, url, event)
@@ -44,7 +56,10 @@ const canLoadMore = computed(() => {
 })
 
 // created() hook
-productsStore.getProductsByFilter('popular').then(res => products.value.popular = res)
+products.popular = await productsStore.getProductsByFilter('popular', 20)
+products.xiaomi = await productsStore.getProductsByQuery('xiaomi', 20)
+
+onMounted(() => _mounted.value = true)
 </script>
 
 <style lang="scss" scoped>

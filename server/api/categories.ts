@@ -41,6 +41,12 @@ export default defineEventHandler(() => {
       name: 'accessories',
       title: 'Аксессуары',
       link: '/category/accessories'
+    },
+    {
+      filter: 'POPULAR',
+      name: 'popular',
+      title: 'Популярное',
+      link: '/category/popular'
     }
 
   ]

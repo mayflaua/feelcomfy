@@ -11,11 +11,12 @@ enum ProductCategory {
   TABLES = 4,
   MONITORS = 5,
   MERCH = 6,
-  ACCESSORIES = 7,
+  ACCESSORIES = 7
 }
 
 enum Filter {
-  POPULAR = 'orders', // TODO: должно быть rating, но пока что их нет
+  POPULAR = 'orders',
+  BEST_RATING = 'score',
   // TODO: больше фильтров
 }
 
@@ -44,7 +45,7 @@ export const useProductsStore = defineStore('products', {
       return this._destructureRating(res)
     },
 
-    async getProductsByCategory (category: ProductCategory, limit: number = 10): Promise<Object[]> {
+    async getProductsByCategory (category: string, limit: number = 10): Promise<Object[]> {
       const { data: res } = await supabase.from('goods')
         .select('*, reviews!left(score)')
         // @ts-ignore

@@ -5,7 +5,7 @@
         Категории
       </p>
       <div class="categories__list">
-        <nuxt-link v-for="category in categoriesList" :key="category.name" :to="category.link" class="category">
+        <nuxt-link v-for="category in categories" :key="category.name" :to="category.link" class="category">
           {{ category.title }}
         </nuxt-link>
       </div>
@@ -79,6 +79,10 @@ const props = defineProps({
   colors: {
     type: Array,
     required: true
+  },
+  categories: {
+    type: Array,
+    required: true
   }
 })
 // range selector value
@@ -87,8 +91,6 @@ const _v = ref(props.minMaxPrice)
 const emitChange = () => {
   emit('change', { price: _v.value, colors: selectedColors })
 }
-
-const categoriesList = await $fetch('/api/categories')
 
 const selectedColors = reactive({})
 props.colors.forEach((i) => {
