@@ -2,3 +2,9 @@
 @import 'font.css';
 @import 'dark-mode';
 @import 'ui.scss';
+
+@media (max-width: 480px) {
+  body {
+    margin-bottom: 60px;
+  }
+}

@@ -19,67 +19,63 @@
       />
     </div>
     <div class="item__desc">
-      <div class="item__head">
-        <div class="item__name">
-          {{ itemInfo.title }} {{ itemInfo.pk_id }}
-        </div>
-        <button
-          v-if="!noInput"
-          class="item__delete-btn dark-invert"
-          @click.prevent="handleDeleteButton"
-        >
-          Удалить
-        </button>
+      <div class="item__name">
+        {{ itemInfo.title }} {{ itemInfo.pk_id }}
       </div>
-      <div class="item__body">
-        <div class="item__info">
-          <p v-if="itemInfo.color" class="item__color">
-            Цвет: <span class="dark-invert">{{ itemInfo.color }}</span>
-          </p>
-          <p v-if="itemInfo.model" class="item__model">
-            Модель: <span class="dark-invert">{{ itemInfo.model }}</span>
-          </p>
-        </div>
-        <div class="item__qty">
-          <div v-if="!noInput" class="qty-input-wrapper">
-            <input
-              :max="itemInfo.units_in_stock"
-              :value="itemInfo.qty"
-              class="item__qty-input"
-              min="1"
-              readonly
-              type="number"
-              ui-input
-            >
-            <button
-              :disabled="itemInfo.qty <= 1"
-              class="qty__minus-btn"
-              @click="itemInfo.qty > 1 ? handleChangeQuantity(-1) : null"
-            >
-              -
-            </button>
-            <button class="qty__plus-btn" @click="handleChangeQuantity(1)">
-              +
-            </button>
-          </div>
-          <p
-            v-if="!noInput"
-            v-show="itemInfo.qty > 1"
-            class="qty__price-per-item"
+      <button
+        v-if="!noInput"
+        class="item__delete-btn dark-invert"
+        @click.prevent="handleDeleteButton"
+      >
+        Удалить
+      </button>
+      <div class="item__info">
+        <p v-if="itemInfo.color" class="item__color">
+          Цвет: <span class="dark-invert">{{ itemInfo.color }}</span>
+        </p>
+        <p v-if="itemInfo.model" class="item__model">
+          Модель: <span class="dark-invert">{{ itemInfo.model }}</span>
+        </p>
+      </div>
+      <div class="item__qty">
+        <div v-if="!noInput" class="qty-input-wrapper">
+          <input
+            :max="itemInfo.units_in_stock"
+            :value="itemInfo.qty"
+            class="item__qty-input"
+            min="1"
+            readonly
+            type="number"
+            ui-input
           >
-            {{ formatter.format(itemInfo.final_price) }}/ед.
-          </p>
-          <div v-if="noInput" class="qty__qty-label">
-            Количество: <span>{{ itemInfo.qty }} шт.</span>
-          </div>
+          <button
+            :disabled="itemInfo.qty <= 1"
+            class="qty__minus-btn"
+            @click="itemInfo.qty > 1 ? handleChangeQuantity(-1) : null"
+          >
+            -
+          </button>
+          <button class="qty__plus-btn" @click="handleChangeQuantity(1)">
+            +
+          </button>
         </div>
-        <div class="item__price">
-          <div v-if="itemInfo.old_price" class="price__old">
-            {{ formatter.format(itemInfo.old_price * itemInfo.qty) }}
-          </div>
-          <div class="price__final">
-            {{ formatter.format(itemInfo.final_price * itemInfo.qty) }}
-          </div>
+        <p
+          v-if="!noInput"
+          v-show="itemInfo.qty > 1"
+          class="qty__price-per-item"
+        >
+          {{ formatter.format(itemInfo.final_price) }}/ед.
+        </p>
+        <div v-if="noInput" class="qty__qty-label">
+          Количество: <span>{{ itemInfo.qty }} шт.</span>
+        </div>
+      </div>
+      <div class="item__price">
+        <div v-if="itemInfo.old_price" class="price__old">
+          {{ formatter.format(itemInfo.old_price * itemInfo.qty) }}
+        </div>
+        <div class="price__final">
+          {{ formatter.format(itemInfo.final_price * itemInfo.qty) }}
         </div>
       </div>
     </div>
@@ -128,7 +124,6 @@ $height: 150px;
 $qtySize: 40px;
 
 .item {
-  //height: $height - $padding * 2;
   width: 100%;
   padding: $padding $padding 20px $padding;
   gap: $gap;
@@ -145,13 +140,18 @@ $qtySize: 40px;
   }
 
   &__delete-btn {
-    padding: 0 0 0 16px;
+    grid-area: delete;
+    align-self: start;
+    justify-self: end;
+    width: max-content;
+    padding-left: 18px;
+
     font-size: 0.7rem;
     line-height: 13px;
 
     border: none;
     outline: none;
-    background: transparent url("~/assets/icons/bin.webp") no-repeat left/contain;
+    background: transparent url("~/assets/icons/bin.webp") no-repeat left/16px;
     cursor: pointer;
     opacity: 0.7;
 
@@ -160,23 +160,24 @@ $qtySize: 40px;
     }
   }
 
-  &__desc {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  &__name {
+    grid-area: title;
+  }
 
-    width: calc(100% - $padding - $img - $gap);
+  &__desc {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 120px 6rem;
+    grid-template-areas:
+      "title title delete"
+  "info qty price";
+    gap: 1rem;
+    flex-grow: 1;
     height: 100%;
   }
 
-  &__head,
-  &__body {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
-
   &__info {
+    grid-area: info;
     display: flex;
     flex-direction: column;
     width: 25%;
@@ -193,6 +194,9 @@ $qtySize: 40px;
   }
 
   &__qty {
+    grid-area: qty;
+    width: fit-content;
+
     position: relative;
 
     .qty-input-wrapper {
@@ -275,8 +279,11 @@ $qtySize: 40px;
   }
 
   &__price {
+    grid-area: price;
     display: flex;
-    align-items: flex-end;
+    justify-content: flex-end;
+    align-items: center;
+    align-self: center;
     gap: 5px;
 
     .price__old {
@@ -321,28 +328,79 @@ $qtySize: 40px;
   $img: 70px;
   $gap: 10px;
 
-  .item {
-    min-height: 170px;
-    height: unset;
-    gap: $gap;
+  //.item {
+  //  min-height: 170px;
+  //  height: unset;
+  //  gap: $gap;
+  //
+  //  &__image {
+  //    width: $img;
+  //    height: $img;
+  //  }
+  //
+  //  &__qty {
+  //    display: flex;
+  //    align-items: center;
+  //    order: 3;
+  //
+  //    width: 100%;
+  //    margin: 0 0 0 -80px;
+  //
+  //    .qty__price-per-item {
+  //      text-align: left;
+  //      display: block;
+  //      position: relative;
+  //      margin: 0 0 0 8px;
+  //    }
+  //
+  //    .qty-input-wrapper {
+  //      height: $qtySize;
+  //
+  //      .item__qty-input {
+  //        width: $qtySize;
+  //        height: $qtySize;
+  //      }
+  //    }
+  //
+  //    .qty__minus-btn,
+  //    .qty__plus-btn {
+  //      width: $qtySize;
+  //    }
+  //  }
+  //
+  //  &__price {
+  //    flex-direction: row-reverse;
+  //  }
+  //}
+}
 
-    &__body {
-      flex-direction: column;
-      gap: 14px;
+@media (max-width: 500px) {
+  .item {
+    &__desc {
+      gap: 0;
+      grid-template-rows: repeat(4, 1fr);
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "title title"
+        "info info"
+        "price price"
+        "qty delete";
     }
 
-    &__image {
-      width: $img;
-      height: $img;
+    &__delete-btn {
+      align-self: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    &__price {
+      flex-direction: row-reverse;
     }
 
     &__qty {
       display: flex;
       align-items: center;
-      order: 3;
-
-      width: 100%;
-      margin: 0 0 0 -80px;
+      margin-left: -120px;
 
       .qty__price-per-item {
         text-align: left;
@@ -350,25 +408,8 @@ $qtySize: 40px;
         position: relative;
         margin: 0 0 0 8px;
       }
-
-      .qty-input-wrapper {
-        height: $qtySize;
-
-        .item__qty-input {
-          width: $qtySize;
-          height: $qtySize;
-        }
-      }
-
-      .qty__minus-btn,
-      .qty__plus-btn {
-        width: $qtySize;
-      }
     }
 
-    &__price {
-      flex-direction: row-reverse;
-    }
   }
 }
 </style>

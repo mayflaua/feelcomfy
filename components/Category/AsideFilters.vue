@@ -50,7 +50,7 @@
         />
       </div>
     </div>
-    <div v-if="colors.length !== 0" class="color">
+    <div v-if="colors.length > 1" class="color">
       <p class="color__title">
         Цвет
       </p>

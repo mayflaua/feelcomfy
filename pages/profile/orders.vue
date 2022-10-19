@@ -6,36 +6,24 @@
         <p class="orders__title">
           Мои заказы
         </p>
-        <div class="orders__filter" ui-switcher>
+        <div v-if="!isMobileScreen" class="orders__filter" ui-switcher>
           <div
-            :class="currentFilterTab === 'all' && 'active'"
+            v-for="filter in filterTabValues"
+            :key="filter.value"
+            :class="currentFilterTab.value === filter.value && 'active'"
             ui-switcher-button
-            @click="currentFilterTab = 'all'"
+            @click="currentFilterTab = filter"
           >
-            Все заказы
-          </div>
-          <div
-            :class="currentFilterTab === 'active' && 'active'"
-            ui-switcher-button
-            @click="currentFilterTab = 'active'"
-          >
-            Активные
-          </div>
-          <div
-            :class="currentFilterTab === 'delivered' && 'active'"
-            ui-switcher-button
-            @click="currentFilterTab = 'delivered'"
-          >
-            Подтвержденные
-          </div>
-          <div
-            :class="currentFilterTab === 'not-paid' && 'active'"
-            ui-switcher-button
-            @click="currentFilterTab = 'not-paid'"
-          >
-            Неоплаченные
+            {{ filter.label }}
           </div>
         </div>
+        <v-select
+          v-else
+          v-model="currentFilterTab"
+          :clearable="false"
+          :options="filterTabValues"
+          class="orders__filter--mobile"
+        />
         <div
           class="
               orders__list"
@@ -59,12 +47,18 @@
 </template>
 
 <script setup>
+import { useMediaQuery } from '@vueuse/core'
 import { useOrdersStore } from '@/stores/orders'
 import useAuth from '@/composables/useAuth'
+import 'vue-select/dist/vue-select.css'
+
+const vSelect = defineAsyncComponent(() => import('vue-select'))
 
 useHead({
   title: 'Мои заказы'
 })
+
+const isMobileScreen = useMediaQuery('(max-width: 420px)')
 
 const orderStore = useOrdersStore()
 const { user, isLoggedIn } = useAuth()
@@ -89,14 +83,30 @@ const unwatchUser = watch(user, async () => {
   }
 })
 
-const currentFilterTab = ref('all')
+const filterTabValues = [{
+  label: 'Все заказы',
+  value: 'all'
+},
+{
+  label: 'Активные',
+  value: 'active'
+},
+{
+  label: 'Подтвержденные',
+  value: 'granted'
+},
+{
+  label: 'Неоплаченные',
+  value: 'not-paid'
+}]
+const currentFilterTab = ref(filterTabValues[0])
 
 const ordersList = computed(() => {
-  if (currentFilterTab.value === 'all') {
+  if (currentFilterTab.value.value === 'all') {
     return orderStore.orders
-  } else if (currentFilterTab.value === 'active') {
+  } else if (currentFilterTab.value.value === 'active') {
     return orderStore.orders.filter(order => order.status === 'created')
-  } else if (currentFilterTab.value === 'delivered') {
+  } else if (currentFilterTab.value.value === 'delivered') {
     return orderStore.orders.filter(order => order.status === 'granted')
   } else {
     return orderStore.orders.filter(order => order.status === 'not-paid')
@@ -129,6 +139,13 @@ const ordersList = computed(() => {
       margin: 20px 0;
       @media (max-width: 768px) {
         margin: 20px auto;
+      }
+
+      &--mobile {
+        --vs-border-color: none;
+        width: 170px;
+        font-size: 0.9rem;
+        margin: 0 0 1rem 0;
       }
     }
   }
