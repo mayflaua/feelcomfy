@@ -215,6 +215,11 @@ export const useCartStore: StoreDefinition = defineStore('cart', {
         .from('carts')
         .update({ cart: this._cartCompressed })
         .eq('user_id', supabase.auth.user().id)
+    },
+
+    resetCart () {
+      this.cart = []
+      this._cartCompressed = []
     }
 
   }

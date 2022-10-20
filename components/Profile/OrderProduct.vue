@@ -43,6 +43,8 @@
 
 import slugify from 'slugify'
 
+const emit = defineEmits('add-review')
+
 const props = defineProps({
   item: {
     type: Object,

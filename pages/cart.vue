@@ -106,7 +106,13 @@
       </div>
     </div>
 
-    <TitledWrapper :cards="lastViewedCards" passive slider title="Вы недавно смотрели" />
+    <TitledWrapper
+      v-if="lastViewedList.length !== 0"
+      :cards="lastViewedCards"
+      passive
+      slider
+      title="Вы недавно смотрели"
+    />
   </div>
 
   <UILoader v-else fullscreen v2 />

@@ -1,6 +1,5 @@
 <template>
   <NuxtLayout name="profile">
-    <LazyProfileAddReview v-if="_showReviewModal" :item-id="_itemIdForReview" @close="_showReviewModal = false" />
     <div v-if="isLoggedIn() && _mounted" class="profile__orders">
       <div v-if="!orderStore.fetchState">
         <p class="orders__title">
@@ -32,7 +31,6 @@
             v-for="order in ordersList"
             :key="order.order_id"
             :order-info="order"
-            @add-review="handleAddReview"
           />
         </div>
       </div>
@@ -61,14 +59,6 @@ const isMobileScreen = useMediaQuery('(max-width: 420px)')
 
 const orderStore = useOrdersStore()
 const { user, isLoggedIn } = useAuth()
-
-const _showReviewModal = ref(false)
-const _itemIdForReview = ref(0)
-
-const handleAddReview = (id) => {
-  _itemIdForReview.value = id
-  _showReviewModal.value = true
-}
 
 const _mounted = ref(false)
 onMounted(() => {

@@ -1,3 +1,6 @@
+import { useFavoritesStore } from '~/stores/favorites'
+import { useCartStore } from '~/stores/cart'
+
 const useAuth = () => {
   const user = useState('user', () => null)
   const { supabase } = useSupabase()
@@ -35,14 +38,19 @@ const useAuth = () => {
   }
 
   const signOut = async () => {
-    // FIXME: doesnt remove the session
+    const favoritesStore = useFavoritesStore()
+    const cartStore = useCartStore()
+
+    favoritesStore.resetFavorites()
+    cartStore.resetCart()
+
     const { error } = await supabase.auth.signOut()
     localStorage.removeItem('supabase.auth.token')
 
     if (error) {
       throw error
     }
-    // await navigateTo('/')
+    await navigateTo('/')
   }
 
   const isLoggedIn = () => {

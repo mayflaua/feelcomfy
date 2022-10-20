@@ -1,5 +1,7 @@
 <template>
   <div class="order-item">
+    <LazyProfileAddReview v-if="_showReviewModal" :item-id="_itemIdForReview" @close="_showReviewModal = false" />
+
     <div class="order-item__header">
       <p class="header__id">
         ID заказа {{ orderInfo.order_id }}
@@ -40,7 +42,7 @@
         </svg>
       </div>
       <div v-if="showGoods" class="goods__list">
-        <OrderProduct v-for="item in orderInfo.order" :key="item.id" :item="item" />
+        <OrderProduct v-for="item in orderInfo.order" :key="item.id" :item="item" @add-review="handleAddReview" />
       </div>
     </div>
   </div>
@@ -59,10 +61,16 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['add-review'])
-
 const showGoods = ref(false)
 const confirmDeliveryState = ref(false)
+
+const _showReviewModal = ref(false)
+const _itemIdForReview = ref(0)
+
+const handleAddReview = (id) => {
+  _itemIdForReview.value = id
+  _showReviewModal.value = true
+}
 
 const formatter = new Intl.NumberFormat('ru-RU', {
   style: 'currency',

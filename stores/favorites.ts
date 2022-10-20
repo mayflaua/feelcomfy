@@ -94,6 +94,11 @@ export const useFavoritesStore = defineStore('favorites', {
         product.score = (reviews.map(i => i.score).reduce((acc, num) => acc + num, 0) / (product.reviews || 1)).toFixed(1)
       })
       return arr
+    },
+
+    resetFavorites () {
+      this.favoritesList = []
+      this._compressedFavoritesList = []
     }
   }
 })
