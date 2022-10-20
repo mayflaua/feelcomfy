@@ -124,7 +124,7 @@ const handleSignUp = async () => {
     name: signUpName.value
   })
 
-  showConfirmationMessage.value = true
+  // showConfirmationMessage.value = true
 }
 </script>
 
