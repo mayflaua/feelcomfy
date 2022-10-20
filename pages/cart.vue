@@ -199,6 +199,7 @@ const handleMakeOrderClick = async () => {
       path: '/order',
       query: { order: orderID }
     })
+    await cartStore.resetCart(true)
     makeOrderState.value = false
   }
 }

@@ -231,9 +231,13 @@ export const useCartStore: StoreDefinition = defineStore('cart', {
         .eq('user_id', supabase.auth.user().id)
     },
 
-    resetCart () {
+    async resetCart (withUpdate: boolean = false) {
       this.cart = []
       this._cartCompressed = []
+
+      if (withUpdate) {
+        await this._updateDatabase()
+      }
     }
 
   }
