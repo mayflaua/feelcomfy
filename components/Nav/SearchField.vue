@@ -1,13 +1,13 @@
 <template>
   <div class="nav__search-form">
     <input
-      v-model.trim="searchQuery"
       class="search-form__input"
       placeholder="Найти товары"
       type="text"
       ui-input
       @blur="suggestionsList = []"
-      @input="getSuggestions"
+      @focus="getSuggestions"
+      @input="e => searchQuery = e.target.value"
       @keydown.enter="handleSearchClick(searchQuery)"
     >
     <button
@@ -62,6 +62,7 @@ const searchQuery = ref('')
 
 const handleSearchClick = async (query) => {
   if (query) {
+    suggestionsList.value = []
     await navigateTo({
       path: '/search',
       query: {
@@ -82,6 +83,11 @@ const getSuggestions = async () => {
     suggestionsList.value = []
   }
 }
+
+watch(() => searchQuery.value, async () => {
+  console.log('c')
+  await getSuggestions()
+})
 
 </script>
 
@@ -120,7 +126,7 @@ const getSuggestions = async () => {
     height: min-content;
 
     position: absolute;
-    z-index: 1;
+    z-index: 5;
     top: 95%;
     left: 0;
 
@@ -129,6 +135,9 @@ const getSuggestions = async () => {
     background-color: $light;
     border: 1px solid $default;
     border-radius: 0 0 3px 3px;
+
+    @media (max-width: 420px) {
+    }
 
     &--disabled {
       opacity: 0.7;
