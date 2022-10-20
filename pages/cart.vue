@@ -1,6 +1,8 @@
 <template>
   <UILoader v-if="!_mounted" fullscreen v2 />
+
   <UINoUser v-else-if="!isLoggedIn()" />
+
   <div v-else-if="cartStore.cartReady" class="cart-wrapper">
     <div class="title-wrapper">
       <h1 v-if="totalItemsFormatted" class="cart__title">
@@ -103,18 +105,25 @@
         </div>
       </div>
     </div>
+
+    <TitledWrapper :cards="lastViewedCards" passive slider title="Вы недавно смотрели" />
   </div>
+
   <UILoader v-else fullscreen v2 />
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import { useLocalStorage } from '@vueuse/core'
 import useAuth from '../composables/useAuth'
 import useSupabase from '../composables/useSupabase'
 import { useCartStore } from '~~/stores/cart'
 import { useOrdersStore } from '@/stores/orders'
+import { useProductsStore } from '@/stores/products'
+import TitledWrapper from '@/components/UI/TitledWrapper'
 
 const ordersStore = useOrdersStore()
+const productsStore = useProductsStore()
 
 useHead({
   title: 'Корзина - FeelComfy'
@@ -187,7 +196,14 @@ const handleMakeOrderClick = async () => {
 
 // created()
 await cartStore.getCartFromDatabase()
-
+const lastViewedList = useLocalStorage('last-viewed', [])
+let lastViewedCards = []
+if (lastViewedList.value.length !== 0) {
+  lastViewedCards = await productsStore.getProductsByIds(lastViewedList.value)
+  // sort cards array by actual sequence in storage
+  lastViewedCards.sort((a, b) => lastViewedList.value.indexOf(a.pk_id) -
+    lastViewedList.value.indexOf(b.pk_id))
+}
 onMounted(() => (_mounted.value = true))
 
 </script>

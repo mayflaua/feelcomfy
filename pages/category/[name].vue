@@ -114,9 +114,9 @@ const sortItems = () => {
 
 let productCards
 if (isProductCategory) {
-  productCards = await productsStore.getProductsByCategory(categoryObject.name)
+  productCards = await productsStore.getProductsByCategory(categoryObject.name, 20)
 } else {
-  productCards = await productsStore.getProductsByFilter(categoryObject.filter)
+  productCards = await productsStore.getProductsByFilter(categoryObject.filter, 20)
 }
 const filteredCards = ref(productCards)
 

@@ -78,6 +78,14 @@ export const useProductsStore = defineStore('products', {
       return this._destructureRating(res)
     },
 
+    async getProductsByIds (ids) {
+      const { data: res } = await supabase
+        .from('goods')
+        .select('*, reviews!left(score)')
+        .in('pk_id', ids)
+      return this._destructureRating(res)
+    },
+
     _destructureRating (arr: Array<Object>): Array<Object> {
       arr.forEach((product) => {
         const reviews = product.reviews

@@ -172,6 +172,7 @@ import slugify from 'slugify'
 import '@splidejs/vue-splide/css'
 import 'viewerjs/dist/viewer.css'
 import { Splide, SplideSlide } from '@splidejs/vue-splide'
+import { useLocalStorage } from '@vueuse/core'
 import { useReviewsStore } from '@/stores/reviews'
 import { useFavoritesStore } from '@/stores/favorites'
 import { useCartStore } from '@/stores/cart'
@@ -286,6 +287,17 @@ if (item.value.length !== 0 && item.value[0]?.length !== 0) {
   } else {
     item.value = item.value[0]
     item.value.units_in_stock === 0 ? item.value.qty = 0 : item.value.qty = 1
+
+    // store 10 last viewed items in localstorage
+    const storage = useLocalStorage('last-viewed', [])
+
+    // remove id from storage if its in it
+    if (storage.value.includes(item.value.pk_id)) {
+      storage.value.splice(storage.value.findIndex(i => i === item.value.pk_id), 1)
+    }
+    // update storage
+    storage.value.unshift(item.value.pk_id)
+    storage.value = storage.value.slice(0, 10)
 
     _fetchingItem.value = false
   }
