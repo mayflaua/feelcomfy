@@ -7,21 +7,23 @@
       @change="cartStore.handleCheck(itemInfo.pk_id)"
     />
     <div class="item__image">
-      <nuxt-img
-        :alt="itemInfo.title"
-        :src="`images/${itemInfo.netlify_name}`"
-        format="webp"
-        height="100%"
-        placeholder="/assets/images/img-placeholder.webp"
-        prelaod
-        quality="60"
-        sizes="md:70px lg:100px"
-      />
+      <nuxt-link :to="link" target="_blank">
+        <nuxt-img
+          :alt="itemInfo.title"
+          :src="`images/${itemInfo.netlify_name}`"
+          format="webp"
+          height="100%"
+          placeholder="/assets/images/img-placeholder.webp"
+          prelaod
+          quality="60"
+          sizes="md:70px lg:100px"
+        />
+      </nuxt-link>
     </div>
     <div class="item__desc">
-      <div class="item__name">
-        {{ itemInfo.title }} {{ itemInfo.pk_id }}
-      </div>
+      <nuxt-link :to="link" class="item__name" target="_blank">
+        {{ itemInfo.title }}
+      </nuxt-link>
       <button
         v-if="!noInput"
         class="item__delete-btn dark-invert"
@@ -83,10 +85,10 @@
 </template>
 
 <script setup>
+import slugify from 'slugify'
 import { useCartStore } from '~/stores/cart'
 
 const cartStore = useCartStore()
-
 const props = defineProps({
   itemInfo: {
     type: Object,
@@ -99,6 +101,7 @@ const props = defineProps({
   }
 })
 
+const link = `/product/${slugify(props.itemInfo.title)}-${props.itemInfo.pk_id}`
 defineEmits(['delete'])
 
 const formatter = new Intl.NumberFormat('ru-RU', {
@@ -162,15 +165,17 @@ $qtySize: 40px;
 
   &__name {
     grid-area: title;
+    color: inherit;
+    text-decoration: none;
   }
 
   &__desc {
     display: grid;
     grid-template-rows: 1fr 1fr;
-    grid-template-columns: 1fr 120px 6rem;
+    grid-template-columns: 1fr 120px 120px;
     grid-template-areas:
       "title title delete"
-  "info qty price";
+      "info qty price";
     gap: 1rem;
     flex-grow: 1;
     height: 100%;

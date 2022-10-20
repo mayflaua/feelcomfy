@@ -40,42 +40,7 @@
         </svg>
       </div>
       <div v-if="showGoods" class="goods__list">
-        <div v-for="item in orderInfo.order" :key="item.id" class="list__item">
-          <div class="item__image-wrapper">
-            <nuxt-img
-              :alt="item.title"
-              :src="`images/${item.netlify_name}`"
-              class="item__image"
-              format="webp"
-              height="100%"
-              placeholder="/assets/images/img-placeholder.webp"
-              preload
-              quality="60"
-              width="90px"
-            />
-          </div>
-          <div class="item__info">
-            <div class="title">
-              {{ item.title }}
-            </div>
-            <div v-if="item.model" class="model">
-              <span>Модель:</span> <span>{{ item.model }}</span>
-            </div>
-            <div v-if="item.color" class="color">
-              <span>Цвет:</span> <span>{{ item.color }}</span>
-            </div>
-            <div class="quantity">
-              <span>Количество</span> <span>{{ item.qty }}</span>
-            </div>
-            <div class="price">
-              <span>Стоимость</span> <span>{{ item.price }}</span>
-            </div>
-
-            <button v-if="allowReview" class="add-review-btn" @click="emit('add-review', item.pk_id)">
-              Оставить отзыв
-            </button>
-          </div>
-        </div>
+        <OrderProduct v-for="item in orderInfo.order" :key="item.id" :item="item" />
       </div>
     </div>
   </div>
@@ -83,6 +48,7 @@
 
 <script setup>
 import useSupabase from '@/composables/useSupabase'
+import OrderProduct from '@/components/Profile/OrderProduct'
 
 const { supabase } = useSupabase()
 
@@ -90,10 +56,6 @@ const props = defineProps({
   orderInfo: {
     type: Object,
     required: true
-  },
-  allowReview: {
-    type: Boolean,
-    default: false
   }
 })
 
@@ -222,61 +184,6 @@ const handleSubmitButton = async () => {
       &__list {
         display: flex;
         flex-direction: column;
-
-        .list__item {
-          display: flex;
-          gap: 20px;
-          padding: 15px 0;
-          margin: 0 20px;
-          border-bottom: 1px solid $default;
-
-          &:last-child {
-            border: none;
-          }
-
-          .item__info {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            font-size: 0.9rem;
-            color: $font;
-            width: 100%;
-
-            .title {
-              font-size: 1rem;
-              margin: 0 0 20px 0;
-            }
-
-            .model, .color, .quantity, .price {
-              display: flex;
-
-              span {
-                color: $dark;
-                width: max(90px, 17%);
-
-                &:last-child {
-                  color: $font;
-                  width: 83%;
-                }
-              }
-            }
-
-            .add-review-btn {
-              background: none;
-              outline: none;
-              border: none;
-              width: max-content;
-              align-self: flex-end;
-              font-size: 1rem;
-              color: $blue;
-              cursor: pointer;
-              font-weight: 500;
-
-              text-transform: uppercase;
-            }
-          }
-
-        }
       }
     }
   }
