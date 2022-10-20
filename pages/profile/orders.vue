@@ -31,7 +31,6 @@
           <ProfileOrder
             v-for="order in ordersList"
             :key="order.order_id"
-            :allow-review="order.status !== 'created'"
             :order-info="order"
             @add-review="handleAddReview"
           />
@@ -106,7 +105,7 @@ const ordersList = computed(() => {
     return orderStore.orders
   } else if (currentFilterTab.value.value === 'active') {
     return orderStore.orders.filter(order => order.status === 'created')
-  } else if (currentFilterTab.value.value === 'delivered') {
+  } else if (currentFilterTab.value.value === 'granted') {
     return orderStore.orders.filter(order => order.status === 'granted')
   } else {
     return orderStore.orders.filter(order => order.status === 'not-paid')

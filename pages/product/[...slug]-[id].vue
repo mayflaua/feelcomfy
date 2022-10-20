@@ -279,15 +279,18 @@ const handleReviewsClick = async () => {
 
 // created()
 item.value = await productStore.getProductById(route.params.id)
-if (item.value[0].length !== 0) {
+// check if product link is valid and return to index page if not
+if (item.value.length !== 0 && item.value[0]?.length !== 0) {
   if (slugify(item.value[0].title) !== route.params.slug[0]) {
-    item.value = null
+    await navigateTo('/')
   } else {
     item.value = item.value[0]
     item.value.units_in_stock === 0 ? item.value.qty = 0 : item.value.qty = 1
 
     _fetchingItem.value = false
   }
+} else {
+  await navigateTo('/')
 }
 
 onMounted(() => {
