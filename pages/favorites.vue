@@ -34,6 +34,15 @@
       </div>
     </main>
   </div>
+  <div v-else-if="favoritesCards.length === 0" class="favorites--empty">
+    <p class="favorites__title">
+      Добавьте то, что понравилось
+    </p>
+    <p class="favorites__subtitle">
+      Перейдите на главную страницу и нажмите на ♡ в товаре
+    </p>
+    <LazyUIButton class="favorites__btn" text="На главную" @click="navigateTo('/')" />
+  </div>
   <UILoader v-else fullscreen v2 />
 </template>
 
@@ -114,6 +123,25 @@ onMounted(() => (_mounted.value = true))
 <style lang="scss" scoped>
 .favorites {
   padding: 0 10px;
+
+  &--empty {
+    text-align: center;
+    background: url("~/assets/images/no-wishes.webp") no-repeat top/8rem;
+    padding: 100px 6px 0 6px;
+
+    .favorites__subtitle {
+      font-size: 0.9rem;
+    }
+
+    .favorites__title {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+    .favorites__btn {
+      width: max-content;
+    }
+  }
 
   &__header {
     display: flex;
