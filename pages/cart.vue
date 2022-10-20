@@ -30,6 +30,9 @@
           />
           <span v-if="cartStore.allChecked" class="info__checkbox-text">Снять все</span>
           <span v-else class="info__checkbox-text">Выбрать все</span>
+          <button v-if="cartStore.anyChecked" class="remove-selected-btn" @click="cartStore.removeCheckedItems">
+            Удалить выбранные
+          </button>
         </div>
         <div class="items">
           <LazyCartItem
@@ -233,8 +236,24 @@ onMounted(() => (_mounted.value = true))
 
   &__info {
     display: flex;
+    align-items: center;
     gap: 10px;
     padding: 20px;
+
+    .remove-selected-btn {
+      margin-left: auto;
+      opacity: 0.6;
+      background: url("~/assets/icons/bin.webp") transparent no-repeat left/contain;
+      border: none;
+      outline: none;
+      padding-left: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
   }
 
   &__cart-counter {

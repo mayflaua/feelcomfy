@@ -11,6 +11,7 @@ interface CompressedCartItem {
 interface CartItem {
   readonly pk_id: number;
   readonly category_id: number;
+  checked: boolean;
   title: string;
   old_price?: number | null;
   final_price: number;
@@ -45,6 +46,7 @@ export const useCartStore: StoreDefinition = defineStore('cart', {
           ),
 
     allChecked: state => state.cart.every(item => item.checked),
+    anyChecked: state => state.cart.some(item => item.checked),
 
     getCheckValue:
       state =>
@@ -104,7 +106,7 @@ export const useCartStore: StoreDefinition = defineStore('cart', {
       await this._updateDatabase()
     },
 
-    async _removeFromCart (itemID: number) {
+    async _removeFromCart (itemID: number, noUpdate: boolean = false) {
       /* remove items from both compressed and normal carts */
 
       this._cartCompressed.splice(
@@ -117,7 +119,9 @@ export const useCartStore: StoreDefinition = defineStore('cart', {
         this.cart.findIndex((item: CartItem) => item.pk_id === itemID),
         1
       )
-      await this._updateDatabase()
+      if (!noUpdate) {
+        await this._updateDatabase()
+      }
     },
 
     changeQuantity (itemID: number, value: number): void {
@@ -167,6 +171,16 @@ export const useCartStore: StoreDefinition = defineStore('cart', {
       this.isInCart(itemID)
         ? await this._removeFromCart(itemID)
         : await this._addToCart(itemID, qty)
+    },
+
+    async removeCheckedItems (): Promise<void> {
+      const temp: Array<CartItem> = Array.from(this.cart)
+      for (const i of temp) {
+        if (i.checked) {
+          this._removeFromCart(i.pk_id, true)
+        }
+      }
+      await this._updateDatabase()
     },
 
     async getCompressedCart (): Promise<void> {
