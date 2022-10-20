@@ -6,20 +6,18 @@
       class="item__checkbox"
       @change="cartStore.handleCheck(itemInfo.pk_id)"
     />
-    <div class="item__image">
-      <nuxt-link :to="link" target="_blank">
-        <nuxt-img
-          :alt="itemInfo.title"
-          :src="`images/${itemInfo.netlify_name}`"
-          format="webp"
-          height="100%"
-          placeholder="/assets/images/img-placeholder.webp"
-          prelaod
-          quality="60"
-          sizes="md:70px lg:100px"
-        />
-      </nuxt-link>
-    </div>
+    <nuxt-link :to="link" class="item__image" target="_blank">
+      <nuxt-img
+        :alt="itemInfo.title"
+        :modifiers="{w: 100, h: 100, cm: 'pad_resize'}"
+        :src="`images/${itemInfo.netlify_name}`"
+        format="webp"
+        placeholder="/assets/images/img-placeholder.webp"
+        prelaod
+        quality="60"
+        sizes="md:70px lg:100px"
+      />
+    </nuxt-link>
     <div class="item__desc">
       <nuxt-link :to="link" class="item__name" target="_blank">
         {{ itemInfo.title }}
@@ -136,10 +134,11 @@ $qtySize: 40px;
   align-items: center;
 
   &__image {
-    height: $img;
-    width: $img;
+    max-height: $img;
+    max-width: $img;
     display: flex;
     align-items: center;
+
   }
 
   &__delete-btn {
@@ -171,7 +170,7 @@ $qtySize: 40px;
 
   &__desc {
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 40px 1fr;
     grid-template-columns: 1fr 120px 120px;
     grid-template-areas:
       "title title delete"
@@ -201,6 +200,7 @@ $qtySize: 40px;
   &__qty {
     grid-area: qty;
     width: fit-content;
+    align-self: end;
 
     position: relative;
 
@@ -288,7 +288,7 @@ $qtySize: 40px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    align-self: center;
+    align-self: end;
     gap: 5px;
 
     .price__old {
@@ -328,62 +328,11 @@ $qtySize: 40px;
   }
 }
 
-@media (max-width: 600px) {
-  $qtySize: 30px;
-  $img: 70px;
-  $gap: 10px;
-
-  //.item {
-  //  min-height: 170px;
-  //  height: unset;
-  //  gap: $gap;
-  //
-  //  &__image {
-  //    width: $img;
-  //    height: $img;
-  //  }
-  //
-  //  &__qty {
-  //    display: flex;
-  //    align-items: center;
-  //    order: 3;
-  //
-  //    width: 100%;
-  //    margin: 0 0 0 -80px;
-  //
-  //    .qty__price-per-item {
-  //      text-align: left;
-  //      display: block;
-  //      position: relative;
-  //      margin: 0 0 0 8px;
-  //    }
-  //
-  //    .qty-input-wrapper {
-  //      height: $qtySize;
-  //
-  //      .item__qty-input {
-  //        width: $qtySize;
-  //        height: $qtySize;
-  //      }
-  //    }
-  //
-  //    .qty__minus-btn,
-  //    .qty__plus-btn {
-  //      width: $qtySize;
-  //    }
-  //  }
-  //
-  //  &__price {
-  //    flex-direction: row-reverse;
-  //  }
-  //}
-}
-
 @media (max-width: 500px) {
   .item {
     &__desc {
       gap: 0;
-      grid-template-rows: repeat(4, 1fr);
+      grid-template-rows: 40px 1fr 40px 40px;
       grid-template-columns: 1fr 1fr;
       grid-template-areas:
         "title title"
@@ -400,6 +349,7 @@ $qtySize: 40px;
 
     &__price {
       flex-direction: row-reverse;
+      justify-self: end;
     }
 
     &__qty {

@@ -40,8 +40,9 @@
             v-for="item in categoriesList"
             v-show="asideCategoriesOpened"
             :key="item.name"
-            :to="item.name"
+            :to="item.link"
             class="aside__categories-item"
+            @click="$emit('close-aside')"
           >
             {{ item.title }}
             <svg
