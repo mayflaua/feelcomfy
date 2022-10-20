@@ -25,7 +25,17 @@
                 :alt="item.title"
                 :src="`images/${item.netlify_name}`"
                 class="info__image"
-                fit="cover"
+                format="webp"
+                height="100%"
+                placeholder="/assets/images/img-placeholder.webp"
+                width="160"
+              />
+            </SplideSlide>
+            <SplideSlide v-for="image in item.netlify_images">
+              <nuxt-img
+                :alt="item.title"
+                :src="`images/${image}`"
+                class="info__image"
                 format="webp"
                 height="100%"
                 placeholder="/assets/images/img-placeholder.webp"
@@ -38,6 +48,7 @@
             ref="mainSplide"
             :options="{
               pagination: false,
+              fixedHeight: '30rem',
             }"
             class="splide-main"
             @splide:mounted="_splideMounted = true"
@@ -46,6 +57,16 @@
               <nuxt-img
                 :alt="item.title"
                 :src="`images/${item.netlify_name}`"
+                class="info__image"
+                format="webp"
+                placeholder="/assets/images/img-placeholder.webp"
+                @click="openImage"
+              />
+            </SplideSlide>
+            <SplideSlide v-for="image in item.netlify_images">
+              <nuxt-img
+                :alt="item.title"
+                :src="`images/${image}`"
                 class="info__image"
                 format="webp"
                 placeholder="/assets/images/img-placeholder.webp"
@@ -227,8 +248,12 @@ const goToReviews = async () => {
 }
 
 const openImage = function () {
+  const images = [`https://ik.imagekit.io/sweetie/images/${item.value.netlify_name}`]
+  if (item.value.netlify_images) {
+    images.push(...item.value.netlify_images.map(i => (i = `https://ik.imagekit.io/sweetie/images/${i}`)))
+  }
   VueViewer.api({
-    images: [`https://ik.imagekit.io/sweetie/images/${item.value.netlify_name}`]
+    images
   }, {
     title: item.value.title,
     loop: true
@@ -334,7 +359,15 @@ onMounted(() => {
           align-self: center;
         }
 
+        .splide-main {
+          flex-grow: 1;
+        }
+
         .splide-thumbs {
+          img {
+            max-height: 10rem;
+          }
+
           .splide__slide.is-active {
             border: 1px solid $dark;
           }
@@ -343,6 +376,8 @@ onMounted(() => {
 
       &__image {
         width: 100%;
+        height: 100%;
+        object-fit: contain;
       }
     }
   }

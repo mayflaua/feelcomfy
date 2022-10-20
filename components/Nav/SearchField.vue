@@ -85,7 +85,6 @@ const getSuggestions = async () => {
 }
 
 watch(() => searchQuery.value, async () => {
-  console.log('c')
   await getSuggestions()
 })
 
