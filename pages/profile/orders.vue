@@ -21,6 +21,7 @@
           v-model="currentFilterTab"
           :clearable="false"
           :options="filterTabValues"
+          :searchable="false"
           class="orders__filter--mobile"
         />
         <div

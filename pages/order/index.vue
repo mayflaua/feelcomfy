@@ -540,11 +540,15 @@ order.value = await ordersStore.getOrderInfo(await getQueryData())
         }
 
         .payment__method {
-          display: grid;
+          display: flex;
           width: 90%;
           gap: 0 20px;
           margin: 0 auto;
-          grid-template-columns: repeat(3, 1fr);
+
+          @media (max-width: 500px) {
+            flex-direction: column;
+            gap: 0.5rem;
+          }
 
           .method {
             &__card,
