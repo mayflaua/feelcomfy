@@ -5,7 +5,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "analyze": "nuxt build --analyze"
+    "analyze": "nuxi analyze"
   },
   "devDependencies": {
     "@nuxt/image-edge": "^1.0.0-27719579.87dcdf2",
@@ -28,8 +28,10 @@
     "pinia": "^2.0.22",
     "sass": "^1.55.0",
     "slugify": "^1.6.5",
+    "swiper": "^8.4.4",
     "v-viewer": "^3.0.10",
     "vue-select": "^4.0.0-beta.5",
-    "vue3-circle-progress": "^1.0.7"
+    "vue3-circle-progress": "^1.0.7",
+    "vue3-lazy-hydration": "^1.2.1"
   }
 }

@@ -1,7 +1,9 @@
 <template>
-  <div v-if="_mounted">
+  <div>
     <LazyCartPopup ref="popup" />
-    <BannerCarousel />
+
+    <IndexBannerCarousel />
+
     <UITitledWrapper v-if="products.popular" path="category/popular" title="Популярное">
       <div class="cards">
         <Card
@@ -12,17 +14,19 @@
         />
       </div>
     </UITitledWrapper>
-    <UITitledWrapper v-if="products.xiaomi" path="search?q=xiaomi" title="Бренд Xiaomi">
+    <LazyUITitledWrapper path="search?q=xiaomi" title="Бренд Xiaomi">
       <div class="cards">
         <Card
           v-for="card in products.xiaomi"
           :key="card.pk_id"
           :card="card"
+          lazy
           @show-popup="_showPopup"
         />
       </div>
-    </UITitledWrapper>
-    <UILoader v-else fullscreen v2 />
+    </LazyUITitledWrapper>
+
+    <!--    <UILoader v-else fullscreen v2 />-->
 
     <UIButton
       v-if="canLoadMore"
@@ -31,7 +35,6 @@
       @click.prevent="handleLoadMoreClick"
     />
   </div>
-  <UILoader v-else fullscreen v2 />
 </template>
 
 <script setup>

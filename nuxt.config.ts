@@ -36,7 +36,6 @@ export default defineNuxtConfig({
   },
   modern: true,
   css: ['~/assets/style/main.scss'],
-
   modules: ['@pinia/nuxt', '@nuxt/image-edge', '@nuxtjs/color-mode'],
   vite: {
     css: {

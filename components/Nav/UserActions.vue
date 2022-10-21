@@ -70,7 +70,6 @@ const handleAccountClick = async () => {
     await navigateTo('/profile/orders')
   }
 }
-
 </script>
 
 <style lang="scss" scoped>

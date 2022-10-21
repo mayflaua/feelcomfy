@@ -7,13 +7,15 @@
       <NavUserActions @open-auth-modal="openAuthModal" />
     </nav>
     <NavCategoriesLinks />
-    <transition name="menu">
-      <LazyNavAside
-        v-if="sideMenuOpened"
-        @close-aside="closeAside"
-        @open-auth-modal="openAuthModal"
-      />
-    </transition>
+    <ClientOnly>
+      <transition name="menu">
+        <LazyNavAside
+          v-if="sideMenuOpened"
+          @close-aside="closeAside"
+          @open-auth-modal="openAuthModal"
+        />
+      </transition>
+    </ClientOnly>
   </header>
 </template>
 
@@ -60,7 +62,7 @@ export default {
 
 .header {
   width: 100%;
-  margin: 15px 0 0 0;
+  padding: 15px 0 0 0;
 
   color: $font;
 }

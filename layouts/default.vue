@@ -1,30 +1,18 @@
 <template>
   <div class="container">
-    <TheNav @open-auth-modal="openAuthModal" />
+    <TheNav />
     <main class="content">
       <slot />
     </main>
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
-
 const route = useRoute()
 useHead({
   link: [
     { rel: 'canonical', href: 'https://feelcomfy.netlify.app' + route.path }
   ]
 })
-
-const isAuthModalOpened = ref(false)
-
-const closeAuthModal = () => {
-  isAuthModalOpened.value = false
-}
-
-const openAuthModal = () => {
-  isAuthModalOpened.value = true
-}
 </script>
 <style lang="scss">
 html {

@@ -4,10 +4,26 @@ import { useCartStore } from '~/stores/cart'
 const useAuth = () => {
   const user = useState('user', () => null)
   const { supabase } = useSupabase()
-  const router = useRouter()
+  const favoritesStore = useFavoritesStore()
+  const cartStore = useCartStore()
 
-  supabase.auth.onAuthStateChange((event, session) => {
+  supabase.auth.onAuthStateChange(async (event, session) => {
     user.value = session?.user || null
+
+    if (event === 'SIGNED_IN' &&
+      !cartStore.cartReady &&
+      !favoritesStore.favoritesReady &&
+      !favoritesStore._fetchingCompressed &&
+      !cartStore._fetchingCompressed) {
+      const t = performance.now()
+      await favoritesStore.getCompressedFavoritesList()
+      await cartStore.getCompressedCart()
+      console.info(`fetched cart and favorites in ${performance.now() - t}ms`)
+    } else if (event === 'SIGNED_OUT') {
+      favoritesStore.resetFavorites()
+      cartStore.resetCart()
+      console.info('reset cart and favorites')
+    }
   })
 
   const signUp = async ({ email, password, ...metadata }) => {
@@ -38,12 +54,6 @@ const useAuth = () => {
   }
 
   const signOut = async () => {
-    const favoritesStore = useFavoritesStore()
-    const cartStore = useCartStore()
-
-    favoritesStore.resetFavorites()
-    cartStore.resetCart()
-
     const { error } = await supabase.auth.signOut()
     localStorage.removeItem('supabase.auth.token')
 

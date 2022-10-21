@@ -12,10 +12,12 @@
         :modifiers="{w: 100, h: 100, cm: 'pad_resize'}"
         :src="`images/${itemInfo.netlify_name}`"
         format="webp"
+        height="100"
         placeholder="/assets/images/img-placeholder.webp"
         prelaod
         quality="60"
         sizes="md:70px lg:100px"
+        width="100"
       />
     </nuxt-link>
     <div class="item__desc">
