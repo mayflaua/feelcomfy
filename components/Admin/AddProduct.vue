@@ -49,6 +49,7 @@
         </div>
       </div>
     </div>
+    <pre>{{ product }}</pre>
   </div>
 </template>
 
@@ -60,7 +61,7 @@ const { supabase } = useSupabase()
 const imagekit = new ImageKit({
   urlEndpoint: 'https://ik.imagekit.io/sweetie',
   publicKey: 'public_ztvv2RW/8vkArMlXq1pvMKKzqEM=',
-  authenticationEndpoint: 'http://localhost:3000/api/ik'
+  authenticationEndpoint: 'http://192.168.0.62:3000/api/ik'
 })
 
 const fields = [
@@ -120,7 +121,7 @@ const fields = [
 
 const categories = ['Мышь', 'Клавиатура', 'Кресло', 'Стол', 'Монитор', 'Мерч', 'Аксессуар']
 
-let product = reactive({})
+const product = reactive({})
 
 const imageInput = ref(null)
 const imagesInput = ref(null)
@@ -193,7 +194,13 @@ const handleSubmit = async () => {
   uploadProgress.value = 'Добавление товара'
   await supabase.from('goods').insert(product)
   uploadProgress.value = 'Добавить'
-  product = reactive({})
+  for (const [key] of Object.entries(product)) {
+    product[key] = null
+  }
+  imagesStore.main = null
+  imagesPreview.main = null
+  imagesStore.additional = []
+  imagesPreview.additional = []
 }
 
 </script>
