@@ -1,16 +1,18 @@
 <template>
   <nuxt-link :title="card.title" :to="`/product/${slug}-${card.pk_id}`" class="card" target="_blank">
-    <div class="card__image">
-      <nuxt-img
-        :alt="card.title"
-        :loading="lazy ? 'lazy' : 'eager'"
-        :modifiers="{f: 'webp'}"
-        :src="`images/${card.netlify_name}`"
-        class="img"
-        placeholder="/assets/images/img-placeholder.webp"
-        sizes="450:150px 600:200px sm:250px"
-      />
-    </div>
+    <LazyHydrationWrapper>
+      <div class="card__image">
+        <nuxt-img
+          :alt="card.title"
+          :loading="lazy ? 'lazy' : 'eager'"
+          :modifiers="{f: 'webp'}"
+          :src="`images/${card.netlify_name}`"
+          class="img"
+          placeholder="/assets/images/img-placeholder.webp"
+          sizes="450:150px 600:200px sm:250px"
+        />
+      </div>
+    </LazyHydrationWrapper>
     <div class="card__favorites-btn" @click.stop.prevent="_handleFavoritesAction">
       <ClientOnly>
         <svg
@@ -262,6 +264,7 @@ export default {
 
   &__info {
     width: 100%;
+    height: 36px;
 
     display: flex;
     justify-content: space-between;
@@ -278,7 +281,6 @@ export default {
       font-weight: 500;
       margin: 0 5px 0 0;
 
-      align-self: flex-end;
     }
 
     .card__no-stock {
@@ -286,7 +288,6 @@ export default {
       color: $dark;
       margin: 0 5px 0 0;
 
-      align-self: flex-end;
     }
   }
 

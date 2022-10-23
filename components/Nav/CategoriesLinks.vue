@@ -2,10 +2,8 @@
   <div class="categories">
     <ul class="list">
       <li v-for="item in categoriesList" :key="item.name">
-        <nuxt-link :to="item.link" class="list__item">
-          {{
-            item.title
-          }}
+        <nuxt-link :to="item.link" class="list__item" no-prefetch>
+          {{ item.title }}
         </nuxt-link>
       </li>
     </ul>

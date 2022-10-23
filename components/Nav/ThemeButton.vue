@@ -1,5 +1,5 @@
 <template>
-  <ColorScheme>
+  <ColorScheme class="change-theme theme-light" tag="div">
     <button
       :class="themeButtonName"
       class="change-theme"

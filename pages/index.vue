@@ -4,17 +4,18 @@
 
     <IndexBannerCarousel />
 
-    <UITitledWrapper v-if="products.popular" path="category/popular" title="Популярное">
+    <UITitledWrapper v-show="products.popular" path="category/popular" title="Популярное">
       <div class="cards">
         <Card
           v-for="card in products.popular"
           :key="card.pk_id"
           :card="card"
+          lazy
           @show-popup="_showPopup"
         />
       </div>
     </UITitledWrapper>
-    <LazyUITitledWrapper path="search?q=xiaomi" title="Бренд Xiaomi">
+    <LazyUITitledWrapper v-show="products.xiaomi" path="search?q=xiaomi" title="Бренд Xiaomi">
       <div class="cards">
         <Card
           v-for="card in products.xiaomi"
@@ -25,15 +26,6 @@
         />
       </div>
     </LazyUITitledWrapper>
-
-    <!--    <UILoader v-else fullscreen v2 />-->
-
-    <UIButton
-      v-if="canLoadMore"
-      class="load-more-btn"
-      text="Загрузить еще"
-      @click.prevent="handleLoadMoreClick"
-    />
   </div>
 </template>
 
@@ -45,8 +37,6 @@ const productsStore = useProductsStore()
 const products = reactive({})
 const popup = ref(null)
 
-const _mounted = ref(false)
-
 const _showPopup = ({ name, url, event }) =>
   popup.value.show(name, url, event)
 
@@ -54,15 +44,10 @@ const handleLoadMoreClick = () => {
   productsStore.getProductsFromDatabase(10)
 }
 
-const canLoadMore = computed(() => {
-  return !productsStore.isLoading && productsStore.totalProductsLoaded && productsStore.productsCanBeLoaded !== 0
-})
-
 // created() hook
 products.popular = await productsStore.getProductsByFilter('popular', 20)
 products.xiaomi = await productsStore.getProductsByQuery('xiaomi', 20)
 
-onMounted(() => _mounted.value = true)
 </script>
 
 <style lang="scss" scoped>
