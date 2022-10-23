@@ -25,10 +25,6 @@ export default defineNuxtConfig({
         {
           name: 'keywords',
           content: 'интернет магазин, маркетплейс, низкие цены, для программистов'
-        },
-        {
-          httpEquiv: 'content-language',
-          content: 'ru'
         }
       ]
     }
