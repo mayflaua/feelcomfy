@@ -1,13 +1,18 @@
 <template>
   <div class="review">
-    <p class="review__name">
+    <p v-if="!admin" class="review__name">
       {{ review.is_anon ? 'Анонимный пользователь' : review.user_name }}
+    </p>
+    <p v-else class="review__name">
+      {{ review.user_name }} ({{ review.is_anon && 'анонимно' }})
+      <slot name="button" />
     </p>
     <div class="review__info">
       <div class="review__score">
         <img
           v-for="star of 5"
           :key="star"
+          :alt="star"
           :class="{'star--transparent': star >
             review.score}"
           src="~/assets/icons/star.svg"
@@ -29,6 +34,10 @@ defineProps({
   review: {
     type: Object,
     required: true
+  },
+  admin: {
+    type: Boolean,
+    default: false
   }
 })
 

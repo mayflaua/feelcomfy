@@ -29,8 +29,7 @@ export default defineNuxtConfig({
         {
           httpEquiv: 'content-language',
           content: 'ru'
-        },
-        {}
+        }
       ]
     }
   },
