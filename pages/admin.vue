@@ -11,7 +11,7 @@
         <li
           v-for="item in asideLinks"
           :key="item.label"
-          :style="{backgroundImage: `url(/assets/icons/${item.icon})`}"
+          :class="`menu__item--${item.classLabel}`"
           class="menu__item"
           @click="currentComponent=item.component"
         >
@@ -52,12 +52,12 @@ const asideLinks = [
   {
     label: 'Добавить товар',
     component: AddProduct,
-    icon: 'add.png'
+    classLabel: 'add'
   },
   {
     label: 'Редактировать товары',
     component: EditProducts,
-    icon: 'edit.png'
+    classLabel: 'edit'
   }
 ]
 </script>
@@ -178,6 +178,14 @@ const asideLinks = [
 
         &:hover {
           background-color: darken($light, 10)
+        }
+
+        &--add {
+          background-image: url('~/assets/icons/add.png')
+        }
+
+        &--edit {
+          background-image: url('~/assets/icons/edit.png')
         }
       }
     }

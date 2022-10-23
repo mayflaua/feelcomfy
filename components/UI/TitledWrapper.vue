@@ -20,20 +20,12 @@
         />
       </svg>
     </nuxt-link>
-
+    <!--TODO: slider prop-->
     <slot v-if="!slider" />
-    <Splide v-else :options="options">
-      <SplideSlide v-for="item in cards">
-        <Card :card="item" />
-      </SplideSlide>
-    </Splide>
   </div>
 </template>
 
 <script setup>
-
-import { Splide, SplideSlide } from '@splidejs/vue-splide'
-import '@splidejs/vue-splide/css'
 
 const props = defineProps({
   path: {
@@ -57,32 +49,6 @@ const props = defineProps({
     default: () => []
   }
 })
-
-let options = {}
-if (props.slider) {
-  options = {
-    type: 'slide',
-    perPage: 4,
-    gap: '1rem',
-    pagination: false,
-    arrows: true,
-    padding: { right: '5%' },
-    breakpoints: {
-      1100: {
-        perPage: 3
-      },
-      850: {
-        perPage: 2.5
-      },
-      700: {
-        perPage: 2
-      },
-      420: {
-        perPage: 1.5
-      }
-    }
-  }
-}
 
 </script>
 

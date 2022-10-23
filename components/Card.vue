@@ -1,5 +1,5 @@
 <template>
-  <nuxt-link :title="card.title" :to="`/product/${slug}-${card.pk_id}`" class="card" target="_blank">
+  <nuxt-link :title="card.title" :to="`/product/${slug}-${card.pk_id}`" class="card" no-prefetch target="_blank">
     <LazyHydrationWrapper>
       <div class="card__image">
         <nuxt-img

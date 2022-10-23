@@ -1,8 +1,6 @@
 <template>
   <div>
-    <UILoader v-if=" _fetchingItem" fullscreen v2 />
-
-    <div v-show="!_fetchingItem" class="product">
+    <div class="product">
       <div class="product__info-card">
         <ProductImages :images="item.netlify_images" :main-image="item.netlify_name" />
         <ProductInfoBlock :item="item" @reviews:click="goToReviews" />
@@ -19,9 +17,7 @@
         </div>
 
         <div ref="_reviewsBody" class="desc__body">
-          <LazyHydrationWrapper>
-            <ProductDescriptionTab v-if="currentTab === 'desc'" :description="item.description" />
-          </LazyHydrationWrapper>
+          <ProductDescriptionTab v-if="currentTab === 'desc'" :description="item.description" />
           <ClientOnly>
             <KeepAlive>
               <ProductReviewsTab
@@ -41,18 +37,12 @@
 import slugify from 'slugify'
 
 import { useLocalStorage } from '@vueuse/core'
-import { LazyHydrationWrapper } from 'vue3-lazy-hydration'
 import { useProductsStore } from '@/stores/products'
-
-const hydrat = () => {
-  console.log('hydrated')
-}
 
 const productStore = useProductsStore()
 
 const route = useRoute()
 const item = ref(null)
-const _fetchingItem = ref(true)
 
 const currentTab = ref('desc')
 const _reviewsBody = ref(null)
@@ -82,8 +72,6 @@ if (item.value.length !== 0 && item.value[0]?.length !== 0) {
     // update storage
     storage.value.unshift(item.value.pk_id)
     storage.value = storage.value.slice(0, 10)
-
-    _fetchingItem.value = false
   }
 } else {
   await navigateTo('/')

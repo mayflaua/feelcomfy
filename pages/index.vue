@@ -40,10 +40,6 @@ const popup = ref(null)
 const _showPopup = ({ name, url, event }) =>
   popup.value.show(name, url, event)
 
-const handleLoadMoreClick = () => {
-  productsStore.getProductsFromDatabase(10)
-}
-
 // created() hook
 products.popular = await productsStore.getProductsByFilter('popular', 20)
 products.xiaomi = await productsStore.getProductsByQuery('xiaomi', 20)

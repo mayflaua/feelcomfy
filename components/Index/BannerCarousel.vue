@@ -12,15 +12,17 @@
     class="banner-carousel"
   >
     <SwiperSlide v-for="(banner, i) in banners" :key="banner.image">
-      <nuxt-link :to="banner.path">
+      <nuxt-link :to="banner.path" no-prefetch>
         <nuxt-img
           :alt="banner.alt"
           :loading="i !== 2 ? 'lazy' : 'eager'"
           :preload="i === 2"
           :src="banner.image"
           format="webp"
+          height="400"
           quality="90"
           sizes="xxl:1400px xl:1100px lg:900px md:650px sm:500px xs:200px"
+          width="990"
         />
       </nuxt-link>
     </SwiperSlide>

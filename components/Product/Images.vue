@@ -12,10 +12,10 @@
       class="swiper-main"
     >
       <SwiperSlide>
-        <nuxt-img :src="`images/${mainImage}`" @click="openImage" />
+        <nuxt-img :src="`images/${mainImage}`" preload @click="openImage" />
       </SwiperSlide>
       <SwiperSlide v-for="img in images" :key="img">
-        <nuxt-img :src="`images/${img}`" @click="openImage" />
+        <nuxt-img :placeholder="10" :src="`images/${img}`" loading="lazy" @click="openImage" />
       </SwiperSlide>
     </swiper>
     <swiper
@@ -45,6 +45,7 @@ import 'swiper/css'
 import 'swiper/css/thumbs'
 import 'swiper/css/navigation'
 import 'swiper/css/free-mode'
+import 'viewerjs/dist/viewer.css'
 
 import { api as viewerApi } from 'v-viewer'
 import { useMediaQuery } from '@vueuse/core'
