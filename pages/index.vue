@@ -1,10 +1,13 @@
 <template>
   <div>
     <LazyCartPopup ref="popup" />
-
     <IndexBannerCarousel />
 
-    <UITitledWrapper v-show="products.popular" path="category/popular" title="Популярное">
+    <UITitledWrapper
+      v-show="products.popular"
+      path="category/popular"
+      title="Популярное"
+    >
       <div class="cards">
         <Card
           v-for="card in products.popular"
@@ -15,25 +18,54 @@
         />
       </div>
     </UITitledWrapper>
-    <LazyUITitledWrapper v-show="products.xiaomi" path="search?q=xiaomi" title="Бренд Xiaomi">
-      <div class="cards">
-        <Card
-          v-for="card in products.xiaomi"
-          :key="card.pk_id"
-          :card="card"
-          lazy
-          @show-popup="_showPopup"
-        />
-      </div>
-    </LazyUITitledWrapper>
+
+    <Observer :margin="200" :on-intersect="loadXiaomi" once>
+      <LazyUITitledWrapper
+        v-show="products.xiaomi"
+        path="search?q=xiaomi"
+        title="Бренд Xiaomi"
+      >
+        <div class="cards">
+          <Card
+            v-for="card in products.xiaomi"
+            :key="card.pk_id"
+            :card="card"
+            lazy
+            @show-popup="_showPopup"
+          />
+        </div>
+      </LazyUITitledWrapper>
+    </Observer>
+
+    <Observer :margin="100" :on-intersect="loadRecommendations" once>
+      <LazyUITitledWrapper
+        v-if="products.recommendations && products.recommendations.length !== 0"
+        passive
+        title="Рекомендовано вам"
+      >
+        <div class="cards">
+          <Card
+            v-for="card in products.recommendations"
+            :key="card.pk_id"
+            :card="card"
+            lazy
+            @show-popup="_showPopup"
+          />
+        </div>
+      </LazyUITitledWrapper>
+    </Observer>
   </div>
 </template>
 
 <script setup>
 import { useProductsStore } from '@/stores/products'
+import useRecommendations from '@/composables/useRecommendations'
+import useAuth from '@/composables/useAuth'
+
+const { getSimilarsByCategories } = useRecommendations()
+const { isLoggedIn } = useAuth()
 
 const productsStore = useProductsStore()
-
 const products = reactive({})
 const popup = ref(null)
 
@@ -42,8 +74,16 @@ const _showPopup = ({ name, url, event }) =>
 
 // created() hook
 products.popular = await productsStore.getProductsByFilter('popular', 20)
-products.xiaomi = await productsStore.getProductsByQuery('xiaomi', 20)
 
+const loadXiaomi = async () => {
+  products.xiaomi = await productsStore.getProductsByQuery('xiaomi', 20)
+}
+
+const loadRecommendations = async () => {
+  if (isLoggedIn()) {
+    products.recommendations = await getSimilarsByCategories()
+  }
+}
 </script>
 
 <style lang="scss" scoped>
