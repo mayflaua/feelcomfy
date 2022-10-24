@@ -1,18 +1,10 @@
 import { defineStore } from 'pinia'
 import useSupabase from '~/composables/useSupabase'
 import useSearch from '~/composables/useSearch'
+import { ProductCategory } from '~/types/categories'
+import { Product, ProductWithRating } from '~/types/product'
 
 const { supabase } = useSupabase()
-
-enum ProductCategory {
-  MOUSE = 1,
-  KEYBOARDS = 2,
-  CHAIRS = 3,
-  TABLES = 4,
-  MONITORS = 5,
-  MERCH = 6,
-  ACCESSORIES = 7
-}
 
 enum Filter {
   POPULAR = 'orders',
@@ -45,7 +37,7 @@ export const useProductsStore = defineStore('products', {
       return this._destructureRating(res)
     },
 
-    async getProductsByCategory (category: string, limit: number = 10): Promise<Object[]> {
+    async getProductsByCategory (category: ProductCategory, limit: number = 10): Promise<Object[]> {
       const { data: res } = await supabase.from('goods')
         .select('*, reviews!left(score)')
         // @ts-ignore
@@ -86,13 +78,22 @@ export const useProductsStore = defineStore('products', {
       return this._destructureRating(res)
     },
 
-    _destructureRating (arr: Array<Object>): Array<Object> {
+    _destructureRating (arr: Array<Product>): Array<ProductWithRating> {
+      const res: Array<ProductWithRating> = []
       arr.forEach((product) => {
         const reviews = product.reviews
-        product.reviews = reviews.length
-        product.score = (reviews.map(i => i.score).reduce((acc, num) => acc + num, 0) / (product.reviews || 1)).toFixed(1)
+        const mappedProduct: ProductWithRating = {
+          ...product,
+          reviews: reviews.length,
+          score: (reviews
+            .map(i => i.score)
+            .reduce((acc, num) => acc + num, 0) / (reviews.length || 1))
+            .toFixed(1)
+        }
+        res.push(mappedProduct)
       })
-      return arr
+      return res
     }
+
   }
 })

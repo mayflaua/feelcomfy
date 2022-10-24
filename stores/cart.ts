@@ -1,26 +1,8 @@
 import { defineStore, StoreDefinition } from 'pinia'
 import useSupabase from '~/composables/useSupabase'
+import { CartItem, CompressedCartItem } from '~/types/cart'
 
 const { supabase } = useSupabase()
-
-interface CompressedCartItem {
-  readonly pk_id: number;
-  qty: number;
-}
-
-interface CartItem {
-  readonly pk_id: number;
-  readonly category_id: number;
-  checked: boolean;
-  title: string;
-  old_price?: number | null;
-  final_price: number;
-  units_in_stock: number;
-  image_url: URL;
-  model?: string;
-  color?: string;
-  orders: number;
-}
 
 export const useCartStore: StoreDefinition = defineStore('cart', {
   state: () => ({

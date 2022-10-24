@@ -1,16 +1,16 @@
 import { defineStore } from 'pinia'
 import useSupabase from '~/composables/useSupabase'
+import { Order, OrderProduct } from '~/types/orders'
 
 const { supabase } = useSupabase()
 
 export const useOrdersStore = defineStore('order', {
   state: () => ({
-    _goods: [],
-    orders: [],
+    _goods: [] as OrderProduct[],
+    orders: [] as Order[],
 
     fetchState: null
   }),
-  getters: {},
   actions: {
     async getOrders (userId) {
       this.fetchState = true

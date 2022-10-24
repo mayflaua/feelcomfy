@@ -1,25 +1,27 @@
 import { defineStore } from 'pinia'
 import useSupabase from '~/composables/useSupabase'
+import { FavoritesListItem, FavoritesListItemWithRating } from '~/types/favorites'
+import { ProductID } from '~/types/product'
 
 const { supabase } = useSupabase()
 
 export const useFavoritesStore = defineStore('favorites', {
   state: () => ({
-    _compressedFavoritesList: [] as Number[],
-    favoritesList: [],
+    _compressedFavoritesList: [] as ProductID[],
+    favoritesList: [] as FavoritesListItemWithRating[],
 
-    favoritesReady: false,
+    favoritesReady: false as Boolean,
 
-    _fetchingCompressed: false
+    _fetchingCompressed: false as Boolean
   }),
   getters: {
     isInFavorites: state => itemID =>
-      state._compressedFavoritesList.includes(itemID),
+      state._compressedFavoritesList.includes(itemID) as Boolean,
     totalFavorites: state =>
-      state._compressedFavoritesList.length
+      state._compressedFavoritesList.length as Number
   },
   actions: {
-    async handleFavoritesAction (itemID): Promise<void> {
+    async handleFavoritesAction (itemID: ProductID): Promise<void> {
       // fetch favorites if it wasnt fetched
       if (this.prefetchedFavoritesSize) {
         await this.getFavoritesFromDatabase()
@@ -29,18 +31,18 @@ export const useFavoritesStore = defineStore('favorites', {
         ? await this._removeFromFavorites(itemID)
         : await this._addToFavorites(itemID)
     },
-    async _addToFavorites (itemID): Promise<void> {
+    async _addToFavorites (itemID: ProductID): Promise<void> {
       this._compressedFavoritesList.push(itemID)
       await this._updateDatabase()
     },
-    async _removeFromFavorites (itemID): Promise<void> {
+    async _removeFromFavorites (itemID: ProductID): Promise<void> {
       const index = this._compressedFavoritesList.indexOf(itemID)
 
       // remove from compressed list
       this._compressedFavoritesList.splice(index, 1)
 
       // remove from full list
-      this.favoritesList.splice(this.favoritesList.findIndex(item => item.pk__id === itemID), 1)
+      this.favoritesList.splice(this.favoritesList.findIndex(item => item.pk_id === itemID), 1)
       await this._updateDatabase()
     },
 
@@ -68,12 +70,10 @@ export const useFavoritesStore = defineStore('favorites', {
           .from('goods')
           .select('*, reviews!left(score)')
           .in('pk_id', this._compressedFavoritesList)
-
         this.favoritesList = this._destructureRating(res)
         this.favoritesReady = true
       } else {
         // retry fetch if compressedFavorites isnt fetched yet
-
         setTimeout(async () => await this.getFavoritesFromDatabase(), 10)
       }
     },
@@ -87,13 +87,21 @@ export const useFavoritesStore = defineStore('favorites', {
       this.prefetchedFavoritesSize = res[0].favorites_size
     },
 
-    _destructureRating (arr: Array<Object>): Array<Object> {
+    _destructureRating (arr: Array<FavoritesListItem>): Array<FavoritesListItemWithRating> {
+      const res: Array<FavoritesListItemWithRating> = []
       arr.forEach((product) => {
         const reviews = product.reviews
-        product.reviews = reviews.length
-        product.score = (reviews.map(i => i.score).reduce((acc, num) => acc + num, 0) / (product.reviews || 1)).toFixed(1)
+        const mappedProduct: FavoritesListItemWithRating = {
+          ...product,
+          reviews: reviews.length,
+          score: (reviews
+            .map(i => i.score)
+            .reduce((acc, num) => acc + num, 0) / (reviews.length || 1))
+            .toFixed(1)
+        }
+        res.push(mappedProduct)
       })
-      return arr
+      return res
     },
 
     resetFavorites () {
