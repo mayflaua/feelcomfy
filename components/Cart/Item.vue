@@ -333,14 +333,18 @@ $qtySize: 40px;
 @media (max-width: 500px) {
   .item {
     &__desc {
-      gap: 0;
-      grid-template-rows: 40px 1fr 40px 40px;
+      gap: 0.5rem;
+      grid-template-rows: 1fr 1fr 20px 40px;
       grid-template-columns: 1fr 1fr;
       grid-template-areas:
         "title title"
         "info info"
         "price price"
         "qty delete";
+    }
+
+    &__image {
+      align-self: flex-start;
     }
 
     &__delete-btn {

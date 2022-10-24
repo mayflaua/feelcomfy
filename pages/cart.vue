@@ -109,7 +109,7 @@
       </div>
     </div>
 
-    <TitledWrapper
+    <UITitledWrapper
       v-if="lastViewedList.length !== 0"
       :cards="lastViewedCards"
       passive
@@ -122,17 +122,15 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 import useAuth from '../composables/useAuth'
-import useSupabase from '../composables/useSupabase'
-import { useCartStore } from '~~/stores/cart'
+import { useCartStore } from '@/stores/cart'
 import { useOrdersStore } from '@/stores/orders'
 import { useProductsStore } from '@/stores/products'
-import TitledWrapper from '@/components/UI/TitledWrapper'
 
 const ordersStore = useOrdersStore()
 const productsStore = useProductsStore()
+const cartStore = useCartStore()
 
 useHead({
   title: 'Корзина - FeelComfy'
@@ -145,8 +143,7 @@ const CircleProgress = defineAsyncComponent({
 })
 const colorMode = useColorMode()
 
-const { user, isLoggedIn } = useAuth()
-const { supabase } = useSupabase()
+const { isLoggedIn } = useAuth()
 
 const makeOrderState = ref(false)
 
@@ -157,7 +154,6 @@ const formatter = new Intl.NumberFormat('ru-RU', {
   maximumFractionDigits: 0
 })
 
-const cartStore = useCartStore()
 /* dynamic array with cards */
 const cartItems = computed(() => cartStore.cart)
 
@@ -199,7 +195,6 @@ const handleMakeOrderClick = async () => {
       path: '/order',
       query: { order: orderID }
     })
-    await cartStore.resetCart(true)
     makeOrderState.value = false
   }
 }
@@ -208,6 +203,7 @@ const handleMakeOrderClick = async () => {
 await cartStore.getCartFromDatabase()
 const lastViewedList = useLocalStorage('last-viewed', [])
 let lastViewedCards = []
+console.log(lastViewedList.value)
 if (lastViewedList.value.length !== 0) {
   lastViewedCards = await productsStore.getProductsByIds(lastViewedList.value)
   // sort cards array by actual sequence in storage

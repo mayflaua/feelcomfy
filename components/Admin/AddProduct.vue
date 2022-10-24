@@ -29,6 +29,7 @@
           </option>
         </select>
       </div>
+      <AdminDataFields @changed="e => product.additional_data = e" />
     </div>
     <div class="add-product__images">
       <p class="title">
@@ -222,9 +223,11 @@ const handleSubmit = async () => {
   }
 
   &__form {
+
     .field {
       display: flex;
       align-items: center;
+      width: 100%;
 
       .label {
         width: 11rem;

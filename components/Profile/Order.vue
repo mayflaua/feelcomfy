@@ -6,7 +6,7 @@
       <p class="header__id">
         ID заказа {{ orderInfo.order_id }}
         <UIButton
-          v-if="orderStatus !=='granted'"
+          v-if="['created', 'not-paid'].includes(orderStatus)"
           :loading-state="confirmDeliveryState"
           :text="orderStatus === 'created' ? 'Подтвердить получение' : 'Перейти к оплате'"
           class="submit-btn"
@@ -42,7 +42,13 @@
         </svg>
       </div>
       <div v-if="showGoods" class="goods__list">
-        <OrderProduct v-for="item in orderInfo.order" :key="item.id" :item="item" @add-review="handleAddReview" />
+        <OrderProduct
+          v-for="item in orderInfo.order"
+          :key="item.id"
+          :allow-reviews="orderInfo.status === 'granted'"
+          :item="item"
+          @add-review="handleAddReview"
+        />
       </div>
     </div>
   </div>

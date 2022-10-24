@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 import useSupabase from '~/composables/useSupabase'
 import useSearch from '~/composables/useSearch'
-import { ProductCategory } from '~/types/categories'
+// @ts-ignore
+import { ProductCategory } from '~/types/categories.d.ts'
 import { Product, ProductWithRating } from '~/types/product'
 
 const { supabase } = useSupabase()

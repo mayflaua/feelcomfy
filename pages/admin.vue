@@ -193,6 +193,8 @@ const asideLinks = [
 
   &__body {
     flex-grow: 1;
+    max-width: calc(100% - 50px);
+    overflow-x: hidden;
     padding: 30px;
     margin-left: 50px;
   }

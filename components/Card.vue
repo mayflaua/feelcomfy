@@ -270,11 +270,6 @@ export default {
     justify-content: space-between;
     align-items: center;
 
-    @media (max-width: 450px) {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
     .card__in-cart {
       font-size: 0.9rem;
       color: $blue;
@@ -285,6 +280,7 @@ export default {
 
     .card__no-stock {
       font-size: 0.9rem;
+      text-align: right;
       color: $dark;
       margin: 0 5px 0 0;
 

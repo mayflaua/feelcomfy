@@ -23,6 +23,8 @@ const val = ref(props.defaultValue)
 .checkbox {
   width: 16px;
   height: 16px;
+  min-width: 16px;
+  min-height: 16px;
   position: relative;
 
   &:checked:before {

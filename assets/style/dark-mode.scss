@@ -137,6 +137,22 @@
     }
   }
 
+  .popup {
+    background-color: $default !important;
+
+    &__desc {
+      color: $light;
+
+      .popup__title {
+        color: $font;
+      }
+    }
+
+    &__close {
+      background-color: $default
+    }
+  }
+
   .signin-wrapper {
     .signin-modal {
       box-shadow: 0 0 15px 1px rgba($light, 0.1);

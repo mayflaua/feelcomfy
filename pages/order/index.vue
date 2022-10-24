@@ -253,6 +253,7 @@
 <script setup>
 import 'vue-select/dist/vue-select.css'
 import { useOrdersStore } from '@/stores/orders'
+import { useCartStore } from '@/stores/cart'
 
 useHead({
   title: 'Оформление заказа - FeelComfy'
@@ -268,10 +269,8 @@ const vSelect = defineAsyncComponent({
   loader: () => import('vue-select')
 })
 
-const { user } = useAuth()
-const { supabase } = useSupabase()
-
 const ordersStore = useOrdersStore()
+const cartStore = useCartStore()
 
 const order = ref(null)
 const cities = await $fetch('/api/cities')
@@ -283,6 +282,7 @@ const getQueryData = async () => {
   /* get order_id from query and clear query */
   const router = useRouter()
   if (router.currentRoute.value.query.order) {
+    await cartStore.resetCart()
     return router.currentRoute.value.query.order
   } else {
     await navigateTo('/')

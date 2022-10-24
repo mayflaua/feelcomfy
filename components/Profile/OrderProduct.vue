@@ -31,8 +31,7 @@
       <div class="price">
         <span>Стоимость</span> <span>{{ item.price }}</span>
       </div>
-
-      <button v-if="allowReview" class="add-review-btn" @click="emit('add-review', item.pk_id)">
+      <button v-if="allowReviews" class="add-review-btn" @click="emit('add-review', item.pk_id)">
         Оставить отзыв
       </button>
     </div>
@@ -43,17 +42,17 @@
 
 import slugify from 'slugify'
 
-const emit = defineEmits('add-review')
+const emit = defineEmits(['add-review'])
 
 const props = defineProps({
   item: {
     type: Object,
     required: true
+  },
+  allowReviews: {
+    type: Boolean,
+    default: false
   }
-})
-
-const allowReview = computed(() => {
-  return props.item.status !== 'created'
 })
 
 const link = `/product/${slugify(props.item.title)}-${props.item.id}`

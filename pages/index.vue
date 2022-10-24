@@ -54,6 +54,7 @@
         </div>
       </LazyUITitledWrapper>
     </Observer>
+    <UILoader v-if="_fetching" />
   </div>
 </template>
 
@@ -71,17 +72,21 @@ const popup = ref(null)
 
 const _showPopup = ({ name, url, event }) =>
   popup.value.show(name, url, event)
-
+const _fetching = ref(false)
 // created() hook
 products.popular = await productsStore.getProductsByFilter('popular', 20)
 
 const loadXiaomi = async () => {
+  _fetching.value = true
   products.xiaomi = await productsStore.getProductsByQuery('xiaomi', 20)
+  _fetching.value = false
 }
 
 const loadRecommendations = async () => {
   if (isLoggedIn()) {
+    _fetching.value = true
     products.recommendations = await getSimilarsByCategories()
+    _fetching.value = false
   }
 }
 </script>

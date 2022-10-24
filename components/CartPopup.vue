@@ -9,7 +9,7 @@
               class="popup__image"
               format="webp"
               height="100%"
-              preload
+              lazy
               quality="40"
               width="60px"
             />
@@ -99,7 +99,7 @@ export default {
 }
 
 .wrapper {
-  width: 500px;
+  max-width: min(100%, 500px);
 
   display: flex;
   flex-direction: column;
@@ -110,6 +110,11 @@ export default {
   left: 0;
   right: 0;
   z-index: 20;
+
+  @media (max-width: 500px) {
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
+  }
 }
 
 .popup {
@@ -144,6 +149,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    align-self: stretch;
     justify-content: space-around;
   }
 
