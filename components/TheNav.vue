@@ -1,6 +1,6 @@
 <template>
   <header class="header">
-    <LazyAuthSignIn v-if="isAuthModalOpened" @close-modal="closeAuthModal" />
+    <LazyAuthModal v-if="isAuthModalOpened" @close="closeAuthModal" />
     <nav class="nav">
       <NavLogo />
       <NavSearchField @open-aside="openAside" />

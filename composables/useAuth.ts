@@ -31,6 +31,9 @@ const useAuth = () => {
       { email, password },
       { data: metadata }
     )
+    if (error) {
+      throw error
+    }
     await supabase.from('carts').insert({
       user_id: u.id,
       cart: []
@@ -39,9 +42,7 @@ const useAuth = () => {
       user_id: u.id,
       favorites: []
     })
-    if (error) {
-      throw error
-    }
+
     return u
   }
 
