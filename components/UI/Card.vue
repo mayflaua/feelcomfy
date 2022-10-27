@@ -1,6 +1,6 @@
 <template>
-  <div class="card">
-    <div class="card__wishes-btn" @click="handleFavoritesClick">
+  <nuxt-link :to="`/product/${slugify(product.title)}-${product.pk_id}`" class="card" no-prefetch>
+    <div class="card__wishes-btn" @click.stop.prevent="handleFavoritesClick">
       <svg
         :class="{'icon--active': isInFavorites}"
         class="icon"
@@ -54,7 +54,7 @@
       </div>
 
       <div v-if="isInCart" class="info__qty">
-        <button class="qty__minus-btn" @click="handleMinusButtonClick">
+        <button class="qty__minus-btn" @click.stop.prevent="handleMinusButtonClick">
           -
         </button>
         <input
@@ -70,7 +70,7 @@
         <button
           :disabled="cartStore.getQuantity(product.pk_id) === product.units_in_stock"
           class="qty__plus-btn"
-          @click="cartStore.changeQuantity(product.pk_id, 1)"
+          @click.stop.prevent="cartStore.changeQuantity(product.pk_id, 1)"
         >
           +
         </button>
@@ -79,14 +79,14 @@
         v-else
         class="info__cart-btn"
         text="В корзину"
-        @click="handleCartAdd"
+        @click.stop.prevent="handleCartAdd"
       />
     </div>
-  </div>
+  </nuxt-link>
 </template>
 
 <script lang="ts" setup>
-
+import slugify from 'slugify'
 import { computed } from 'vue'
 import { ProductWithRating } from '~/types/product'
 import { useFavoritesStore } from '~/stores/favorites'
@@ -132,6 +132,8 @@ const handleMinusButtonClick = async (): Promise<void> => {
 <style lang="scss" scoped>
 .card {
   min-height: 100%;
+  text-decoration: none;
+  color: $font;
 
   display: flex;
   flex-direction: column;
