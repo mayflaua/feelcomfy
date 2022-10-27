@@ -22,15 +22,15 @@
       </div>
     </div>
     <main class="favorites__body">
-      <div class="favorites-list">
-        <LazyCard
+      <CardsContainer class="favorites-list">
+        <UICard
           v-for="card in favoritesCardsSorted"
           :key="card.id"
-          :card="card"
+          :product="card"
           @unlike="handleUnlikeEvent"
           @show-popup="_showPopup"
         />
-      </div>
+      </CardsContainer>
     </main>
   </div>
   <div v-else-if="favoritesCardsSorted.length === 0" class="favorites--empty">
@@ -178,27 +178,5 @@ onMounted(() => (_mounted.value = true))
     padding: 30px 0;
   }
 
-  &-list {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-row-gap: 30px;
-    grid-column-gap: 20px;
-    justify-items: center;
-
-    @media (max-width: 1500px) {
-      grid-template-columns: repeat(4, 1fr);
-    }
-    @media (max-width: 1100px) {
-      grid-template-columns: repeat(3, 1fr);
-      grid-column-gap: 10px;
-    }
-    @media (max-width: 800px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    @media (max-width: 350px) {
-      grid-template-columns: 1fr;
-    }
-  }
 }
 </style>

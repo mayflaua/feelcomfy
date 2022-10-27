@@ -10,9 +10,9 @@
       </p>
     </div>
 
-    <div v-if="products.length !== 0" class="search__result">
-      <LazyCard v-for="item in products" :key="item.pk_id" :card="item" />
-    </div>
+    <CardsContainer class="search__result">
+      <UICard v-for="item in products" :key="item.pk_id" :product="item" />
+    </CardsContainer>
   </div>
 </template>
 
@@ -50,29 +50,6 @@ watch(() => route.query.q, async () => {
   &__title {
     font-size: 1.4rem;
     font-weight: 500;
-  }
-
-  &__result {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-row-gap: 30px;
-    grid-column-gap: 20px;
-    justify-items: center;
-
-    @media (max-width: 1500px) {
-      grid-template-columns: repeat(4, 1fr);
-    }
-    @media (max-width: 1300px) {
-      grid-template-columns: repeat(3, 1fr);
-      grid-column-gap: 10px;
-    }
-    @media (max-width: 800px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    @media (max-width: 350px) {
-      grid-template-columns: 1fr;
-    }
   }
 }
 </style>

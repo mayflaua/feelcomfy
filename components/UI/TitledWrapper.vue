@@ -21,7 +21,9 @@
     </nuxt-link>
 
     <div v-if="!slider" class="cards">
-      <Card v-for="card in cards" :key="card.pk_id" :card="card" />
+      <CardsContainer>
+        <UICard v-for="card in cards" :key="card.pk_id" :product="card" />
+      </CardsContainer>
     </div>
 
     <Swiper
@@ -122,27 +124,5 @@ const props = defineProps({
     }
   }
 
-  .cards {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-row-gap: 30px;
-    grid-column-gap: 20px;
-    justify-items: center;
-
-    @media (max-width: 1500px) {
-      grid-template-columns: repeat(4, 1fr);
-    }
-    @media (max-width: 1300px) {
-      grid-template-columns: repeat(3, 1fr);
-      grid-column-gap: 10px;
-    }
-    @media (max-width: 800px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    @media (max-width: 350px) {
-      grid-template-columns: 1fr;
-    }
-  }
 }
 </style>

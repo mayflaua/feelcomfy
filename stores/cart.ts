@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import useSupabase from '~/composables/useSupabase'
 import { CartItem, CompressedCartItem } from '~/types/cart'
+import { ProductID } from '~/types/product'
 
 const { supabase } = useSupabase()
 
@@ -21,10 +22,12 @@ export const useCartStore = defineStore('cart', {
   getters: {
     isInCart:
       state =>
-        (itemID: number) =>
+        (itemID: ProductID) =>
           state._cartCompressed.some(
             item => item.pk_id === itemID
           ),
+
+    getQuantity: state => (itemID: ProductID) => state._cartCompressed.find(i => i.pk_id === itemID)?.qty || null,
 
     allChecked: state => state.cart.every(item => item.checked),
     anyChecked: state => state.cart.some(item => item.checked),
@@ -116,11 +119,16 @@ export const useCartStore = defineStore('cart', {
       this._updating = false
     },
 
-    changeQuantity (itemID: number, value: number): void {
+    async changeQuantity (itemID: number, value: number): Promise<void> {
       this._updating = true
 
+      if (this.cart.length !== this._cartCompressed.length) {
+        console.log('getting cart')
+        await this.getCartFromDatabase()
+      }
       /* change quantity in stored compressed cart and on ui */
       const currentItem = this.cart.find(item => item.pk_id === itemID)
+
       if (
         (currentItem.qty > 0 && currentItem.qty < currentItem.units_in_stock) ||
         (currentItem.qty >= currentItem.units_in_stock && value < 0)

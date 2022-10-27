@@ -202,9 +202,12 @@
     }
 
     .card {
-      background-color: $dark;
       color: $font;
       border-color: $default;
+
+      &__image {
+        background: white;
+      }
 
       &__orders {
         color: $light;

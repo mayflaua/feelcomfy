@@ -29,9 +29,9 @@
         :min-max-price="getMinMaxPriceValues()"
         @change="applyFilters"
       />
-      <main class="products">
-        <Card v-for="item in filteredCards" :key="item.pk_id" :card="item" />
-      </main>
+      <CardsContainer class="products" shorten>
+        <UICard v-for="item in filteredCards" :key="item.pk_id" :product="item" />
+      </CardsContainer>
     </div>
     <UILoader v-if="!_mounted" fullscreen v2 />
   </div>
@@ -205,22 +205,11 @@ const getAvailableColors = (): string[] => {
   &__body {
     padding: 30px 0;
     display: flex;
-    gap: 7rem;
+    gap: 4rem;
 
     @media (max-width: 768px) {
       flex-direction: column;
       gap: 2rem;
-    }
-
-    .products {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-      gap: 1rem;
-
-      @media (max-width: 768px) {
-        justify-content: space-around;
-      }
     }
   }
 }

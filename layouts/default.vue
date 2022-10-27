@@ -22,15 +22,15 @@ html {
 }
 
 .container {
-  width: 80vw;
+  width: min(1200px, 80vw);
   margin: 0 auto;
   padding: 0 7px;
 
   @media (max-width: 1600px) {
-    width: 90vw;
+    width: min(1200px, 90vw);
   }
   @media (max-width: 1400px) {
-    width: 100%;
+    width: min(1200px, 100%);
   }
 }
 
