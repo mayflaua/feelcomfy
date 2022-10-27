@@ -10,23 +10,17 @@ export const useFavoritesStore = defineStore('favorites', {
     _compressedFavoritesList: [] as ProductID[],
     favoritesList: [] as FavoritesListItemWithRating[],
 
-    favoritesReady: false as Boolean,
-
-    _fetchingCompressed: false as Boolean
+    favoritesReady: false as boolean,
+    _fetchingCompressed: false as boolean
   }),
   getters: {
     isInFavorites: state => itemID =>
-      state._compressedFavoritesList.includes(itemID) as Boolean,
+      state._compressedFavoritesList.includes(itemID) as boolean,
     totalFavorites: state =>
-      state._compressedFavoritesList.length as Number
+      state._compressedFavoritesList.length as number
   },
   actions: {
     async handleFavoritesAction (itemID: ProductID): Promise<void> {
-      // fetch favorites if it wasnt fetched
-      if (this.prefetchedFavoritesSize) {
-        await this.getFavoritesFromDatabase()
-      }
-
       this.isInFavorites(itemID)
         ? await this._removeFromFavorites(itemID)
         : await this._addToFavorites(itemID)
@@ -73,18 +67,9 @@ export const useFavoritesStore = defineStore('favorites', {
         this.favoritesList = this._destructureRating(res)
         this.favoritesReady = true
       } else {
-        // retry fetch if compressedFavorites isnt fetched yet
+        // retry fetch if compressedFavorites isn't fetched yet
         setTimeout(async () => await this.getFavoritesFromDatabase(), 10)
       }
-    },
-
-    async getFavoritesSize (): Promise<void> {
-      // get only users favorites size for nav icon
-      const { data: res } = await supabase
-        .from('favorites')
-        .select('favorites_size')
-        .eq('user_id', supabase.auth.user().id)
-      this.prefetchedFavoritesSize = res[0].favorites_size
     },
 
     _destructureRating (arr: Array<FavoritesListItem>): Array<FavoritesListItemWithRating> {

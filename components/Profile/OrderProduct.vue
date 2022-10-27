@@ -31,9 +31,10 @@
       <div class="price">
         <span>Стоимость</span> <span>{{ item.price }}</span>
       </div>
-      <button v-if="allowReviews" class="add-review-btn" @click="emit('add-review', item.pk_id)">
+      <button v-if="allowReviews" class="add-review-btn" @click="emit('add-review', item.id)">
         Оставить отзыв
       </button>
+      {{ item }}
     </div>
   </div>
 </template>

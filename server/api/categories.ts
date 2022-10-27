@@ -1,5 +1,8 @@
 import { defineEventHandler } from 'h3'
-import { CategoryObject, Filter, ProductCategory } from '~/types/categories'
+// @ts-ignore
+import type { CategoryObject } from '~/types/categories.d.ts'
+// @ts-ignore
+import { Filter, ProductCategory } from '~/types/categories.d.ts'
 
 export default defineEventHandler(() => {
   const categoriesList:CategoryObject[] = [

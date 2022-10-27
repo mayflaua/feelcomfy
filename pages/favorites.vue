@@ -2,7 +2,7 @@
   <UILoader v-if="!_mounted" fullscreen v2 />
   <UINoUser v-else-if="!isLoggedIn()" />
 
-  <div v-else-if="favoritesCards.length !== 0" class="favorites">
+  <div v-else-if="favoritesCardsSorted.length !== 0" class="favorites">
     <LazyCartPopup ref="popup" />
     <div class="favorites__header">
       <h1 class="favorites__title">
@@ -12,20 +12,19 @@
         <p class="sorting__title">
           Сортировка
         </p>
-        <v-select
+        <vSelect
           v-model="sortOption"
           :clearable="false"
           :options="sortingSelectOptions"
           :searchable="false"
           class="sorting__select"
-          @option:selected="sortItems"
         />
       </div>
     </div>
     <main class="favorites__body">
       <div class="favorites-list">
         <LazyCard
-          v-for="card in favoritesCards"
+          v-for="card in favoritesCardsSorted"
           :key="card.id"
           :card="card"
           @unlike="handleUnlikeEvent"
@@ -34,7 +33,7 @@
       </div>
     </main>
   </div>
-  <div v-else-if="favoritesCards.length === 0" class="favorites--empty">
+  <div v-else-if="favoritesCardsSorted.length === 0" class="favorites--empty">
     <p class="favorites__title">
       Добавьте то, что понравилось
     </p>
@@ -46,9 +45,12 @@
   <UILoader v-else fullscreen v2 />
 </template>
 
-<script setup>
-import { useFavoritesStore } from '~/stores/favorites'
+<script lang="ts" setup>
 import 'vue-select/dist/vue-select.css'
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue'
+import { useHead } from '#app'
+import { useFavoritesStore } from '~/stores/favorites'
+import useAuth from '~/composables/useAuth'
 
 const vSelect = defineAsyncComponent({
   loader: () => import('vue-select')
@@ -62,7 +64,6 @@ const _mounted = ref(false)
 
 const favoritesStore = useFavoritesStore()
 
-const { supabase } = useSupabase()
 const { isLoggedIn } = useAuth()
 
 const sortingSelectOptions = [
@@ -89,7 +90,13 @@ const sortingSelectOptions = [
 ]
 const sortOption = ref(sortingSelectOptions[0])
 
-const sortItems = () => {
+const popup = ref(null)
+
+const _showPopup = ({ name, url, event }) => {
+  popup.value.show(name, url, event)
+}
+
+const favoritesCardsSorted = computed(() => {
   const method = sortOption.value.value
 
   const sorter = {
@@ -99,18 +106,11 @@ const sortItems = () => {
     rating: arr => arr.sort((a, b) => b.score - a.score),
     orders: arr => arr.sort((a, b) => b.orders - a.orders)
   }
-  favoritesCards.value = sorter[method](favoritesCards.value)
-}
 
-const popup = ref()
+  return sorter[method](favoritesStore.favoritesList)
+})
 
-const _showPopup = ({ name, url }) => {
-  popup.value.show(name, url)
-}
-
-const favoritesCards = computed(() => favoritesStore.favoritesList)
-
-const handleUnlikeEvent = async (id) => {
+const handleUnlikeEvent = async (id): Promise<void> => {
   await favoritesStore.handleFavoritesAction(id)
 }
 

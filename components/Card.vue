@@ -140,8 +140,7 @@ export default {
       this.$emit('show-popup', {
         name: this.card.title,
         url: this.card.netlify_name,
-        // no remove event is used now
-        event: this.isInCart ? 'remove' : 'add'
+        event: 'add'
       })
       await this.cartStore.handleCartAction(this.card.pk_id)
     }
