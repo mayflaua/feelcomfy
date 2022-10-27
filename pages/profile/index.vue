@@ -1,5 +1,7 @@
-<script setup>
+<script lang="ts" setup>
+import { definePageMeta } from '#imports'
+
 definePageMeta({
-  middleware: 'profile-redirect'
+  redirect: '/profile/orders'
 })
 </script>

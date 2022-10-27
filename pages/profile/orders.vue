@@ -44,7 +44,9 @@
   </NuxtLayout>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { computed, defineAsyncComponent, onMounted, ref, watch } from 'vue'
+import { useHead } from '#app'
 import { useMediaQuery } from '@vueuse/core'
 import { useOrdersStore } from '@/stores/orders'
 import useAuth from '@/composables/useAuth'
@@ -73,7 +75,10 @@ const unwatchUser = watch(user, async () => {
   }
 })
 
-const filterTabValues = [{
+const filterTabValues:Array<{
+  label: string
+  value: 'all' | 'active' | 'not-paid' | 'granted'
+}> = [{
   label: 'Все заказы',
   value: 'all'
 },

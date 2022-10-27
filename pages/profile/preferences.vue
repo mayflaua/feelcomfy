@@ -62,7 +62,7 @@
               name="middle-name"
               placeholder="Номер телефона"
               required
-              type="phone"
+              type="tel"
               ui-input
             >
           </div>
@@ -123,8 +123,9 @@
   </NuxtLayout>
 </template>
 
-<script setup>
-// TODO: signOut не удаляет сессию из localStorage или что то ее пересоздает после удаления
+<script lang="ts" setup>
+import { useHead } from '#app'
+import { onMounted, reactive, ref, watch } from 'vue'
 import useSupabase from '@/composables/useSupabase'
 import useAuth from '@/composables/useAuth'
 
@@ -137,7 +138,7 @@ const { supabase } = useSupabase()
 const { user, signOut } = useAuth()
 
 const saveState = ref(false)
-const handleSaveClick = async () => {
+const handleSaveClick = async (): Promise<void> => {
   saveState.value = true
   await supabase.auth.update({
     ...formFields
@@ -145,7 +146,7 @@ const handleSaveClick = async () => {
   saveState.value = false
 }
 
-const handleSigninOut = async () => {
+const handleSigninOut = async (): Promise<void> => {
   await signOut()
 }
 

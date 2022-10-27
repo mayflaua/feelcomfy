@@ -16,6 +16,7 @@
               v-for="star of 5"
               :key="star"
               :class="{'star--highlighted': star <= highlightedStars ||star <= selectedStars }"
+              alt="star"
               class="star"
               src="~/assets/icons/star.svg"
               @click="selectedStars = star"
@@ -41,8 +42,10 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { ref } from 'vue'
 import { useReviewsStore } from '@/stores/reviews'
+import { ProductID } from '~/types/product'
 
 const reviewsStore = useReviewsStore()
 
@@ -54,14 +57,12 @@ const isAnon = ref(false)
 
 const reviewText = ref()
 
-const props = defineProps({
-  itemId: {
-    type: Number,
-    required: true
-  }
-})
+const props = defineProps<{
+  itemId: ProductID
+}>()
+
 const _sending = ref(false)
-const submit = async () => {
+const submit = async (): Promise<void> => {
   _sending.value = true
   await reviewsStore.uploadReview({
     item_id: props.itemId,

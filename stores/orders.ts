@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import useSupabase from '~/composables/useSupabase'
-import { Order, OrderProduct } from '~/types/orders'
+import { Order, OrderID, OrderProduct, OrderProductCompressed } from '~/types/orders'
+import { ProductID } from '~/types/product'
 
 const { supabase } = useSupabase()
 
@@ -9,23 +10,28 @@ export const useOrdersStore = defineStore('order', {
     _goods: [] as OrderProduct[],
     orders: [] as Order[],
 
-    fetchState: null
+    fetchState: false as boolean
   }),
   actions: {
-    async getOrders (userId) {
+    async getOrders (userId): Promise<void> {
       this.fetchState = true
-      const { data: orders } = await supabase.from('orders')
+      const { data } = await supabase
+        .from('orders')
         .select('order_id, order, created_at, status')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
+
+      const orders: Order[] = data
+
       orders.forEach((currentOrder) => {
         currentOrder.worth = currentOrder.order.reduce((acc, curr) =>
           acc + curr.qty * curr.price
         , 0)
       })
 
-      const goodsIdsToFetch = Array.from(new Set(orders.map(order => order.order.map(good => good.id)).flat()))
-      const { data: goods } = await supabase.from('goods')
+      const goodsIdsToFetch: ProductID[] = Array.from(new Set(orders.map(order => order.order.map(good => good.id)).flat()))
+      const { data: goods } = await supabase
+        .from('goods')
         .select('pk_id, title, netlify_name, model, color')
         .in('pk_id', goodsIdsToFetch)
 
@@ -45,7 +51,7 @@ export const useOrdersStore = defineStore('order', {
       this.fetchState = false
     },
 
-    async makeOrder (order): Promise<number> {
+    async makeOrder (order): Promise<OrderID> {
       // update products units_in_stock column
       for (const product of order) {
         await supabase
@@ -58,23 +64,25 @@ export const useOrdersStore = defineStore('order', {
       order.map(i => delete i.units_in_stock)
 
       // adding order to database and return its order_id
-      const { data: res } = await supabase.from('orders').insert({
-        user_id: supabase.auth.user().id,
-        order,
-        status: 'not-paid'
-      }
-      )
+      const { data: res } = await supabase
+        .from('orders')
+        .insert({
+          user_id: supabase.auth.user().id,
+          order,
+          status: 'not-paid'
+        }
+        )
       return res[0].order_id
     },
 
-    async submitOrder (orderId) {
+    async submitOrder (orderId: OrderID): Promise<void> {
       await supabase
         .from('orders')
         .update({ status: 'created' })
         .eq('order_id', orderId)
     },
 
-    async getOrderInfo (orderId): Promise<Object> {
+    async getOrderInfo (orderId: OrderID): Promise<OrderProductCompressed[]> {
       /* get order info from database */
       const { data: res } = await supabase
         .from('orders')
@@ -82,16 +90,16 @@ export const useOrdersStore = defineStore('order', {
         .eq('order_id', orderId)
 
       /* list all goods ids */
-      const ids = res[0].order.map(item => item.id)
+      const ids: ProductID[] = res[0].order.map(item => item.id)
 
       /* select goods with listed ids from database */
-      const goods = await supabase
+      const { data: goods } = await supabase
         .from('goods')
         .select('title, netlify_name, model, color, pk_id, units_in_stock')
         .in('pk_id', ids)
 
       /* push price and qty from order to goods list */
-      goods.data.forEach((item) => {
+      goods.forEach((item) => {
         const index =
           res[0].order[
             res[0].order.findIndex(i => i.id === item.pk_id)
@@ -100,7 +108,7 @@ export const useOrdersStore = defineStore('order', {
         item.final_price = index.price
       })
 
-      return goods.data
+      return goods
     }
   }
 })

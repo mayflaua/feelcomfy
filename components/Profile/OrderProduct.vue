@@ -38,22 +38,17 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 
 import slugify from 'slugify'
+import { OrderProduct } from '~/types/orders'
 
 const emit = defineEmits(['add-review'])
 
-const props = defineProps({
-  item: {
-    type: Object,
-    required: true
-  },
-  allowReviews: {
-    type: Boolean,
-    default: false
-  }
-})
+const props = defineProps<{
+  item: OrderProduct
+  allowReviews: boolean
+}>()
 
 const link = `/product/${slugify(props.item.title)}-${props.item.id}`
 

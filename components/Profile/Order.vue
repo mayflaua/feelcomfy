@@ -42,7 +42,7 @@
         </svg>
       </div>
       <div v-if="showGoods" class="goods__list">
-        <OrderProduct
+        <ProfileOrderProduct
           v-for="item in orderInfo.order"
           :key="item.id"
           :allow-reviews="orderInfo.status === 'granted'"
@@ -54,18 +54,17 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { computed, ref } from 'vue'
+import { navigateTo } from '#app'
 import useSupabase from '@/composables/useSupabase'
-import OrderProduct from '@/components/Profile/OrderProduct'
+import { Order } from '~/types/orders'
 
 const { supabase } = useSupabase()
 
-const props = defineProps({
-  orderInfo: {
-    type: Object,
-    required: true
-  }
-})
+const props = defineProps<{
+  orderInfo: Order
+}>()
 
 const showGoods = ref(false)
 const confirmDeliveryState = ref(false)
@@ -73,7 +72,7 @@ const confirmDeliveryState = ref(false)
 const _showReviewModal = ref(false)
 const _itemIdForReview = ref(0)
 
-const handleAddReview = (id) => {
+const handleAddReview = (id): void => {
   _itemIdForReview.value = id
   _showReviewModal.value = true
 }

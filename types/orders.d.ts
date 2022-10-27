@@ -1,5 +1,14 @@
-export interface OrderProduct {
-  readonly pk_id: number
+import { ProductID } from '~/types/product'
+
+export type OrderID = number
+
+export interface OrderProductCompressed {
+  readonly id: ProductID
+  qty: number
+  price: number
+}
+
+export interface OrderProduct extends OrderProductCompressed{
   title: string
   netlify_name: string
   model: string | null
@@ -7,7 +16,8 @@ export interface OrderProduct {
 }
 
 export interface Order {
-  readonly order_id: number
+  readonly order_id: OrderID
+  created_at: string
   status: 'granted' | 'created' | 'not-paid'
   worth: number
   order: OrderProduct[]
