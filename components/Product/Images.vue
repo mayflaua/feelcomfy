@@ -12,13 +12,12 @@
       class="swiper-main"
     >
       <SwiperSlide>
-        <nuxt-img :src="`images/${mainImage}`" preload @click="openImage" />
+        <nuxt-img :src="`images/${mainImage}`" preload @click="openImage(0)" />
       </SwiperSlide>
-      <SwiperSlide v-for="img in images" :key="img">
-        <nuxt-img :placeholder="10" :src="`images/${img}`" @click="openImage" />
+      <SwiperSlide v-for="(img, i) in images" :key="img">
+        <nuxt-img :placeholder="10" :src="`images/${img}`" @click="openImage(i + 1)" />
       </SwiperSlide>
     </swiper>
-
     <swiper
       v-if="images"
       v-show="_thumbsMounted"
@@ -56,10 +55,9 @@ import 'swiper/css/thumbs'
 import 'swiper/css/navigation'
 import 'swiper/css/free-mode'
 import 'viewerjs/dist/viewer.css'
-
-import { api as viewerApi } from 'v-viewer'
 import { useMediaQuery } from '@vueuse/core'
 import { computed, ref, Ref } from 'vue'
+import { api as viewerApi } from 'v-viewer'
 
 const _thumbsMounted: Ref<boolean> = ref(false)
 
@@ -84,12 +82,12 @@ const thumbsDirection:Ref<'horizontal'| 'vertical'> = computed(() => isMobileRes
   ? 'horizontal'
   : 'vertical')
 
-const openImage = () => {
+const openImage = (imageIndex) => {
   const images = [`https://ik.imagekit.io/sweetie/images/${props.mainImage}`]
   if (props.images && props.images.length !== 0) {
     images.push(...props.images.map(i => (i = `https://ik.imagekit.io/sweetie/images/${i}`)))
   }
-  viewerApi({ images })
+  viewerApi({ images, options: { toolbar: false, initialViewIndex: imageIndex } })
 }
 
 </script>

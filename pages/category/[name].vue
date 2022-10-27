@@ -40,19 +40,19 @@
 <script lang="ts" setup>
 import 'vue-select/dist/vue-select.css'
 import { useMediaQuery } from '@vueuse/core'
-import { useHead, useLazyFetch, useRoute } from '#app'
+import { useFetch, useHead, useRoute } from '#app'
 import { defineAsyncComponent, onMounted, ref } from 'vue'
 import { useProductsStore } from '@/stores/products'
 import { definePageMeta } from '#imports'
 import { ProductWithRating } from '~/types/product'
 
 const route = useRoute()
-const { data: categories } = await useLazyFetch('/api/categories')
+const { data: categories } = await useFetch('/api/categories')
 const categoryObject = categories.value.find(i => i.name === route.params.name)
 const title = categoryObject.title
 
 const _mounted = ref(false)
-onMounted(() => _mounted.value = true)
+onMounted(() => (_mounted.value = true))
 
 useHead({
   title: `${title} в магазине FeelComfy`

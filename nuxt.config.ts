@@ -52,7 +52,7 @@ export default defineNuxtConfig({
     filenames: {
       chunk: () => '[name].[id].[contenthash].js'
     },
-    transpile: ['pinia']
+    transpile: ['pinia', 'v-viewer']
   },
 
   image: {
