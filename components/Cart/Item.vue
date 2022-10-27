@@ -57,7 +57,11 @@
           >
             -
           </button>
-          <button class="qty__plus-btn" @click="handleChangeQuantity(1)">
+          <button
+            :disabled="itemInfo.qty >= itemInfo.units_in_stock"
+            class="qty__plus-btn"
+            @click="handleChangeQuantity(1)"
+          >
             +
           </button>
         </div>
@@ -262,6 +266,11 @@ $qtySize: 40px;
       font-size: 1.5rem;
       font-weight: 300;
       color: $font;
+
+      &[disabled] {
+        color: $dark;
+        pointer-events: none;
+      }
     }
 
     .qty__minus-btn {
@@ -290,7 +299,6 @@ $qtySize: 40px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    align-self: end;
     gap: 5px;
 
     .price__old {

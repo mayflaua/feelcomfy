@@ -9,7 +9,6 @@ const useAuth = () => {
 
   supabase.auth.onAuthStateChange(async (event, session) => {
     user.value = session?.user || null
-
     if (event === 'SIGNED_IN' &&
       !cartStore.cartReady &&
       !favoritesStore.favoritesReady &&
@@ -21,7 +20,7 @@ const useAuth = () => {
       console.info(`fetched cart and favorites in ${performance.now() - t}ms`)
     } else if (event === 'SIGNED_OUT') {
       favoritesStore.resetFavorites()
-      cartStore.resetCart()
+      await cartStore.resetCart()
       console.info('reset cart and favorites')
     }
   })

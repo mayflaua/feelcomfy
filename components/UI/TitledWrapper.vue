@@ -5,7 +5,6 @@
       <svg
         v-if="!passive"
         class="arrow dark-invert"
-        data-v-ca056c68=""
         fill="none"
         height="36"
         viewBox="0 0 24 24"
@@ -43,10 +42,6 @@ const props = defineProps({
   passive: {
     type: Boolean,
     default: false
-  },
-  cards: {
-    type: Array,
-    default: () => []
   }
 })
 
