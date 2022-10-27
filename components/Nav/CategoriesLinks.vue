@@ -10,8 +10,10 @@
   </div>
 </template>
 
-<script setup>
-const categoriesList = await $fetch('/api/categories')
+<script lang="ts" setup>
+import { useLazyFetch } from '#app'
+
+const { data: categoriesList } = await useLazyFetch('/api/categories')
 
 </script>
 

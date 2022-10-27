@@ -1,14 +1,20 @@
 <template>
-  <ColorScheme class="change-theme theme-light" tag="div">
-    <button
-      :class="themeButtonName"
-      class="change-theme"
-      @click="changeTheme"
-    />
-  </ColorScheme>
+  <div class="theme-button-container">
+    <ClientOnly>
+      <button
+        v-if="!colorMode.unknown"
+        :class="themeButtonName"
+        class="change-theme"
+        @click="changeTheme"
+      />
+    </ClientOnly>
+  </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+
+import { computed } from 'vue'
+import { useColorMode } from '#imports'
 
 const props = defineProps({
   hideOn768: {
@@ -37,6 +43,12 @@ const themeButtonName = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+.theme-button-container {
+  width: 24px;
+  height: 24px;
+  align-self: center;
+  margin: 0 5px 0 0;
+}
 .change-theme {
   min-width: 24px;
   height: 24px;

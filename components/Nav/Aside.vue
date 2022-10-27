@@ -63,15 +63,18 @@
   </aside>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { Ref, ref } from 'vue'
+import { useLazyFetch } from '#app'
+import useAuth from '~/composables/useAuth'
 
 const { isLoggedIn } = useAuth()
 
-const emit = defineEmits(['close-aside', 'open-auth-modal'])
+defineEmits(['close-aside', 'open-auth-modal'])
 
-const asideCategoriesOpened = ref(false)
+const asideCategoriesOpened: Ref<boolean> = ref(false)
 
-const categoriesList = await $fetch('/api/categories')
+const { data: categoriesList } = await useLazyFetch('/api/categories')
 
 </script>
 

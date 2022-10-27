@@ -46,21 +46,22 @@
   </div>
 </template>
 
-<script setup>
-
+<script lang="ts" setup>
+import { Ref, ref, watch } from 'vue'
+import { navigateTo } from '#app'
 import useSearch from '@/composables/useSearch'
 
-const emit = defineEmits(['open-aside'])
+defineEmits(['open-aside'])
 
 const search = useSearch()
 
-const suggestionsList = ref([])
-const searchHistory = ref([])
+const suggestionsList:Ref<string[]> = ref([])
+const searchHistory:Ref<string[]> = ref([])
 
-const fetchingSuggestions = ref(false)
-const searchQuery = ref('')
+const fetchingSuggestions: Ref<boolean> = ref(false)
+const searchQuery: Ref<string> = ref('')
 
-const handleSearchClick = async (query) => {
+const handleSearchClick = async (query): Promise<void> => {
   if (query) {
     suggestionsList.value = []
     await navigateTo({

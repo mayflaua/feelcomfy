@@ -39,10 +39,12 @@
   </div>
 </template>
 
-<script setup>
-
+<script lang="ts" setup>
+import { computed } from 'vue'
+import { navigateTo } from '#app'
 import { useCartStore } from '@/stores/cart'
 import { useFavoritesStore } from '@/stores/favorites'
+import useAuth from '~/composables/useAuth'
 
 const emit = defineEmits(['open-auth-modal'])
 

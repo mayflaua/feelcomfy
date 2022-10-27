@@ -9,7 +9,7 @@
     <NavCategoriesLinks />
     <ClientOnly>
       <transition name="menu">
-        <LazyNavAside
+        <NavAside
           v-if="sideMenuOpened"
           @close-aside="closeAside"
           @open-auth-modal="openAuthModal"
@@ -19,33 +19,28 @@
   </header>
 </template>
 
-<script>
+<script lang="ts" setup>
+import { Ref, ref } from 'vue'
 
-export default {
-  data: () => ({
-    sideMenuOpened: false,
-    isAuthModalOpened: false
-  }),
+const sideMenuOpened: Ref<boolean> = ref(false)
+const isAuthModalOpened: Ref<boolean> = ref(false)
 
-  methods: {
-    openAuthModal () {
-      this.sideMenuOpened = false
-      this.isAuthModalOpened = true
-    },
-
-    closeAuthModal () {
-      this.isAuthModalOpened = false
-    },
-
-    openAside () {
-      this.sideMenuOpened = true
-    },
-
-    closeAside () {
-      this.sideMenuOpened = false
-    }
-  }
+const openAuthModal = (): void => {
+  sideMenuOpened.value = false
+  isAuthModalOpened.value = true
 }
+const closeAuthModal = (): void => {
+  sideMenuOpened.value = true
+  isAuthModalOpened.value = false
+}
+
+const openAside = (): void => {
+  sideMenuOpened.value = true
+}
+const closeAside = (): void => {
+  sideMenuOpened.value = false
+}
+
 </script>
 
 <style lang="scss" scoped>
