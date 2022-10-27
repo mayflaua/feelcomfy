@@ -122,7 +122,6 @@
           <Card v-for="card in lastViewedCards" :key="card.pk_id" :card="card" />
         </UITitledWrapper>
       </ClientOnly>
-      {{ lastViewedList }}
     </div>
   </div>
 </template>

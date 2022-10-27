@@ -1,6 +1,6 @@
-import ProductCategory from '~/types/categories'
+import { ProductCategory } from '~/types/categories'
 
-export type ProductID = Number
+export type ProductID = number
 export type Score = {
   score: number
 }

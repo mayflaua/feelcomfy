@@ -33,51 +33,45 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { navigateTo, useRoute } from '#app'
+import { ref, Ref } from 'vue'
 import slugify from 'slugify'
-
 import { useLocalStorage } from '@vueuse/core'
 import { useProductsStore } from '@/stores/products'
 
 const productStore = useProductsStore()
 
 const route = useRoute()
-const item = ref(null)
 
-const currentTab = ref('desc')
+const currentTab: Ref<'desc'|'reviews'> = ref('desc')
 const _reviewsBody = ref(null)
 
-const goToReviews = () => {
+const goToReviews = (): void => {
   currentTab.value = 'reviews'
   _reviewsBody.value.scrollIntoView()
 }
 
 // created()
-item.value = await productStore.getProductById(route.params.id)
+const [item] = await productStore.getProductById(route.params.id)
 // check if product link is valid and return to index page if not
-if (item.value.length !== 0 && item.value[0]?.length !== 0) {
-  if (slugify(item.value[0].title) !== route.params.slug[0]) {
-    await navigateTo('/')
-  } else {
-    item.value = item.value[0]
-    item.value.units_in_stock === 0 ? item.value.qty = 0 : item.value.qty = 1
-
-    // store 10 last viewed items in localstorage
-    const storage = useLocalStorage('last-viewed', [])
-
-    // remove id from storage if its in it
-    if (storage.value.includes(item.value.pk_id)) {
-      storage.value.splice(storage.value.findIndex(i => i === item.value.pk_id), 1)
-    }
-    // update storage
-    storage.value.unshift(item.value.pk_id)
-    storage.value = storage.value.slice(0, 10)
-  }
-} else {
+if (!item || slugify(item.title) !== route.params.slug[0]) {
   await navigateTo('/')
+} else {
+  // store 20 last viewed items in localstorage
+  const storage = useLocalStorage('last-viewed', [])
+
+  // remove id from storage if its in it
+  if (storage.value.includes(item.pk_id)) {
+    storage.value.splice(storage.value.findIndex(i => i === item.pk_id), 1)
+  }
+  // update storage
+  storage.value.unshift(item.pk_id)
+  storage.value = storage.value.slice(0, 20)
 }
 
 </script>
+
 <style lang="scss" scoped>
 
 .product {

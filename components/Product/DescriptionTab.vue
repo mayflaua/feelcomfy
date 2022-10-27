@@ -4,7 +4,7 @@
   </p>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 defineProps({
   description: {
     type: String,

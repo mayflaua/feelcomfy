@@ -12,21 +12,17 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { ref } from 'vue'
 import { useReviewsStore } from '@/stores/reviews'
+import { ProductID } from '~/types/product'
 
 const reviewsStore = useReviewsStore()
 
-const props = defineProps({
-  reviewsNumber: {
-    type: Number,
-    required: true
-  },
-  itemId: {
-    type: Number,
-    required: true
-  }
-})
+const props = defineProps<{
+  reviewsNumber: number
+  itemId: ProductID
+}>()
 
 const reviews = ref([])
 if (props.reviewsNumber) {

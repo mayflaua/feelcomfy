@@ -15,10 +15,13 @@
         <nuxt-img :src="`images/${mainImage}`" preload @click="openImage" />
       </SwiperSlide>
       <SwiperSlide v-for="img in images" :key="img">
-        <nuxt-img :placeholder="10" :src="`images/${img}`" loading="lazy" @click="openImage" />
+        <nuxt-img :placeholder="10" :src="`images/${img}`" @click="openImage" />
       </SwiperSlide>
     </swiper>
+
     <swiper
+      v-if="images"
+      v-show="_thumbsMounted"
       :direction="thumbsDirection"
       :free-mode="true"
       :modules="modules"
@@ -26,6 +29,7 @@
       :space-between="10"
       :watch-slides-progress="true"
       class="swiper-thumbs"
+      @init="_thumbsMounted = true"
       @swiper="setThumbsSwiper"
     >
       <SwiperSlide>
@@ -35,10 +39,16 @@
         <nuxt-img :src="`images/${img}`" />
       </SwiperSlide>
     </swiper>
+    <div v-if="!_thumbsMounted && images" class="swiper-thumbs-skeleton">
+      <div class="swiper-thumbs-skeleton-item" />
+      <div class="swiper-thumbs-skeleton-item" />
+      <div class="swiper-thumbs-skeleton-item" />
+      <div class="swiper-thumbs-skeleton-item" />
+    </div>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { FreeMode, Navigation, Thumbs } from 'swiper'
 import 'swiper/css'
@@ -49,6 +59,9 @@ import 'viewerjs/dist/viewer.css'
 
 import { api as viewerApi } from 'v-viewer'
 import { useMediaQuery } from '@vueuse/core'
+import { computed, ref, Ref } from 'vue'
+
+const _thumbsMounted: Ref<boolean> = ref(false)
 
 const props = defineProps({
   mainImage: {
@@ -67,11 +80,13 @@ const setThumbsSwiper = (swiper) => {
   thumbsSwiper.value = swiper
 }
 const isMobileResolution = useMediaQuery('(max-width: 420px)')
-const thumbsDirection = computed(() => isMobileResolution.value ? 'horizontal' : 'vertical')
+const thumbsDirection:Ref<'horizontal'| 'vertical'> = computed(() => isMobileResolution.value
+  ? 'horizontal'
+  : 'vertical')
 
 const openImage = () => {
   const images = [`https://ik.imagekit.io/sweetie/images/${props.mainImage}`]
-  if (props.images.length !== 0) {
+  if (props.images && props.images.length !== 0) {
     images.push(...props.images.map(i => (i = `https://ik.imagekit.io/sweetie/images/${i}`)))
   }
   viewerApi({ images })
@@ -130,6 +145,21 @@ const openImage = () => {
     width: 20%;
     box-sizing: border-box;
     padding: 10px 0;
+
+    &-skeleton {
+      height: 100%;
+      width: 20%;
+      padding: 10px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      &-item {
+        width: 100%;
+        height: 100%;
+        background-color: $light;
+      }
+    }
 
     @media (max-width: 420px) {
       height: 20%;

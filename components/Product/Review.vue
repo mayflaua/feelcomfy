@@ -28,18 +28,14 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 
-defineProps({
-  review: {
-    type: Object,
-    required: true
-  },
-  admin: {
-    type: Boolean,
-    default: false
-  }
-})
+import { Review } from '~/types/reviews'
+
+defineProps<{
+  review: Review
+  admin?: false
+}>()
 
 </script>
 

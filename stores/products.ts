@@ -3,7 +3,7 @@ import useSupabase from '~/composables/useSupabase'
 import useSearch from '~/composables/useSearch'
 // @ts-ignore
 import { ProductCategory } from '~/types/categories.d.ts'
-import { Product, ProductWithRating } from '~/types/product'
+import { Product, ProductID, ProductWithRating } from '~/types/product'
 
 const { supabase } = useSupabase()
 
@@ -22,12 +22,12 @@ export const useProductsStore = defineStore('products', {
   getters: {},
 
   actions: {
-    async getProductsFromDatabase (items): Promise<Object[]> {
+    async getProductsFromDatabase (items: ProductID[]): Promise<ProductWithRating[]> {
       this.isLoading = true
       const { data: res } = await supabase
         .from('goods')
         .select('*, reviews!left(score)')
-        .range(this.totalProductsLoaded, this.totalProductsLoaded + items - 1)
+        .in('pk_id', items)
 
       const { count: prodCount } = await supabase
         .from('goods')
@@ -38,7 +38,7 @@ export const useProductsStore = defineStore('products', {
       return this._destructureRating(res)
     },
 
-    async getProductsByCategory (category: ProductCategory, limit: number = 10): Promise<Object[]> {
+    async getProductsByCategory (category: ProductCategory, limit: number = 10): Promise<ProductWithRating[]> {
       const { data: res } = await supabase.from('goods')
         .select('*, reviews!left(score)')
         // @ts-ignore
@@ -47,14 +47,14 @@ export const useProductsStore = defineStore('products', {
       return this._destructureRating(res)
     },
 
-    async getProductsByQuery (query: string, limit: number = 10): Promise<Object[]> {
+    async getProductsByQuery (query: string, limit: number = 10): Promise<ProductWithRating[]> {
       // eslint-disable-next-line no-undef
       const { findByQuery } = useSearch()
       const res = await findByQuery(query, limit)
       return this._destructureRating(res)
     },
 
-    async getProductsByFilter (filter: Filter, limit: number = 10): Promise<Object[]> {
+    async getProductsByFilter (filter: Filter, limit: number = 10): Promise<ProductWithRating[]> {
       const { data: res } = await supabase.from('goods')
         .select('*, reviews!left(score)')
         .order(Filter[filter.toUpperCase()], { ascending: false })
@@ -63,7 +63,7 @@ export const useProductsStore = defineStore('products', {
       return this._destructureRating(res)
     },
 
-    async getProductById (id) {
+    async getProductById (id): Promise<ProductWithRating[]> {
       const { data: res } = await supabase
         .from('goods')
         .select('*, reviews!left(score)')
@@ -71,7 +71,7 @@ export const useProductsStore = defineStore('products', {
       return this._destructureRating(res)
     },
 
-    async getProductsByIds (ids) {
+    async getProductsByIds (ids): Promise<ProductWithRating[]> {
       const { data: res } = await supabase
         .from('goods')
         .select('*, reviews!left(score)')

@@ -93,13 +93,12 @@
         Цена:
       </div>
       <div class="price__price-wrapper">
-        <span class="final-price">{{ formatter.format(item.final_price * Math.max(item.qty, 1)) }}</span>
+        <span class="final-price">{{ formatter.format(item.final_price * Math.max(qty, 1)) }}</span>
         <span v-if="item.old_price" class="old-price">{{
-          formatter.format(item.old_price * Math.max(item.qty, 1))
+          formatter.format(item.old_price * Math.max(qty, 1))
         }}</span>
       </div>
     </div>
-
     <UIButton
       v-if="isLoggedIn()"
       :disabled="item.units_in_stock === 0 || isInCart"
@@ -110,26 +109,26 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 
+import { computed, ref, Ref } from 'vue'
 import { useFavoritesStore } from '@/stores/favorites'
 import { useCartStore } from '@/stores/cart'
+import useAuth from '~/composables/useAuth'
+import type { ProductWithRating } from '~/types/product'
 
 const favoritesStore = useFavoritesStore()
 const cartStore = useCartStore()
 const { isLoggedIn } = useAuth()
 
-const popup = ref()
+const popup = ref(null)
 
-const props = defineProps({
-  item: {
-    type: Object,
-    required: true
-  }
-})
+const props = defineProps<{
+  item: ProductWithRating
+}>()
 defineEmits(['reviews:click'])
 
-const qty = ref(props.item.qty)
+const qty: Ref<number> = ref(1)
 
 /* currency formatter */
 const formatter = new Intl.NumberFormat('ru-RU', {
