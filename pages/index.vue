@@ -5,54 +5,26 @@
 
     <UITitledWrapper
       v-show="products.popular"
+      :cards="products.popular"
       path="category/popular"
       title="Популярное"
-    >
-      <div class="cards">
-        <Card
-          v-for="card in products.popular"
-          :key="card.pk_id"
-          :card="card"
-          lazy
-          @show-popup="_showPopup"
-        />
-      </div>
-    </UITitledWrapper>
-
+    />
     <Observer :margin="200" :on-intersect="loadXiaomi" once>
-      <LazyUITitledWrapper
-        v-show="products.xiaomi"
+      <UITitledWrapper
+        v-if="products.xiaomi"
+        :cards="products.xiaomi"
         path="search?q=xiaomi"
         title="Бренд Xiaomi"
-      >
-        <div class="cards">
-          <Card
-            v-for="card in products.xiaomi"
-            :key="card.pk_id"
-            :card="card"
-            lazy
-            @show-popup="_showPopup"
-          />
-        </div>
-      </LazyUITitledWrapper>
+      />
     </Observer>
 
     <Observer :margin="100" :on-intersect="loadRecommendations" once>
-      <LazyUITitledWrapper
-        v-if="products.recommendations && products.recommendations.length !== 0"
+      <UITitledWrapper
+        v-if="products.recommendations"
+        :cards="products.recommendations"
         passive
         title="Рекомендовано вам"
-      >
-        <div class="cards">
-          <Card
-            v-for="card in products.recommendations"
-            :key="card.pk_id"
-            :card="card"
-            lazy
-            @show-popup="_showPopup"
-          />
-        </div>
-      </LazyUITitledWrapper>
+      />
     </Observer>
     <UILoader v-if="_fetching" />
   </div>
@@ -99,26 +71,4 @@ const loadRecommendations = async () => {
   width: 140px;
 }
 
-.cards {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-row-gap: 30px;
-  grid-column-gap: 20px;
-  justify-items: center;
-
-  @media (max-width: 1500px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  @media (max-width: 1300px) {
-    grid-template-columns: repeat(3, 1fr);
-    grid-column-gap: 10px;
-  }
-  @media (max-width: 800px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  @media (max-width: 350px) {
-    grid-template-columns: 1fr;
-  }
-}
 </style>

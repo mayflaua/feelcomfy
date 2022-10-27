@@ -117,10 +117,9 @@
           v-if="lastViewedCards.length !== 0"
           :cards="lastViewedCards"
           passive
+          slider
           title="Вы недавно смотрели"
-        >
-          <Card v-for="card in lastViewedCards" :key="card.pk_id" :card="card" />
-        </UITitledWrapper>
+        />
       </ClientOnly>
     </div>
   </div>
@@ -224,6 +223,7 @@ onMounted(() => (_mounted.value = true))
 </script>
 
 <style lang="scss" scoped>
+
 .cart {
   display: flex;
   justify-content: space-between;

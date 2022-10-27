@@ -19,13 +19,49 @@
         />
       </svg>
     </nuxt-link>
-    <!--TODO: slider prop-->
-    <slot v-if="!slider" />
+
+    <div v-if="!slider" class="cards">
+      <Card v-for="card in cards" :key="card.pk_id" :card="card" />
+    </div>
+
+    <Swiper
+      v-else
+      :breakpoints="{
+        350: {
+          slidesPerView: 2
+        },
+        800: {
+          slidesPerView: 3
+        },
+        1100: {
+          slidesPerView: 4
+        },
+        1300: {
+          slidesPerView: 5
+        }
+      }"
+      :free-mode="true"
+      :modules="modules"
+      :slides-per-view="1"
+      :space-between="10"
+      class="cards-slider"
+      navigation
+    >
+      <SwiperSlide v-for="card in cards" :key="card.pk_id">
+        <Card :card="card" />
+      </SwiperSlide>
+    </Swiper>
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { FreeMode, Navigation } from 'swiper'
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/free-mode'
 
+const modules = [Navigation, FreeMode]
 const props = defineProps({
   path: {
     type: String,
@@ -42,6 +78,10 @@ const props = defineProps({
   passive: {
     type: Boolean,
     default: false
+  },
+  cards: {
+    type: Array,
+    required: true
   }
 })
 
@@ -70,6 +110,38 @@ const props = defineProps({
 
     &:hover {
       text-decoration: underline;
+    }
+  }
+
+  .cards-slider {
+    --swiper-navigation-size: 40px;
+    --swiper-navigation-color: black;
+
+    @media (max-width: 768px) {
+      --swiper-navigation-size: 20px;
+    }
+  }
+
+  .cards {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-row-gap: 30px;
+    grid-column-gap: 20px;
+    justify-items: center;
+
+    @media (max-width: 1500px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media (max-width: 1300px) {
+      grid-template-columns: repeat(3, 1fr);
+      grid-column-gap: 10px;
+    }
+    @media (max-width: 800px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media (max-width: 350px) {
+      grid-template-columns: 1fr;
     }
   }
 }
