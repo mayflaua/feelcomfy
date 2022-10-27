@@ -2,16 +2,10 @@ import { defineStore } from 'pinia'
 import useSupabase from '~/composables/useSupabase'
 import useSearch from '~/composables/useSearch'
 // @ts-ignore
-import { ProductCategory } from '~/types/categories.d.ts'
+import { Filter, ProductCategory } from '~/types/categories.d.ts'
 import { Product, ProductID, ProductWithRating } from '~/types/product'
 
 const { supabase } = useSupabase()
-
-enum Filter {
-  POPULAR = 'orders',
-  BEST_RATING = 'score',
-  // TODO: больше фильтров
-}
 
 export const useProductsStore = defineStore('products', {
   state: () => ({

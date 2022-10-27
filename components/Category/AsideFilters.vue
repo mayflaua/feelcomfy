@@ -64,27 +64,19 @@
   </aside>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import '@vueform/slider/themes/default.scss'
 
 import Slider from '@vueform/slider'
+import { reactive, ref } from 'vue'
 
 const emit = defineEmits(['change'])
 
-const props = defineProps({
-  minMaxPrice: {
-    type: Array,
-    required: true
-  },
-  colors: {
-    type: Array,
-    required: true
-  },
-  categories: {
-    type: Array,
-    required: true
-  }
-})
+const props = defineProps<{
+  minMaxPrice: [number, number]
+  colors: Array<string>
+  categories: Array<string>
+}>()
 // range selector value
 const _v = ref(props.minMaxPrice)
 

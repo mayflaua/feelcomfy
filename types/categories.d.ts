@@ -7,3 +7,16 @@ export enum ProductCategory {
   MERCH = 6,
   ACCESSORIES = 7
 }
+
+export enum Filter {
+  POPULAR = 'orders',
+  BEST_RATING = 'score',
+}
+
+export interface CategoryObject {
+  categoryID?: ProductCategory
+  filter?: Filter
+  name: string
+  title: string
+  link: string
+}

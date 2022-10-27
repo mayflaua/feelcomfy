@@ -1,49 +1,52 @@
+import { defineEventHandler } from 'h3'
+import { CategoryObject, Filter, ProductCategory } from '~/types/categories'
+
 export default defineEventHandler(() => {
-  const categoriesList = [
+  const categoriesList:CategoryObject[] = [
     {
-      categoryID: 1,
+      categoryID: ProductCategory.MOUSE,
       name: 'mouse',
       title: 'Мыши',
       link: '/category/mouse'
     },
     {
-      categoryID: 2,
+      categoryID: ProductCategory.KEYBOARDS,
       name: 'keyboards',
       title: 'Клавиатуры',
       link: '/category/keyboards'
     },
     {
-      categoryID: 3,
+      categoryID: ProductCategory.CHAIRS,
       name: 'chairs',
       title: 'Кресла',
       link: '/category/chairs'
     },
     {
-      categoryID: 4,
+      categoryID: ProductCategory.TABLES,
       name: 'tables',
       title: 'Столы',
       link: '/category/tables'
     },
     {
-      categoryID: 5,
+      categoryID: ProductCategory.MONITORS,
       name: 'monitors',
       title: 'Мониторы',
       link: '/category/monitors'
     },
     {
-      categoryID: 6,
+      categoryID: ProductCategory.MERCH,
       name: 'merch',
       title: 'Мерч',
       link: '/category/merch'
     },
     {
-      categoryID: 7,
+      categoryID: ProductCategory.ACCESSORIES,
       name: 'accessories',
       title: 'Аксессуары',
       link: '/category/accessories'
     },
     {
-      filter: 'POPULAR',
+      filter: Filter.POPULAR,
       name: 'popular',
       title: 'Популярное',
       link: '/category/popular'

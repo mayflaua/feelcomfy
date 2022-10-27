@@ -1,6 +1,6 @@
 <template>
   <div class="category-page">
-    <div class="category-page__header">
+    <div v-show="_mounted" class="category-page__header">
       <p class="title">
         {{ title }}
       </p>
@@ -15,11 +15,13 @@
           @option:selected="sortItems"
         />
       </div>
-      <button v-if="!_isDesktopScreen" class="show-filters-btn dark-invert" @click="showFilters = !showFilters">
-        Фильтры
-      </button>
+      <ClientOnly>
+        <button v-if="!_isDesktopScreen" class="show-filters-btn dark-invert" @click="showFilters = !showFilters">
+          Фильтры
+        </button>
+      </ClientOnly>
     </div>
-    <div class="category-page__body">
+    <div v-show="_mounted" class="category-page__body">
       <CategoryAsideFilters
         v-show="showFilters || _isDesktopScreen"
         :categories="categories"
@@ -31,19 +33,26 @@
         <Card v-for="item in filteredCards" :key="item.pk_id" :card="item" />
       </main>
     </div>
+    <UILoader v-if="!_mounted" fullscreen v2 />
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import 'vue-select/dist/vue-select.css'
 import { useMediaQuery } from '@vueuse/core'
+import { useHead, useLazyFetch, useRoute } from '#app'
+import { defineAsyncComponent, onMounted, ref } from 'vue'
 import { useProductsStore } from '@/stores/products'
+import { definePageMeta } from '#imports'
+import { ProductWithRating } from '~/types/product'
 
 const route = useRoute()
-const categories = await $fetch('/api/categories')
-const categoryObject = categories.find(i => i.name === route.params.name)
+const { data: categories } = await useLazyFetch('/api/categories')
+const categoryObject = categories.value.find(i => i.name === route.params.name)
 const title = categoryObject.title
-const isProductCategory = !categoryObject.filter
+
+const _mounted = ref(false)
+onMounted(() => _mounted.value = true)
 
 useHead({
   title: `${title} в магазине FeelComfy`
@@ -112,19 +121,19 @@ const sortItems = () => {
   filteredCards.value = sorter[method](productCards)
 }
 
-let productCards
-if (isProductCategory) {
+let productCards: ProductWithRating[]
+if (!categoryObject.filter) {
   productCards = await productsStore.getProductsByCategory(categoryObject.name, 20)
 } else {
   productCards = await productsStore.getProductsByFilter(categoryObject.filter, 20)
 }
 const filteredCards = ref(productCards)
 
-const getMinMaxPriceValues = () => {
+const getMinMaxPriceValues = (): [number, number] => {
   const arr = productCards.map(i => i.final_price)
   return [Math.min(...arr), Math.max(...arr)]
 }
-const getAvailableColors = () => {
+const getAvailableColors = (): string[] => {
   return [...new Set(productCards.map(i => i.color))].filter(i => i !== '')
 }
 </script>
