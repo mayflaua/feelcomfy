@@ -119,23 +119,29 @@ const emitChange = () => {
 }
 
 const selectedCategories = reactive({})
-props?.categories.forEach((i) => {
-  selectedCategories[i.categoryID] = false
-})
+if (props.categories) {
+  props.categories.forEach((i) => {
+    selectedCategories[i.categoryID] = false
+  })
+}
 
 const selectedColors = reactive({})
-props?.colors.forEach((i) => {
-  selectedColors[i] = false
-})
+if (props.colors) {
+  props?.colors.forEach((i) => {
+    selectedColors[i] = false
+  })
+}
 
 const selectedCharacteristics = reactive({})
-props?.chars.forEach((char) => {
-  const [key, value] = Object.entries(char)[0]
-  selectedCharacteristics[key] = []
-  value.forEach((val) => {
-    selectedCharacteristics[key].push({ [val]: false })
+if (props.chars) {
+  props?.chars.forEach((char) => {
+    const [key, value] = Object.entries(char)[0]
+    selectedCharacteristics[key] = []
+    value.forEach((val) => {
+      selectedCharacteristics[key].push({ [val]: false })
+    })
   })
-})
+}
 </script>
 
 <style lang="scss" scoped>

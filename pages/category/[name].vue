@@ -16,7 +16,7 @@
         />
       </div>
       <ClientOnly>
-        <button v-if="!_isDesktopScreen" class="show-filters-btn dark-invert" @click="showFilters = !showFilters">
+        <button class="show-filters-btn dark-invert" @click="showFilters = !showFilters">
           Фильтры
         </button>
       </ClientOnly>
@@ -24,7 +24,6 @@
     <div v-show="_mounted" class="category-page__body">
       <CategoryAsideFilters
         v-show="showFilters || _isDesktopScreen"
-        :categories="categories"
         :colors="getAvailableColors()"
         :min-max-price="getMinMaxPriceValues()"
         @change="applyFilters"
@@ -199,6 +198,12 @@ const getAvailableColors = (): string[] => {
       cursor: pointer;
       text-decoration: none;
       color: $font;
+
+      display: none;
+
+      @media (max-width: 768px) {
+        display: block;
+      }
     }
   }
 
