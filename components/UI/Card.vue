@@ -1,5 +1,10 @@
 <template>
-  <nuxt-link :to="`/product/${slugify(product.title)}-${product.pk_id}`" class="card" no-prefetch>
+  <nuxt-link
+    :class="{'card--wide': wide && !isLowResolution}"
+    :to="`/product/${slugify(product.title)}-${product.pk_id}`"
+    class="card"
+    no-prefetch
+  >
     <div class="card__wishes-btn" @click.stop.prevent="handleFavoritesClick">
       <svg
         :class="{'icon--active': isInFavorites}"
@@ -46,6 +51,22 @@
         {{ product.title }}
       </div>
 
+      <div v-if="wide" class="info__characteristics">
+        <div v-if="product.color" class="characteristic-field">
+          <span class="characteristic-field__label">Цвет:</span>
+          <span class="characteristic-field__value">{{ product.color }}</span>
+        </div>
+        <div v-if="product.model" class="characteristic-field">
+          <span class="characteristic-field__label">Модель:</span>
+          <span class="characteristic-field__value">{{ product.model }}</span>
+        </div>
+
+        <div v-for="(value, label) of product.additional_data" class="characteristic-field">
+          <span class="characteristic-field__label">{{ label }}:</span>
+          <span class="characteristic-field__value">{{ value }}</span>
+        </div>
+      </div>
+
       <div class="info__badges">
         <CardBadgeOneLeft v-if="product.units_in_stock === 1" />
         <CardBadgeHighRating v-if="product.score >= 4.5" />
@@ -88,6 +109,7 @@
 <script lang="ts" setup>
 import slugify from 'slugify'
 import { computed } from 'vue'
+import { useMediaQuery } from '@vueuse/core'
 import { ProductWithRating } from '~/types/product'
 import { useFavoritesStore } from '~/stores/favorites'
 import { useCartStore } from '~/stores/cart'
@@ -98,7 +120,10 @@ const cartStore = useCartStore()
 const props = defineProps<{
   product: ProductWithRating
   lazy?: boolean
+  wide?: boolean
 }>()
+
+const isLowResolution = useMediaQuery('(max-width: 400px)')
 
 // currency formatter
 const _f = new Intl.NumberFormat('ru-RU', {
@@ -288,5 +313,95 @@ const handleMinusButtonClick = async (): Promise<void> => {
     }
   }
 
+}
+
+.card--wide {
+  flex-direction: row;
+  gap: 1rem;
+  border-bottom: 1px solid $light;
+  padding-bottom: 1rem;
+
+  @media (max-width: 420px) {
+    gap: 0.5rem;
+  }
+
+  .card {
+    &__image {
+      height: 100%;
+      width: 25%;
+    }
+
+    &__wishes-btn {
+      order: 3;
+      align-self: flex-start;
+    }
+
+    &__info {
+      display: grid;
+      grid-template-columns: 75% 25%;
+      grid-template-rows: auto 1fr 40px;
+      gap: 0.3rem;
+      grid-template-areas: "title price"
+      "info badges"
+      "score cart";
+
+      @media (max-width: 630px) {
+        grid-template-columns: 60% 40%;
+        grid-template-areas: "title title"
+        "info info"
+        "price badges"
+        "score cart"
+      }
+
+      .info {
+
+        &__title {
+          grid-area: title;
+          font-size: 1.2rem;
+          font-weight: 500;
+        }
+
+        &__characteristics {
+          grid-area: info;
+          font-size: 0.9rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.3rem;
+
+          .characteristic-field {
+            display: flex;
+            gap: 5px;
+
+            &__label {
+              color: $dark;
+            }
+          }
+        }
+
+        &__price-wrapper {
+          grid-area: price;
+        }
+
+        &__cart-btn {
+          grid-area: cart;
+
+          @media (max-width: 420px) {
+            font-size: 0.9rem;
+            height: 30px;
+            line-height: 30px;
+            padding: 0;
+          }
+        }
+
+        &__badges {
+          grid-area: badges;
+        }
+
+        &__rating {
+          grid-area: score;
+        }
+      }
+    }
+  }
 }
 </style>

@@ -1,22 +1,41 @@
 <template>
-  <input
-    v-model="val"
-    class="checkbox"
-    type="checkbox"
-    @change="$emit('changed', val)"
-  >
+  <div class="checkbox-wrapper" @click="model = !model">
+    <input
+      v-model="model"
+      :class="{'checkbox--checked': model}"
+      :value="modelValue"
+      class="checkbox"
+      type="checkbox"
+    >
+    <slot />
+  </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script lang="ts" setup>
+
+import { computed } from 'vue'
 
 const props = defineProps({
-  defaultValue: {
+  modelValue: {
     type: Boolean,
-    default: true
+    default: false
+  },
+  value: {
+    type: Boolean,
+    default: false
   }
 })
-const val = ref(props.defaultValue)
+
+const emit = defineEmits(['update:modelValue', 'changed'])
+
+const model = computed({
+  get () {
+    return props.modelValue
+  },
+  set (value) {
+    emit('update:modelValue', value)
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -27,12 +46,19 @@ const val = ref(props.defaultValue)
   min-height: 16px;
   position: relative;
 
-  &:checked:before {
+  &-wrapper {
+    display: flex;
+    gap: 0.6rem;
+    cursor: pointer;
+  }
+
+  &:checked:before,
+  &--checked:before {
     background-color: $blue;
     border-color: $blue;
     background-image: url("~/assets/icons/check.webp");
     background-repeat: no-repeat;
-    background-size: 90%;
+    background-size: 100%;
     background-position: center;
   }
 

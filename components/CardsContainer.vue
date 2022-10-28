@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'cards-container--shortened': shorten}" class="cards-container">
+  <div :class="{'cards-container--shortened': shorten, 'cards-container--extended': extended}" class="cards-container">
     <slot />
   </div>
 </template>
@@ -8,6 +8,7 @@
 
 defineProps<{
   shorten?: boolean
+  extended?: boolean
 }>()
 
 </script>
@@ -30,6 +31,16 @@ defineProps<{
 
   @media (max-width: 500px) {
     grid-template-columns: 1fr 1fr;
+  }
+
+  &--extended {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 15rem;
+
+    @media (max-width: 400px) {
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: auto;
+    }
   }
 
   &--shortened {

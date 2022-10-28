@@ -48,7 +48,6 @@
 
 <script lang="ts" setup>
 import { Ref, ref, watch } from 'vue'
-import { navigateTo } from '#app'
 import useSearch from '@/composables/useSearch'
 
 defineEmits(['open-aside'])
@@ -61,7 +60,7 @@ const searchHistory:Ref<string[]> = ref([])
 const fetchingSuggestions: Ref<boolean> = ref(false)
 const searchQuery: Ref<string> = ref('')
 
-const handleSearchClick = async (query): Promise<void> => {
+const handleSearchClick = async (query) => {
   if (query) {
     suggestionsList.value = []
     await navigateTo({
