@@ -1,7 +1,6 @@
 <template>
   <div class="product__info">
     <LazyCartPopup ref="popup" />
-
     <div class="info__stats">
       <span class="stats__rating">
         {{ item.score }}
@@ -106,6 +105,13 @@
       class="add-to-cart-btn"
       @click="handleAddToCartClick"
     />
+
+    <div v-if="item.additional_data" class="info__characteristics">
+      <div v-for="(value, label) of item.additional_data" :key="value" class="characteristic-field">
+        <span class="characteristic-field__label">{{ label }}:</span>
+        <span class="characteristic-field__value">{{ value }}</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -391,11 +397,29 @@ const checkInputValue = () => {
       }
     }
 
+    &__characteristics {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 100%;
+
+      .characteristic-field {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+          border-bottom: 1px solid $light;
+
+        &__label {
+          color: darken($dark, 30);
+        }
+      }
+    }
   }
 
   .add-to-cart-btn {
     border-radius: 8px;
   }
+
 }
 
 </style>
