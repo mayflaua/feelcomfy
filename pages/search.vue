@@ -22,6 +22,18 @@
           class="sorting__select"
           @option:selected="sortItems"
         />
+        <div class="appearance-switch">
+          <button
+            :class="{'appearance-switch__button--selected': appearanceType === 'list'}"
+            class="appearance-switch__button appearance-switch__button--list"
+            @click="appearanceType = 'list'"
+          />
+          <button
+            :class="{'appearance-switch__button--selected': appearanceType === 'grid'}"
+            class="appearance-switch__button appearance-switch__button--grid"
+            @click="appearanceType = 'grid'"
+          />
+        </div>
       </div>
     </div>
 
@@ -40,8 +52,8 @@
         Нет продуктов для заданных фильтров
       </p>
 
-      <CardsContainer class="search__result" extended>
-        <UICard v-for="item in filteredProducts" :key="item.pk_id" :product="item" wide />
+      <CardsContainer :extended="appearanceType === 'list'" :shorten="appearanceType === 'grid'" class="search__result">
+        <UICard v-for="item in filteredProducts" :key="item.pk_id" :product="item" :wide="appearanceType === 'list'" />
       </CardsContainer>
     </main>
   </div>
@@ -50,7 +62,7 @@
 <script lang="ts" setup>
 
 import { navigateTo, useFetch, useHead, useRoute } from '#app'
-import { defineAsyncComponent, onMounted, ref, watch } from 'vue'
+import { defineAsyncComponent, onMounted, Ref, ref, watch } from 'vue'
 import { useMediaQuery } from '@vueuse/core'
 import { useProductsStore } from '@/stores/products'
 import 'vue-select/dist/vue-select.css'
@@ -75,6 +87,7 @@ if (!route.query.q) {
 
 const _isMobileScreen = useMediaQuery('(max-width: 768px)')
 const showFilters = ref(!_isMobileScreen.value)
+const appearanceType:Ref<'list' | 'grid'> = ref('list')
 
 // sorting data
 const sortingSelectOptions = [
@@ -230,6 +243,46 @@ watch(() => route.query.q, async () => {
     .sorting__select {
       width: 12rem;
       font-size: 0.85rem;
+    }
+
+    .appearance-switch {
+      width: fit-content;
+      height: 16px;
+      display: flex;
+      gap: 4px;
+      align-self: center;
+
+      &__button {
+        width: 16px;
+        height: 100%;
+        background: url("~/assets/icons/appearance-filters.png") transparent no-repeat left/cover;
+        outline: none;
+        border: none;
+        opacity: 0.4;
+        cursor: pointer;
+
+        @media (max-width: 768px) {
+          width: 24px;
+        }
+
+        &:hover:not(&--selected) {
+          opacity: 0.6;
+        }
+
+        &--selected {
+          opacity: 1;
+        }
+
+        &--grid {
+          background-position: right;
+        }
+      }
+      @media (max-width: 768px) {
+        height: 24px;
+      }
+      @media (max-width: 420px) {
+        display: none;
+      }
     }
 
     .show-filters-btn {

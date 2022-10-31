@@ -24,10 +24,17 @@
     </div>
 
     <div class="card__image">
+      <div
+        v-if="product.netlify_images && product.netlify_images.length !== 0"
+        class="card__image-hover-wrapper"
+        @mouseleave="setImageOnHover(0)"
+      >
+        <div v-for="(el, i) in product.netlify_images" :key="i" class="hover-el" @mouseenter="setImageOnHover(i)" />
+      </div>
       <nuxt-img
         :alt="product.title"
         :loading="lazy ? 'lazy': 'eager'"
-        :src="`images/${product.netlify_name}`"
+        :src="`images/${currentImage}`"
         width="100%"
       />
     </div>
@@ -47,7 +54,7 @@
         <span v-else class="rating__no-reviews">Нет оценок</span>
       </div>
 
-      <div class="info__title">
+      <div :title="product.title" class="info__title">
         {{ product.title }}
       </div>
 
@@ -61,7 +68,7 @@
           <span class="characteristic-field__value">{{ product.model }}</span>
         </div>
 
-        <div v-for="(value, label) of product.additional_data" class="characteristic-field">
+        <div v-for="(value, label) of product.additional_data" :key="value" class="characteristic-field">
           <span class="characteristic-field__label">{{ label }}:</span>
           <span class="characteristic-field__value">{{ value }}</span>
         </div>
@@ -108,7 +115,7 @@
 
 <script lang="ts" setup>
 import slugify from 'slugify'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useMediaQuery } from '@vueuse/core'
 import { ProductWithRating } from '~/types/product'
 import { useFavoritesStore } from '~/stores/favorites'
@@ -134,6 +141,14 @@ const _f = new Intl.NumberFormat('ru-RU', {
 
 const discount = computed(() => Math.floor((1 - props.product.final_price / props.product.old_price) * 100))
 
+const currentImage = ref(props.product.netlify_name)
+const setImageOnHover = (index: number): void => {
+  if (!index) {
+    currentImage.value = props.product.netlify_name
+  } else {
+    currentImage.value = props.product.netlify_images[index - 1]
+  }
+}
 const isInFavorites = computed(() => favoritesStore.isInFavorites(props.product.pk_id))
 const isInCart = computed(() => cartStore.isInCart(props.product.pk_id))
 
@@ -188,9 +203,29 @@ const handleMinusButtonClick = async (): Promise<void> => {
     }
 
   }
+
   &__image {
     width: 100%;
     height: 50%;
+    max-height: 200px;
+    position: relative;
+
+    &-hover-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+
+      .hover-el {
+        flex-grow: 1;
+
+        &:hover {
+          border-bottom: 2px solid $dark;
+        }
+      }
+    }
 
     img {
       width: 100%;
@@ -267,6 +302,11 @@ const handleMinusButtonClick = async (): Promise<void> => {
       &__title {
         margin: 3px 0 0 0;
         line-height: 1.2rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       &__badges {
@@ -308,6 +348,12 @@ const handleMinusButtonClick = async (): Promise<void> => {
             font-weight: 500;
             border: none;
           }
+        }
+      }
+
+      &__characteristics {
+        @media (max-width: 420px) {
+          display: none;
         }
       }
     }

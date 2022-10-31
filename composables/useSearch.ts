@@ -16,7 +16,7 @@ const useSearch = () => {
     // find products matches based on title (find titles that contains query)
     const columnsToFetch = fetch
       ? 'title'
-      : 'pk_id, category_id, title, old_price, final_price, netlify_name, model, color,' +
+      : 'pk_id, category_id, title, old_price, final_price, netlify_name, netlify_images, model, color,' +
       ' orders, additional_data, reviews!left(score)'
 
     const { data: matchedByTitle } = await supabase

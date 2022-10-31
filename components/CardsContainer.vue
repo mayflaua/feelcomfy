@@ -18,6 +18,7 @@ defineProps<{
   max-width: 100%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: 370px;
   grid-row-gap: 1.5rem;
   grid-column-gap: 1rem;
 
