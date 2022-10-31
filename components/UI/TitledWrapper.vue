@@ -30,27 +30,27 @@
       v-else
       :breakpoints="{
         350: {
-          slidesPerView: 2
-        },
-        800: {
           slidesPerView: 3
         },
-        1100: {
+        800: {
           slidesPerView: 4
         },
-        1300: {
+        1100: {
           slidesPerView: 5
+        },
+        1300: {
+          slidesPerView: 6
         }
       }"
       :free-mode="true"
       :modules="modules"
-      :slides-per-view="1"
+      :slides-per-view="2"
       :space-between="10"
       class="cards-slider"
       navigation
     >
       <SwiperSlide v-for="card in cards" :key="card.pk_id">
-        <Card :card="card" />
+        <UICard :fixed-height="350" :product="card" lazy />
       </SwiperSlide>
     </Swiper>
   </div>
@@ -118,6 +118,10 @@ const props = defineProps({
   .cards-slider {
     --swiper-navigation-size: 40px;
     --swiper-navigation-color: black;
+
+    .swiper-wrapper {
+
+    }
 
     @media (max-width: 768px) {
       --swiper-navigation-size: 20px;

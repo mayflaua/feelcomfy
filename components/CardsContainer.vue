@@ -1,5 +1,11 @@
 <template>
-  <div :class="{'cards-container--shortened': shorten, 'cards-container--extended': extended}" class="cards-container">
+  <div
+    :class="{
+      'cards-container--shortened': shorten,
+      'cards-container--extended': extended
+    }"
+    class="cards-container"
+  >
     <slot />
   </div>
 </template>

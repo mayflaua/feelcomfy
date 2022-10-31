@@ -1,6 +1,7 @@
 <template>
   <nuxt-link
     :class="{'card--wide': wide && !isLowResolution}"
+    :style="{height: `${fixedHeight}px`}"
     :to="`/product/${slugify(product.title)}-${product.pk_id}`"
     class="card"
     no-prefetch
@@ -130,6 +131,7 @@ const props = defineProps<{
   product: ProductWithRating
   lazy?: boolean
   wide?: boolean
+  fixedHeight?: number
 }>()
 
 const isLowResolution = useMediaQuery('(max-width: 400px)')
