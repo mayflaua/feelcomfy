@@ -7,15 +7,17 @@
       <NavUserActions @open-auth-modal="openAuthModal" />
     </nav>
     <NavCategoriesLinks />
-    <ClientOnly>
-      <transition name="menu">
-        <NavAside
-          v-if="sideMenuOpened"
-          @close-aside="closeAside"
-          @open-auth-modal="openAuthModal"
-        />
-      </transition>
-    </ClientOnly>
+    <KeepAlive>
+      <ClientOnly>
+        <transition name="menu">
+          <NavAside
+            v-show="sideMenuOpened"
+            @close-aside="closeAside"
+            @open-auth-modal="openAuthModal"
+          />
+        </transition>
+      </ClientOnly>
+    </KeepAlive>
   </header>
 </template>
 
@@ -30,7 +32,7 @@ const openAuthModal = (): void => {
   isAuthModalOpened.value = true
 }
 const closeAuthModal = (): void => {
-  sideMenuOpened.value = true
+  sideMenuOpened.value = false
   isAuthModalOpened.value = false
 }
 
