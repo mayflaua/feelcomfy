@@ -205,25 +205,21 @@
       color: $font;
       border-color: $default;
 
+      &__wishes-btn {
+        .icon:hover {
+          stroke: white;
+        }
+      }
+
       &__image {
         background: white;
       }
-
-      &__orders {
-        color: $light;
-      }
-
-      &__cart-btn:hover {
-        background-color: $default;
-      }
-
     }
 
     .wrapper {
       &__title {
         color: $font;
       }
-
     }
 
     .profile {
@@ -343,6 +339,15 @@
 
               svg {
                 stroke: $font;
+              }
+            }
+          }
+
+          .info__characteristics {
+            .characteristic-field {
+              border-color: $light;
+              &__label {
+                color: $light;
               }
             }
           }
