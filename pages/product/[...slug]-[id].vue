@@ -30,6 +30,15 @@
         </div>
       </div>
     </div>
+    <Observer :margin="100" :on-intersect="getSimilarProducts">
+      <LazyUITitledWrapper
+        v-if="similars.length !== 0 && !gettingSimilars"
+        :cards="similars"
+        passive
+        title="Другие товары из этой категории"
+      />
+      <UILoader v-else />
+    </Observer>
   </div>
 </template>
 
@@ -39,6 +48,7 @@ import { ref, Ref } from 'vue'
 import slugify from 'slugify'
 import { useLocalStorage } from '@vueuse/core'
 import { useProductsStore } from '@/stores/products'
+import { ProductCategory } from '~/types/categories.d.ts'
 
 const productStore = useProductsStore()
 
@@ -70,6 +80,13 @@ if (!item || slugify(item.title) !== route.params.slug[0]) {
   storage.value = storage.value.slice(0, 20)
 }
 
+const gettingSimilars = ref(false)
+const similars = ref([])
+const getSimilarProducts = async () => {
+  gettingSimilars.value = true
+  similars.value = await productStore.getProductsByCategory(ProductCategory[item.category_id], 15)
+  gettingSimilars.value = false
+}
 </script>
 
 <style lang="scss" scoped>
