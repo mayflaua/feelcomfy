@@ -24,6 +24,7 @@
     <div v-show="_mounted" class="category-page__body">
       <CategoryAsideFilters
         v-show="showFilters || _isDesktopScreen"
+        :chars="getCharacteristics()"
         :colors="getAvailableColors()"
         :min-max-price="getMinMaxPriceValues()"
         @change="applyFilters"
@@ -67,9 +68,11 @@ const vSelect = defineAsyncComponent({
 
 const _isDesktopScreen = useMediaQuery('(min-width: 768px)')
 const showFilters = ref(_isDesktopScreen.value)
-const applyFilters = ({ price, colors }) => {
+const applyFilters = ({ price, colors, chars }) => {
+  // colors filter
   const selectedColors = Object.entries(colors).filter(i => i[1]).map(i => i[0])
 
+  // price filter
   filteredCards.value = productCards.filter((item) => {
     if (selectedColors.length === 0) {
       return item.final_price >= price[0] &&
@@ -80,6 +83,27 @@ const applyFilters = ({ price, colors }) => {
         selectedColors.includes(item.color)
     }
   })
+
+  // characteristic filter
+  const hasTruthyValues = Object.values(chars).some(obj => obj.some(val => Object.values(val).some(b => Boolean(b))))
+  if (hasTruthyValues) {
+    const matchedProducts = []
+
+    const allFilterFields = Object.values(chars).flat().filter(obj => Object.values(obj)[0])
+    const allFilterValues = []
+    for (const field of allFilterFields) {
+      allFilterValues.push(Object.entries(field)[0][0])
+    }
+    for (const product of filteredCards.value) {
+      if (product.additional_data) {
+        const allValues = Object.values(product.additional_data)
+        if (allValues.some(val => allFilterValues.includes(val))) {
+          matchedProducts.push(product)
+        }
+      }
+    }
+    filteredCards.value = matchedProducts
+  }
 }
 
 const productsStore = useProductsStore()
@@ -134,6 +158,18 @@ const getMinMaxPriceValues = (): [number, number] => {
 }
 const getAvailableColors = (): string[] => {
   return [...new Set(productCards.map(i => i.color))].filter(i => i !== '')
+}
+const getCharacteristics = (): Array<[string, string[]]> => {
+  const allCharFields = productCards.map(i => i.additional_data).filter(i => i && Object.keys(i).length !== 0)
+  const allLabels = [...new Set(allCharFields.map(i => Object.keys(i)).flat())]
+  const res = []
+  for (const a of allLabels) {
+    const allValues = [...new Set(allCharFields.filter(el => el[a]).map(el => el[a]))]
+    res.push({
+      [a]: allValues
+    })
+  }
+  return res
 }
 </script>
 

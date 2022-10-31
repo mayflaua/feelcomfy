@@ -35,7 +35,9 @@
         :alt="product.title"
         :loading="lazy ? 'lazy': 'eager'"
         :src="`images/${currentImage}`"
-        width="100%"
+        format="webp"
+        quality="60"
+        width="200"
       />
     </div>
 
