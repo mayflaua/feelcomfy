@@ -110,7 +110,7 @@
         v-else
         class="info__cart-btn"
         text="В корзину"
-        @click.stop.prevent="handleCartAdd"
+        @click.stop.prevent="cartStore.handleCartAction(product.pk_id)"
       />
     </div>
   </nuxt-link>
@@ -160,9 +160,6 @@ const handleFavoritesClick = async (): Promise<void> => {
   await favoritesStore.handleFavoritesAction(props.product.pk_id)
 }
 
-const handleCartAdd = async (): Promise<void> => {
-  await cartStore.handleCartAction(props.product.pk_id)
-}
 const handleMinusButtonClick = async (): Promise<void> => {
   if (cartStore.getQuantity(props.product.pk_id) === 1) {
     await cartStore.handleCartAction(props.product.pk_id)

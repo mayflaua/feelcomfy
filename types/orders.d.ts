@@ -6,6 +6,7 @@ export interface OrderProductCompressed {
   readonly id: ProductID
   qty: number
   price: number
+  units_in_stock: number
 }
 
 export interface OrderProduct extends OrderProductCompressed{

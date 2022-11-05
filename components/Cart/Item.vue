@@ -2,9 +2,9 @@
   <div class="item">
     <UICheckbox
       v-if="!noInput"
-      :checked="cartStore.getCheckValue(itemInfo.pk_id)"
+      :model-value="itemInfo.checked"
       class="item__checkbox"
-      @change="cartStore.handleCheck(itemInfo.pk_id)"
+      @click="cartStore.handleCheck(itemInfo.pk_id)"
     />
     <nuxt-link :to="link" class="item__image" target="_blank">
       <nuxt-img

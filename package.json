@@ -5,30 +5,33 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "analyze": "nuxi analyze"
+    "analyze": "nuxi analyze",
+    "webstorm-integration": "vitest --watch --reporter=dot --reporter=json --outputFile=.vitest-result.json"
   },
   "devDependencies": {
-    "@nuxt/image-edge": "^1.0.0-27719579.87dcdf2",
-    "@nuxtjs/color-mode": "^3.1.6",
+    "@nuxt/image-edge": "^1.0.0-27769790.4b27db3",
+    "@nuxtjs/color-mode": "^3.1.8",
     "@nuxtjs/eslint-config-typescript": "^11.0.0",
+    "@vitest/coverage-c8": "^0.24.5",
+    "@vitest/ui": "^0.24.5",
     "node-sass": "^7.0.3",
-    "nuxt": "npm:nuxt3@latest",
-    "sass-loader": "^13.0.2"
+    "nuxt": "^3.0.0-rc.12",
+    "sass-loader": "^13.1.0",
+    "vitest": "^0.24.5"
   },
   "dependencies": {
-    "@pinia/nuxt": "^0.4.2",
+    "@pinia/nuxt": "^0.4.3",
     "@supabase/supabase-js": "^1.35.7",
     "@vueform/slider": "^2.1.5",
-    "@vueuse/core": "^9.3.0",
+    "@vueuse/core": "^9.4.0",
     "imagekit": "^4.1.1",
     "imagekit-javascript": "^1.5.4",
-    "pinia": "^2.0.22",
-    "sass": "^1.55.0",
+    "pinia": "^2.0.23",
+    "sass": "^1.56.0",
     "slugify": "^1.6.5",
     "swiper": "^8.4.4",
     "v-viewer": "^3.0.11",
     "vue-select": "^4.0.0-beta.5",
-    "vue3-circle-progress": "^1.0.7",
-    "vue3-lazy-hydration": "^1.2.1"
+    "vue3-circle-progress": "^1.0.7"
   }
 }

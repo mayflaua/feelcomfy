@@ -1,5 +1,0 @@
-import { LazyHydrationWrapper } from 'vue3-lazy-hydration'
-
-export default defineNuxtPlugin((nuxtApp) => {
-  nuxtApp.vueApp.component('LazyHydrationWrapper', LazyHydrationWrapper)
-})

@@ -8,3 +8,4 @@ node_modules
 dist
 .idea
 /server/api/ik.js
+/.vitest-result.json

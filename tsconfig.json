@@ -8,5 +8,8 @@
     "@/*": [
       "./*"
     ]
+  },
+  "compilerOptions": {
+    "types": ["vitest/globals"]
   }
 }

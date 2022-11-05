@@ -77,11 +77,11 @@
           &__pa, &__favorites, &__cart, &__home {
 
             &--current span {
-              color: invert($blue, 100) !important;
+              color: invert($blue, 100%) !important;
             }
 
             &:hover {
-              background-color: invert($default, 100);
+              background-color: invert($default, 100%);
               @media (max-width: 480px) {
                 background-color: transparent;
               }

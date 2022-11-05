@@ -1,31 +1,31 @@
+import { User } from '@supabase/gotrue-js'
+import { Ref } from 'vue'
+import { navigateTo, useState } from '#imports'
 import { useFavoritesStore } from '~/stores/favorites'
 import { useCartStore } from '~/stores/cart'
+import useSupabase from '~/composables/useSupabase'
 
 const useAuth = () => {
-  const user = useState('user', () => null)
+  const user:Ref<User | null> = useState('user', () => null)
   const { supabase } = useSupabase()
   const favoritesStore = useFavoritesStore()
   const cartStore = useCartStore()
 
   supabase.auth.onAuthStateChange(async (event, session) => {
     user.value = session?.user || null
-    if (event === 'SIGNED_IN' &&
-      !cartStore.cartReady &&
-      !favoritesStore.favoritesReady &&
-      !favoritesStore._fetchingCompressed &&
-      !cartStore._fetchingCompressed) {
-      const t = performance.now()
+
+    if (event === 'SIGNED_IN' && user.value) {
+      cartStore.setUser(user.value.id)
+
+      await cartStore.getCartFromDatabase()
       await favoritesStore.getCompressedFavoritesList()
-      await cartStore.getCompressedCart()
-      console.info(`fetched cart and favorites in ${performance.now() - t}ms`)
     } else if (event === 'SIGNED_OUT') {
       favoritesStore.resetFavorites()
       await cartStore.resetCart()
-      console.info('reset cart and favorites')
     }
   })
 
-  const signUp = async ({ email, password, ...metadata }) => {
+  const signUp = async ({ email, password, ...metadata }: {email: string, password: string, metadata: any}) => {
     const { user: u, error } = await supabase.auth.signUp(
       { email, password },
       { data: metadata }
@@ -33,19 +33,21 @@ const useAuth = () => {
     if (error) {
       throw error
     }
-    await supabase.from('carts').insert({
-      user_id: u.id,
-      cart: []
-    })
-    await supabase.from('favorites').insert({
-      user_id: u.id,
-      favorites: []
-    })
+    if (u) {
+      await supabase.from('carts').insert({
+        user_id: u.id,
+        cart: []
+      })
+      await supabase.from('favorites').insert({
+        user_id: u.id,
+        favorites: []
+      })
+    }
 
     return u
   }
 
-  const signIn = async ({ email, password }) => {
+  const signIn = async ({ email, password }: {email: string, password: string}) => {
     const { user: u, error } = await supabase.auth.signIn({ email, password })
     if (error) {
       throw error
