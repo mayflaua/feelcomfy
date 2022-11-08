@@ -1,48 +1,23 @@
 import { defineStore } from 'pinia'
 import useSupabase from '~/composables/useSupabase'
 import useSearch from '~/composables/useSearch'
-// @ts-ignore
-import { Filter, ProductCategory } from '~/types/categories.d.ts'
+import { Filter, ProductCategory } from '~/types/categories.d'
 import { Product, ProductID, ProductWithRating } from '~/types/product'
 
 const { supabase } = useSupabase()
 
 export const useProductsStore = defineStore('products', {
-  state: () => ({
-    isLoading: false,
-    _productsAvailableInDatabase: null
-  }),
-
-  getters: {},
-
   actions: {
-    async getProductsFromDatabase (items: ProductID[]): Promise<ProductWithRating[]> {
-      this.isLoading = true
-      const { data: res } = await supabase
-        .from('goods')
-        .select('*, reviews!left(score)')
-        .in('pk_id', items)
-
-      const { count: prodCount } = await supabase
-        .from('goods')
-        .select('pk_id', { count: 'exact', head: true })
-      this._productsAvailableInDatabase = prodCount
-      this.isLoading = false
-
-      return this._destructureRating(res)
-    },
-
     async getProductsByCategory (category: ProductCategory, limit: number = 10): Promise<ProductWithRating[]> {
       const { data: res } = await supabase.from('goods')
         .select('*, reviews!left(score)')
-        // @ts-ignore
-        .eq('category_id', ProductCategory[category.toUpperCase()])
+        .eq('category_id', category)
         .limit(limit)
-      return this._destructureRating(res)
+      if (res) { return this._destructureRating(res) }
+      return []
     },
 
     async getProductsByQuery (query: string, limit: number = 10): Promise<ProductWithRating[]> {
-      // eslint-disable-next-line no-undef
       const { findByQuery } = useSearch()
       const res = await findByQuery(query, limit)
       return this._destructureRating(res)
@@ -51,26 +26,29 @@ export const useProductsStore = defineStore('products', {
     async getProductsByFilter (filter: Filter, limit: number = 10): Promise<ProductWithRating[]> {
       const { data: res } = await supabase.from('goods')
         .select('*, reviews!left(score)')
-        .order(Filter[filter.toUpperCase()], { ascending: false })
+        .order(filter, { ascending: false })
         .limit(limit)
 
-      return this._destructureRating(res)
+      if (res) { return this._destructureRating(res) }
+      return []
     },
 
-    async getProductById (id): Promise<ProductWithRating[]> {
+    async getProductById (id: ProductID): Promise<ProductWithRating | undefined> {
       const { data: res } = await supabase
         .from('goods')
         .select('*, reviews!left(score)')
         .eq('pk_id', id)
-      return this._destructureRating(res)
+      if (res) { return this._destructureRating(res)[0] }
+      return undefined
     },
 
-    async getProductsByIds (ids): Promise<ProductWithRating[]> {
+    async getProductsByIds (ids: ProductID[]): Promise<ProductWithRating[]> {
       const { data: res } = await supabase
         .from('goods')
         .select('*, reviews!left(score)')
         .in('pk_id', ids)
-      return this._destructureRating(res)
+      if (res) { return this._destructureRating(res) }
+      return []
     },
 
     _destructureRating (arr: Array<Product>): Array<ProductWithRating> {
