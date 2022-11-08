@@ -16,11 +16,12 @@ const useAuth = () => {
 
     if (event === 'SIGNED_IN' && user.value) {
       cartStore.setUser(user.value.id)
+      favoritesStore.setUser(user.value.id)
 
       await cartStore.getCartFromDatabase()
-      await favoritesStore.getCompressedFavoritesList()
+      await favoritesStore.getFavoritesFromDatabase()
     } else if (event === 'SIGNED_OUT') {
-      favoritesStore.resetFavorites()
+      await favoritesStore.resetFavorites()
       await cartStore.resetCart()
     }
   })

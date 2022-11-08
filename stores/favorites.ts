@@ -1,97 +1,146 @@
 import { defineStore } from 'pinia'
 import useSupabase from '~/composables/useSupabase'
-import { FavoritesListItem, FavoritesListItemWithRating } from '~/types/favorites'
 import { ProductID } from '~/types/product'
+import { FavoritesListItemWithRating } from '~/types/favorites'
+import { useProductsStore } from '~/stores/products'
 
 const { supabase } = useSupabase()
 
-export const useFavoritesStore = defineStore('favorites', {
+export const useFavoritesStore = defineStore('newFavorites', {
   state: () => ({
-    _compressedFavoritesList: [] as ProductID[],
-    favoritesList: [] as FavoritesListItemWithRating[],
+    user: null as string | null,
+    _compressedFavorites: null as ProductID[] | null,
+    favorites: null as FavoritesListItemWithRating[] | null,
 
-    favoritesReady: false as boolean,
-    _fetchingCompressed: false as boolean
+    favoritesReady: false,
+    _fetchingCompressed: false,
+    _updating: false,
+
+    // Disables sync with database for testing purposes
+    _noSync: false
   }),
+
   getters: {
-    isInFavorites: state => itemID =>
-      state._compressedFavoritesList.includes(itemID) as boolean,
-    totalFavorites: state =>
-      state._compressedFavoritesList.length as number
+    // Returns the number of unique products in favorites
+    totalFavorites (state): number {
+      return state._compressedFavorites?.length || 0
+    },
+
+    // Indicates if product is in favorites
+    isInFavorites (state): (id: ProductID) => boolean {
+      return id => state._compressedFavorites?.includes(id) || false
+    }
   },
+
   actions: {
-    async handleFavoritesAction (itemID: ProductID): Promise<void> {
-      this.isInFavorites(itemID)
-        ? await this._removeFromFavorites(itemID)
-        : await this._addToFavorites(itemID)
-    },
-    async _addToFavorites (itemID: ProductID): Promise<void> {
-      this._compressedFavoritesList.push(itemID)
-      await this._updateDatabase()
-    },
-    async _removeFromFavorites (itemID: ProductID): Promise<void> {
-      const index = this._compressedFavoritesList.indexOf(itemID)
-
-      // remove from compressed list
-      this._compressedFavoritesList.splice(index, 1)
-
-      // remove from full list
-      this.favoritesList.splice(this.favoritesList.findIndex(item => item.pk_id === itemID), 1)
-      await this._updateDatabase()
+    // Set user ID
+    setUser (user: string): void {
+      this.user = user
     },
 
-    async _updateDatabase (): Promise<void> {
-      await supabase
-        .from('favorites')
-        .update({ favorites: this._compressedFavoritesList })
-        .eq('user_id', supabase.auth.user().id)
-    },
+    // Fetch products from database depending on compressed favorites list
+    async getFavoritesFromDatabase () : Promise<void> {
+      if (!this._compressedFavorites && !this._fetchingCompressed) {
+        await this._getCompressedFavorites()
+      }
 
-    async getCompressedFavoritesList (): Promise<void> {
-      this._fetchingCompressed = true
-      const { data: response } = await supabase
-        .from('favorites')
-        .select('favorites')
-        .eq('user_id', supabase.auth.user().id)
-      this._compressedFavoritesList = response[0].favorites
-      this._fetchingCompressed = false
-    },
+      if (this._compressedFavorites) {
+        const productsScore = useProductsStore()
 
-    async getFavoritesFromDatabase (): Promise<void> {
-      if (!this._fetchingCompressed && this.totalFavorites !== 0) {
-        // fetch all products info by compressed list ids if compressed already fetched
-        const { data: res } = await supabase
-          .from('goods')
-          .select('*, reviews!left(score)')
-          .in('pk_id', this._compressedFavoritesList)
-        this.favoritesList = this._destructureRating(res)
+        this.favorites = await productsScore.getProductsByIds(this._compressedFavorites)
         this.favoritesReady = true
-      } else {
-        // retry fetch if compressedFavorites isn't fetched yet
-        setTimeout(async () => await this.getFavoritesFromDatabase(), 10)
       }
     },
 
-    _destructureRating (arr: Array<FavoritesListItem>): Array<FavoritesListItemWithRating> {
-      const res: Array<FavoritesListItemWithRating> = []
-      arr.forEach((product) => {
-        const reviews = product.reviews
-        const mappedProduct: FavoritesListItemWithRating = {
-          ...product,
-          reviews: reviews.length,
-          score: (reviews
-            .map(i => i.score)
-            .reduce((acc, num) => acc + num, 0) / (reviews.length || 1))
-            .toFixed(1)
-        }
-        res.push(mappedProduct)
-      })
-      return res
+    // Fetch compressed favorites for currently logged-in user
+    async _getCompressedFavorites () {
+      if (this.user) {
+        this._fetchingCompressed = true
+        const { data, error } = await supabase
+          .from('favorites')
+          .select('favorites')
+          .eq('user_id', this.user)
+        if (error) { throw error }
+
+        this._compressedFavorites = data[0].favorites
+        this._fetchingCompressed = false
+      }
     },
 
-    resetFavorites () {
-      this.favoritesList = []
-      this._compressedFavoritesList = []
+    // Adds a product id to  favorites
+    async _addToFavorites (id: ProductID): Promise<void> {
+      if (this._compressedFavorites && this.favorites) {
+        const productsScore = useProductsStore()
+        const product = await productsScore.getProductById(id)
+
+        this._compressedFavorites.push(id)
+        // TODO: remove index when refactor productsScore
+        this.favorites.push(product[0])
+      }
+    },
+
+    // Removes a product id from favorites
+    _removeFromFavorites (id: ProductID): void {
+      if (this._compressedFavorites && this.favorites) {
+        this._compressedFavorites = this._compressedFavorites.filter(_ => _ !== id)
+        this.favorites = this.favorites.filter(_ => _.pk_id !== id)
+      }
+    },
+
+    // Perform adding or removing product from favorites
+    async handleFavoritesAction (id: ProductID): Promise<void> {
+      if (!this.favorites) { await this.getFavoritesFromDatabase() }
+
+      this.isInFavorites(id)
+        ? this._removeFromFavorites(id)
+        : await this._addToFavorites(id)
+
+      await this._updateDatabase()
+    },
+
+    // Perform synchronisation of locally stored favorites and favorites in database
+    async _updateDatabase (): Promise<void> {
+      if (!this._noSync) {
+        this._updating = true
+
+        if (this.user) {
+          const { error } = await supabase
+            .from('favorites')
+            .update({ favorites: this._compressedFavorites })
+            .eq('user_id', this.user)
+
+          if (error) { throw error }
+        } else {
+          throw new Error(`Favorites sync went wrong. ${this.user} is not a valid user ID`)
+        }
+
+        this._updating = false
+      }
+    },
+
+    // Reset both compressed and full favorites lists
+    // Sync with database if withUpdate arg is true
+    async resetFavorites (withUpdate: boolean = false): Promise<void> {
+      this.favorites = null
+      this._compressedFavorites = null
+
+      if (withUpdate) {
+        await this._updateDatabase()
+      }
+    },
+
+    // For testing purposes
+    disableSync (): void {
+      this._noSync = true
+    },
+
+    setFavorites (favorites: FavoritesListItemWithRating[]): void {
+      this.favorites = favorites
+    },
+
+    setCompressedFavorites (favorites: ProductID[]): void {
+      this._compressedFavorites = favorites
     }
   }
-})
+}
+)
