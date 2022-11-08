@@ -18,7 +18,9 @@ export interface Product {
   color: string | null
   orders: number
   additional_data: [] | null,
-  reviews: Score[]
+  reviews: Score[],
+  description: string | null
+  fts?: string
 }
 
 export interface ProductWithRating extends Product {

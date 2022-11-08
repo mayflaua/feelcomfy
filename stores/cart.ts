@@ -8,7 +8,7 @@ const { supabase } = useSupabase()
 const DEFAULT_CHECKBOX_VALUE = true
 const FREE_DELIVERY_MIN_PRICE = 8000
 
-export const useCartStore = defineStore('newcart', {
+export const useCartStore = defineStore('newCart', {
   state: () => ({
     user: null as string | null,
     _compressedCart: null as CompressedCartItem[] | null,
@@ -25,7 +25,7 @@ export const useCartStore = defineStore('newcart', {
   getters: {
     // Returns boolean indicating if product is in cart.
     isInCart (state): (id: ProductID) => boolean {
-      return id => state._compressedCart?.some(item => item.pk_id === id) || false as boolean
+      return id => state._compressedCart?.some(item => item.pk_id === id) || false
     },
 
     // Returns quantity of products with given ID in cart or null if no such products in cart
@@ -71,7 +71,7 @@ export const useCartStore = defineStore('newcart', {
       return FREE_DELIVERY_MIN_PRICE - this.totalSelectedItemsWorth
     },
     // Return the summary savings based on the products difference of old and final prices
-    summarySaving (state): number {
+    summarySavings (state): number {
       return state.cart?.reduce((acc, curr) => {
         /* consider only checked items with old price */
         return (curr.old_price && curr.checked)
@@ -283,8 +283,17 @@ export const useCartStore = defineStore('newcart', {
       }
     },
 
+    // For testing purposes
     disableSync (): void {
       this._noSync = true
+    },
+
+    setCart (cart: CartItem[]): void {
+      this.cart = cart
+    },
+
+    setCompressedCart (cart: CompressedCartItem[]): void {
+      this._compressedCart = cart
     }
   }
 })
