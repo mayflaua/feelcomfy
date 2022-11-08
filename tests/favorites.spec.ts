@@ -58,6 +58,13 @@ describe('Favorites Store', () => {
     expect(store._compressedFavorites!.length).toEqual(store.favorites!.length)
   })
 
+  it('Returns a valid totalFavorites getter value', () => {
+    const store = useFavoritesStore()
+    store.setCompressedFavorites([0, 0, 23])
+
+    expect(store.totalFavorites).toBe(3)
+  })
+
   it('Adds a product to favorites', async () => {
     const store = useFavoritesStore()
     store.disableSync()
@@ -92,6 +99,20 @@ describe('Favorites Store', () => {
     await store.handleFavoritesAction(product.pk_id)
     expect(store._compressedFavorites).toContain(product.pk_id)
     expect(store.favorites).toContainEqual(product)
+  })
+
+  it('Throws an error when user is null', async () => {
+    const store = useFavoritesStore()
+    store.setCompressedFavorites([1, 2, 3])
+
+    await expect(store._updateDatabase).rejects.toThrow(/went wrong/)
+  })
+
+  it('Throws an error when user is invalid', async () => {
+    const store = useFavoritesStore()
+    store.setUser('invalid')
+
+    await expect(store.getFavoritesFromDatabase).rejects.toThrow()
   })
 
   it('Resets the favorites', async () => {

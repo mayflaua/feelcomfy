@@ -1,6 +1,7 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { useCartStore } from '~/stores/cart'
+import { CartItem, CompressedCartItem } from '~/types/cart'
 
 describe('Cart Store', () => {
   beforeEach(() => {
@@ -8,6 +9,29 @@ describe('Cart Store', () => {
   })
 
   const user = '908ad5c6-a555-4a52-a1e5-f5023e96f344'
+  const product: {
+    readonly compressed: CompressedCartItem, readonly full: CartItem
+  } = {
+    compressed: { pk_id: 30, qty: 3 },
+    full: {
+      pk_id: 30,
+      qty: 3,
+      checked: false,
+      old_price: 1345,
+      final_price: 1333,
+      model: 'test',
+      color: 'test',
+      category_id: 1,
+      netlify_name: 'test',
+      netlify_images: null,
+      orders: 3,
+      units_in_stock: 10,
+      additional_data: null,
+      title: 'test product',
+      reviews: [{ score: 0 }, { score: 2 }],
+      description: 'test'
+    }
+  }
 
   it('Initialized correctly', () => {
     const store = useCartStore()
@@ -45,7 +69,7 @@ describe('Cart Store', () => {
 
     expect(store._compressedCart).toBeTruthy()
     expect(store.cart).toBeTruthy()
-    expect(store._compressedCart.length).toEqual(store.cart.length)
+    expect(store._compressedCart!.length).toEqual(store.cart!.length)
   })
 
   it('Adds checked and qty properties to cart products', async () => {
@@ -53,23 +77,35 @@ describe('Cart Store', () => {
     store.setUser(user)
     await store.getCartFromDatabase()
 
-    for (const product of store.cart) {
-      expect(product).toHaveProperty('checked')
-      expect(product).toHaveProperty('qty')
+    if (store.cart) {
+      for (const product of store.cart) {
+        expect(product).toHaveProperty('checked')
+        expect(product).toHaveProperty('qty')
+      }
     }
   })
 
   it('Adds a product to cart', async () => {
     const store = useCartStore()
-    store.setUser(user)
     store.disableSync()
-    await store.getCartFromDatabase()
+    store.setCompressedCart([])
+    store.setCart([])
 
-    await store._removeFromCart(30, true)
-    expect(store._compressedCart).not.toContainEqual({ pk_id: 30, qty: 1 })
-    await store.handleCartAction(30, 1)
+    await store.handleCartAction(product.compressed.pk_id, 1)
 
-    expect(store._compressedCart).toContainEqual({ pk_id: 30, qty: 1 })
+    expect(store._compressedCart).toContainEqual({ pk_id: product.compressed.pk_id, qty: 1 })
+  })
+
+  it('Removes a product from cart', async () => {
+    const store = useCartStore()
+    store.disableSync()
+    store.setCompressedCart([product.compressed])
+    store.setCart([product.full])
+
+    await store.handleCartAction(product.compressed.pk_id, 1)
+
+    expect(store._compressedCart).not.toContainEqual({ pk_id: product.compressed.pk_id, qty: 1 })
+    expect(store.cart).not.toContainEqual({ pk_id: 30, qty: 1 })
   })
 
   it('Adds a product to cart when cart is null', async () => {
@@ -92,24 +128,24 @@ describe('Cart Store', () => {
 
   it('Increases the quantity', async () => {
     const store = useCartStore()
-    store.setUser(user)
     store.disableSync()
-    await store.getCartFromDatabase()
+    store.setCompressedCart([{ ...product.compressed }])
+    store.setCart([{ ...product.full }])
 
-    const product = { ...store._compressedCart[1] }
-    await store.changeQuantity(product.pk_id, 2)
-    expect(store._compressedCart).toContainEqual({ pk_id: product.pk_id, qty: product.qty + 2 })
+    await store.changeQuantity(product.compressed.pk_id, 2)
+
+    expect(store._compressedCart).toContainEqual({ pk_id: product.compressed.pk_id, qty: product.compressed.qty + 2 })
   })
 
   it('Decreases the quantity', async () => {
     const store = useCartStore()
-    store.setUser(user)
     store.disableSync()
-    await store.getCartFromDatabase()
+    store.setCompressedCart([{ ...product.compressed }])
+    store.setCart([{ ...product.full }])
 
-    const product = { ...store._compressedCart[2] }
-    await store.changeQuantity(product.pk_id, -2)
-    expect(store._compressedCart).toContainEqual({ pk_id: product.pk_id, qty: product.qty - 2 })
+    await store.changeQuantity(product.compressed.pk_id, -2)
+
+    expect(store._compressedCart).toContainEqual({ pk_id: product.compressed.pk_id, qty: product.compressed.qty - 2 })
   })
 
   it('Throws an error when changing quantity of product and cart is null', async () => {
@@ -131,24 +167,23 @@ describe('Cart Store', () => {
 
   it('Removes the product if changing quantity to 0', async () => {
     const store = useCartStore()
-    store.setUser(user)
     store.disableSync()
-    await store.getCartFromDatabase()
+    store.setCompressedCart([{ ...product.compressed }])
+    store.setCart([{ ...product.full }])
 
-    const product = store.cart[0]
-    await store.changeQuantity(product.pk_id, -product.qty)
-    expect(store._compressedCart).not.toContainEqual({ pk_id: product.pk_id, qty: product.qty })
+    await store.changeQuantity(product.compressed.pk_id, -product.compressed.qty)
+    expect(store._compressedCart).not.toContainEqual(product.compressed)
   })
 
   it('Sets the quantity to units_in_stock if value is more than units_in_stock', async () => {
     const store = useCartStore()
     store.setUser(user)
     store.disableSync()
-    await store.getCartFromDatabase()
+    store.setCompressedCart([{ ...product.compressed }])
+    store.setCart([{ ...product.full }])
 
-    const product = store.cart[0]
-    await store.changeQuantity(product.pk_id, product.units_in_stock + 100)
-    expect(store._compressedCart).toContainEqual({ pk_id: product.pk_id, qty: product.units_in_stock })
+    await store.changeQuantity(product.full.pk_id, product.full.units_in_stock + 100)
+    expect(store._compressedCart).toContainEqual({ pk_id: product.full.pk_id, qty: product.full.units_in_stock })
   })
 
   it('Checks every product on init', async () => {
@@ -156,8 +191,10 @@ describe('Cart Store', () => {
     store.setUser(user)
     await store.getCartFromDatabase()
 
-    for (const product of store.cart) {
-      expect(product.checked).toBeTruthy()
+    if (store.cart) {
+      for (const product of store.cart) {
+        expect(product.checked).toBeTruthy()
+      }
     }
   })
 
@@ -166,11 +203,14 @@ describe('Cart Store', () => {
     store.setUser(user)
     await store.getCartFromDatabase()
 
-    store.handleCheck(store.cart[0].pk_id)
-    expect(store.cart[0].checked).toBeFalsy()
-    store.handleCheckAllClick()
-    for (const product of store.cart) {
-      expect(product.checked).toBeTruthy()
+    if (store.cart) {
+      store.handleCheck(store.cart[0].pk_id)
+      expect(store.cart[0].checked).toBeFalsy()
+      store.handleCheckAllClick()
+
+      for (const product of store.cart) {
+        expect(product.checked).toBeTruthy()
+      }
     }
   })
 
@@ -179,12 +219,14 @@ describe('Cart Store', () => {
     store.setUser(user)
     await store.getCartFromDatabase()
 
-    for (const product of store.cart) {
-      expect(product.checked).toBeTruthy()
-    }
-    store.handleCheckAllClick()
-    for (const product of store.cart) {
-      expect(product.checked).toBeFalsy()
+    if (store.cart) {
+      for (const product of store.cart) {
+        expect(product.checked).toBeTruthy()
+      }
+      store.handleCheckAllClick()
+      for (const product of store.cart) {
+        expect(product.checked).toBeFalsy()
+      }
     }
   })
 
@@ -194,18 +236,22 @@ describe('Cart Store', () => {
     store.disableSync()
     await store.getCartFromDatabase()
 
-    const products = [store.cart[0], store.cart[1], store.cart[2]]
-    store.handleCheckAllClick()
-    for (const product of store.cart) {
-      expect(product.checked).toBeFalsy()
+    if (store.cart) {
+      expect(store.cart.length).toBeGreaterThan(2)
+
+      const products = [store.cart[0], store.cart[1], store.cart[2]]
+      store.handleCheckAllClick()
+      for (const product of store.cart) {
+        expect(product.checked).toBeFalsy()
+      }
+      for (const product of products) {
+        store.handleCheck(product.pk_id)
+      }
+      await store.removeCheckedItems()
+      expect(store.cart).not.toContainEqual(products[0])
+      expect(store.cart).not.toContainEqual(products[1])
+      expect(store.cart).not.toContainEqual(products[2])
     }
-    for (const product of products) {
-      store.handleCheck(product.pk_id)
-    }
-    await store.removeCheckedItems()
-    expect(store.cart).not.toContainEqual(products[0])
-    expect(store.cart).not.toContainEqual(products[1])
-    expect(store.cart).not.toContainEqual(products[2])
   })
 
   it('Resets the cart', async () => {
