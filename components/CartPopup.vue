@@ -5,11 +5,10 @@
         <div v-for="(item, i) in queue" :key="item.name" class="popup">
           <div class="image-wrapper">
             <nuxt-img
-              :src="`images/${item.imageUrl}`"
+              :src="`images/${item.url}`"
               class="popup__image"
               format="webp"
               height="100%"
-              lazy
               quality="40"
               width="60px"
             />
@@ -60,25 +59,31 @@
   </teleport>
 </template>
 
-<script>
-export default {
-  data: () => ({
-    queue: [],
-    showTime: 2000,
-    timer: null
-  }),
+<script lang="ts" setup>
+import { useNuxtApp } from '#app'
+import { onMounted, Ref, ref } from 'vue'
+import type { ShowFn, ShowOptions } from '~/types/popup'
 
-  methods: {
-    show (name, url, event) {
-      this.queue.push({ name, imageUrl: url, event })
-      this.timer = setTimeout(() => this.queue.shift(), this.showTime)
-    },
-    close (index) {
-      this.queue.splice(index, 1)
-      clearTimeout(this.timer)
-    }
-  }
+const queue:Ref<ShowOptions[]> = ref([])
+const SHOW_TIME = 2000
+
+let timer:ReturnType<typeof setTimeout> | null = null
+
+const show: ShowFn = ({ name, url, event }) => {
+  queue.value.push({ name, url, event })
+  timer = setTimeout(() => queue.value.shift(), SHOW_TIME)
 }
+
+const close = (index: number): void => {
+  queue.value.splice(index, 1)
+  if (timer) { clearTimeout(timer) }
+}
+
+const { $emitter } = useNuxtApp()
+
+onMounted(() => {
+  if ($emitter) { $emitter.on('show-popup', show) }
+})
 </script>
 
 <style lang="scss" scoped>

@@ -1,5 +1,7 @@
 <template>
   <div class="container">
+    <LazyCartPopup />
+
     <TheNav />
     <main class="content">
       <slot />

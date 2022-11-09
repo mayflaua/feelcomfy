@@ -110,7 +110,7 @@
         v-else
         class="info__cart-btn"
         text="В корзину"
-        @click.stop.prevent="cartStore.handleCartAction(product.pk_id)"
+        @click.stop.prevent="handleCartClick"
       />
     </div>
   </nuxt-link>
@@ -120,12 +120,15 @@
 import slugify from 'slugify'
 import { computed, ref } from 'vue'
 import { useMediaQuery } from '@vueuse/core'
+import { useNuxtApp } from '#app'
 import { ProductWithRating } from '~/types/product'
 import { useFavoritesStore } from '~/stores/favorites'
 import { useCartStore } from '~/stores/cart'
 
 const favoritesStore = useFavoritesStore()
 const cartStore = useCartStore()
+
+const { $emitter } = useNuxtApp()
 
 const props = defineProps<{
   product: ProductWithRating
@@ -158,6 +161,14 @@ const isInCart = computed(() => cartStore.isInCart(props.product.pk_id))
 
 const handleFavoritesClick = async (): Promise<void> => {
   await favoritesStore.handleFavoritesAction(props.product.pk_id)
+}
+const handleCartClick = async (): Promise<void> => {
+  await cartStore.handleCartAction(props.product.pk_id)
+  $emitter.emit('show-popup', {
+    name: props.product.title,
+    url: props.product.netlify_name,
+    event: 'add'
+  })
 }
 
 const handleMinusButtonClick = async (): Promise<void> => {

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <LazyCartPopup ref="popup" />
     <IndexBannerCarousel />
 
     <UITitledWrapper
@@ -30,23 +29,21 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { useProductsStore } from '@/stores/products'
 import useRecommendations from '@/composables/useRecommendations'
 import useAuth from '@/composables/useAuth'
+import { Filter } from '@/types/categories.d'
 
 const { getSimilarsByCategories } = useRecommendations()
 const { isLoggedIn } = useAuth()
 
 const productsStore = useProductsStore()
 const products = reactive({})
-const popup = ref(null)
 
-const _showPopup = ({ name, url, event }) =>
-  popup.value.show(name, url, event)
 const _fetching = ref(false)
 // created() hook
-products.popular = await productsStore.getProductsByFilter('popular', 20)
+products.popular = await productsStore.getProductsByFilter(Filter.POPULAR, 20)
 
 const loadXiaomi = async () => {
   _fetching.value = true
