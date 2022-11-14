@@ -48,7 +48,6 @@ import { ref, Ref } from 'vue'
 import slugify from 'slugify'
 import { useLocalStorage } from '@vueuse/core'
 import { useProductsStore } from '@/stores/products'
-import { ProductCategory } from '~/types/categories.d.ts'
 
 const productStore = useProductsStore()
 
@@ -84,7 +83,7 @@ const gettingSimilars = ref(false)
 const similars = ref([])
 const getSimilarProducts = async () => {
   gettingSimilars.value = true
-  similars.value = await productStore.getProductsByCategory(ProductCategory[item.category_id], 15)
+  similars.value = await productStore.getProductsByCategory(item.category_id, 15)
   gettingSimilars.value = false
 }
 </script>
