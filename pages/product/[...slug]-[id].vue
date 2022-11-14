@@ -63,7 +63,7 @@ const goToReviews = (): void => {
 }
 
 // created()
-const [item] = await productStore.getProductById(route.params.id)
+const item = await productStore.getProductById(route.params.id)
 // check if product link is valid and return to index page if not
 if (!item || slugify(item.title) !== route.params.slug[0]) {
   await navigateTo('/')
